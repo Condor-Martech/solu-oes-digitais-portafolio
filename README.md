@@ -1,122 +1,49 @@
-# 📄 Documento de Requisitos do Produto (PRD) - Portfólio Digital 2025 (Grupo Zonta)
+# LP Hub — Portfólio
 
-> **Versão:** 1.0  
-> **Status:** Em Desenvolvimento  
-> **Público-Alvo:** Stakeholders Internos, Equipes de Desenvolvimento e Marketing  
-> **Dispositivo Alvo:** LG 50" UM7500PSB (Otimizado para TV e Kiosk Mode)
+Página de portfólio dos projetos (sites e landing pages) entregues pelo time.
+HTML, CSS e JavaScript puros em um único arquivo — sem bundler, sem build.
 
----
+## Uso
 
-## 1. Visão Geral do Produto
+Abrir o `portfolio.html` diretamente no navegador, ou servir localmente:
 
-O **Portfólio Digital 2025** é uma aplicação web interativa desenvolvida para apresentar o ecossistema digital do **Grupo Zonta** (Condor, Gigante Atacadista, Hipermais, etc.). A plataforma serve como um _showcase_ visual de alta fidelidade, permitindo a exibição dos projetos em dois modos principais: uma grade de navegação interativa e um modo de apresentação automática (slideshow).
+```
+python3 -m http.server 8000
+# http://localhost:8000/portfolio.html
+```
 
-O design é focado em elegância corporativa, utilizando a identidade visual do grupo (Azul Condor e Vermelho Condor) com animações fluidas para criar uma experiência imersiva em telas grandes.
+Para embedar via iframe em outra página:
 
----
+```html
+<iframe src="/caminho/para/portfolio.html" style="width:100%;height:100vh;border:0"></iframe>
+```
 
-## 2. Objetivos Principais
+## Estrutura
 
-1.  **Centralizar a Apresentação:** Reunir todos os produtos digitais do grupo em uma única interface coesa.
-2.  **Facilitar Demonstrações:** Permitir que stakeholders apresentem o portfólio sem depender de navegação manual complexa em múltiplos sites.
-3.  **Experiência Visual Premium:** Utilizar animações e transições de alta qualidade para refletir a modernidade e inovação do grupo.
-4.  **Flexibilidade de Exibição:** Suportar tanto interação direta (kiosk) quanto modo passivo (TV de recepção/hall).
+```
+portfolio.html      # página única (HTML + CSS + JS)
+screenshots/        # capas dos projetos (referenciadas pelos cards)
+logos/              # logos (reserva — não usados no layout atual)
+```
 
----
+## Editar projetos
 
-## 3. Funcionalidades Chave
+A lista está no array `projects` dentro de `portfolio.html`. Cada item:
 
-### 3.1. Tela Inicial (Grid View)
-
-- **Grade de Projetos:** Exibição de todos os sites cadastrados em uma grade responsiva.
-- **Cartões Interativos:** Cada projeto é representado por um cartão com:
-  - Logo oficial (extraído de `public/logos`).
-  - Status do projeto (Online, Novo, Finalizado).
-  - Descrição curta e metadados (Empresa, Produção Interna/Agência).
-  - Link direto para acesso.
-- **Design:** Fundo com padrão "Enterprise Grid", cabeçalho com branding e rodapé informativo.
-
-### 3.2. Modo Apresentação Automática (AutoSlideshow)
-
-- **Navegação Cíclica:** Alterna automaticamente entre os projetos a cada 15 segundos.
-- **Conteúdo Rico:**
-  - Verifica se há vídeo de demonstração (`video`).
-  - Se não, verifica se o site permite iframe (`allowIframe`).
-  - Fallback para screenshot animado (efeito Ken Burns).
-- **Barra de Progresso:** Indicador visual do tempo restante para o próximo slide.
-- **Controles Manuais:** Botões para pausar, avançar ou retroceder manualmente.
-- **Simulação de Tráfego:** Overlay visual indicando "Simulação de Tráfego Real" para maior imersão.
-
----
-
-## 4. Especificações Técnicas
-
-### 4.1. Stack Tecnológico
-
-- **Framework:** [Next.js](https://nextjs.org/) (App Router)
-- **Estilização:** [Tailwind CSS v4](https://tailwindcss.com/) (com variáveis CSS nativas)
-- **Animações:** [Framer Motion](https://www.framer.com/motion/) (transições de página, hovers e sliders)
-- **Ícones:** [Lucide React](https://lucide.dev/)
-- **Linguagem:** TypeScript
-
-### 4.2. Estrutura de Dados (`src/data/sites.json`)
-
-Os projetos são gerenciados através de um arquivo JSON centralizado, facilitando a manutenção sem necessidade de alterar código.
-
-```json
+```js
 {
-  "name": "Nome do Projeto",
-  "company": "Empresa Responsável",
-  "url": "https://url-do-projeto.com",
-  "production": "Interno" | "Agência",
-  "description": "Breve descrição...",
-  "status": "Online" | "Novo" | "Finalizado",
-  "thumbnail": "/logos/nome-do-arquivo.png",
-  "screenshot": "/screenshots/nome.png",
-  "video": "/videos/nome.webp",
-  "allowIframe": boolean
+  title:     "Nome do projeto",
+  desc:      "Descrição. Aceita múltiplos parágrafos separados por \\n",
+  tags:      ["E-commerce", "Condor", "Online"],
+  link:      "https://...",
+  linkLabel: "Visitar site",
+  image:     "screenshots/arquivo.png"   // ou URL externa
 }
 ```
 
-### 4.3. Assets e Mídia
+As cores das tags são atribuídas automaticamente a partir de uma paleta fixa
+usando hash do nome da tag — tags iguais recebem sempre a mesma cor.
 
-- **Logos:** Armazenados localmente em `/public/logos` para garantir carregamento instantâneo e alta resolução.
-- **Screenshots/Vídeos:** Assets de fallback localizados em `/public/screenshots` e `/public/videos`.
-- **Branding:**
-  - `condor-red`: #D71920
-  - `condor-blue`: #002D5C
-  - `enterprise-bg`: #F3F6F8
+## Dependências externas
 
----
-
-## 5. Guia de Instalação e Execução
-
-### Pré-requisitos
-
-- Node.js 18+
-- npm ou yarn
-
-### Instalação
-
-```bash
-npm install
-# ou
-yarn install
-```
-
-### Ambiente de Desenvolvimento
-
-```bash
-npm run dev
-```
-
-Acesse [http://localhost:3000](http://localhost:3000)
-
-### Build de Produção
-
-```bash
-npm run build
-npm start
-```
-
----
+Apenas Google Fonts (DM Sans + DM Mono). Nenhum pacote npm.
