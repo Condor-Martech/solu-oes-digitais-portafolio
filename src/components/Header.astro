@@ -4,6 +4,7 @@ interface Props {
 }
 
 const { count } = Astro.props;
+const user = Astro.locals.user;
 ---
 
 <header class="site-header">
@@ -12,8 +13,15 @@ const { count } = Astro.props;
       <span class="brand-dot" aria-hidden="true"></span>
       <b>LP Hub</b> <span class="sep" aria-hidden="true">/</span> Portfólio
     </div>
-    <div class="count" aria-live="polite" aria-atomic="true">
-      <b>{count}</b> {count === 1 ? 'projeto' : 'projetos'}
+    <div style="display:flex;align-items:center;gap:12px">
+      <div class="count" aria-live="polite" aria-atomic="true">
+        <b>{count}</b> {count === 1 ? 'projeto' : 'projetos'}
+      </div>
+      {user && (
+        <form method="POST" action="/api/logout">
+          <button class="logout" type="submit">Sair</button>
+        </form>
+      )}
     </div>
   </div>
 </header>

@@ -419,6 +419,88 @@
   .empty-action:hover { background: var(--ink); color: var(--bg); }
   .empty-action:focus-visible { outline: 0.5px solid var(--ink); outline-offset: 3px; }
 
+  /* Login */
+  .login-main {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    padding: 40px 20px;
+  }
+  .login-card {
+    width: 100%;
+    max-width: 420px;
+    background: var(--surface);
+    border: 0.5px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 36px 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .login-card .brand { margin-bottom: 6px; }
+  .login-title {
+    margin: 0;
+    font-family: var(--sans); font-weight: 500;
+    letter-spacing: -.02em;
+    font-size: 32px; line-height: 1.1;
+    color: var(--ink);
+  }
+  .login-sub {
+    margin: 0 0 8px;
+    color: var(--ink-2);
+    font-size: 14.5px; line-height: 1.5;
+  }
+  .login-error {
+    font-family: var(--mono); font-size: 11px;
+    letter-spacing: .06em; text-transform: uppercase;
+    color: #6A2828;
+    background: #F0E2E2;
+    border: 0.5px solid #6A282824;
+    border-radius: var(--r-pill);
+    padding: 10px 14px;
+  }
+  .login-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .login-field span {
+    font-family: var(--mono); font-size: 10px;
+    letter-spacing: .12em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .login-field input {
+    font-family: var(--sans); font-size: 15px;
+    color: var(--ink);
+    background: var(--bg);
+    border: 0.5px solid var(--line);
+    border-radius: var(--r-sm);
+    padding: 12px 14px;
+    transition: border-color .15s ease, background-color .15s ease;
+  }
+  .login-field input:focus {
+    outline: none;
+    border-color: var(--ink);
+    background: var(--surface);
+  }
+  .login-submit {
+    margin-top: 6px;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .login-submit::after { content: none; }
+
+  .logout {
+    font-family: var(--mono); font-size: 10.5px;
+    letter-spacing: .06em; text-transform: uppercase;
+    color: var(--muted);
+    background: none; border: 0; padding: 6px 10px;
+    border-radius: var(--r-pill);
+    cursor: pointer;
+    transition: color .15s ease, background-color .15s ease;
+  }
+  .logout:hover { color: var(--ink); background: var(--bg); }
+
   /* Footer */
   .site-footer {
     border-top: 0.5px solid var(--line);

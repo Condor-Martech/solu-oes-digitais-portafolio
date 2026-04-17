@@ -212,12 +212,16 @@ Los tokens actuales de [styles.css](styles.css) se modelan como theme extendido 
 - [x] `src/pages/api/projects.ts`: valida `x-sync-token`, shape do payload e `production ∈ {Interno, Terceiro, Agência}`. Rejeita 400/401/500 conforme.
 - [x] Testes manuais com curl: upsert (201), update, delete, replace_all, 401 sem token, 400 com production inválida, 400 com op desconhecida.
 
-### Fase 4 — Auth
-- [ ] Crear `src/lib/auth.ts` (HMAC sign/verify).
-- [ ] Crear `src/pages/login.astro` (form con DM Sans, visual coherente).
-- [ ] Crear `src/pages/api/login.ts` y `logout.ts`.
-- [ ] Crear `src/middleware.ts`.
-- [ ] Probar flujo completo: login → cookie → acceso → logout.
+### Fase 4 — Auth ✅
+- [x] `src/lib/auth.ts`: cookie `lphub_session` = `base64url(payload).hmacSig`. `signSession`, `verifySession`, `validateCredentials` com timing-safe equal.
+- [x] Decisão: senha em plano em `.env` (não bcrypt — um único admin em VPS privado, bcrypt só protegeria contra hash leaks que aqui não se aplicam).
+- [x] `src/env.d.ts`: `App.Locals.user?: string` para o middleware propagar sessão.
+- [x] `src/middleware.ts`: gate de sessão. Permite `/login`, `/api/login`, `/api/projects` (token próprio), e assets (`/_astro`, `/screenshots`, `/logos`). Redireciona `text/html` para `/login?next=...`, responde 401 JSON para outros.
+- [x] `src/pages/login.astro`: form semântico com design coerente (DM Sans, `#F7F6F3`, border 0.5px, sem sombras).
+- [x] `src/pages/api/login.ts` (POST formdata, 302 com Set-Cookie) + `logout.ts` (Max-Age=0).
+- [x] `Header.astro`: botão "Sair" quando `Astro.locals.user` presente.
+- [x] Estilos login em `globals.css` sob `@layer components`.
+- [x] Testes manuais com curl — fluxo completo: unauth /, login ok, login errado, cookie válido, cookie adulterado, logout, assets públicos, `/api/projects` bypass por token.
 
 ### Fase 5 — Integración n8n
 - [ ] Configurar workflow n8n con trigger onEdit en el Sheet.

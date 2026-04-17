@@ -1,0 +1,51 @@
+---
+import Base from '../layouts/Base.astro';
+
+const hasError = Astro.url.searchParams.get('error') === '1';
+const next = Astro.url.searchParams.get('next') ?? '/';
+---
+
+<Base title="Entrar — LP Hub">
+  <main class="login-main">
+    <form class="login-card" method="POST" action="/api/login" novalidate>
+      <div class="brand">
+        <span class="brand-dot" aria-hidden="true"></span>
+        <b>LP Hub</b>
+        <span class="sep" aria-hidden="true">/</span>
+        Portfólio
+      </div>
+
+      <h1 class="login-title">Entrar</h1>
+      <p class="login-sub">Acesso restrito ao portfólio interno.</p>
+
+      {hasError && (
+        <div class="login-error" role="alert">Credenciais inválidas.</div>
+      )}
+
+      <input type="hidden" name="next" value={next} />
+
+      <label class="login-field">
+        <span>Usuário</span>
+        <input
+          name="user"
+          type="text"
+          required
+          autocomplete="username"
+          autofocus
+        />
+      </label>
+
+      <label class="login-field">
+        <span>Senha</span>
+        <input
+          name="pass"
+          type="password"
+          required
+          autocomplete="current-password"
+        />
+      </label>
+
+      <button type="submit" class="visit login-submit">Entrar</button>
+    </form>
+  </main>
+</Base>
