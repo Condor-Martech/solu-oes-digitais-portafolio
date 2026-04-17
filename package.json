@@ -4,10 +4,10 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "astro dev",
+    "dev": "node --env-file-if-exists=.env node_modules/astro/astro.js dev",
     "build": "astro build",
     "preview": "astro preview",
-    "start": "node ./dist/server/entry.mjs",
+    "start": "node --env-file-if-exists=.env ./dist/server/entry.mjs",
     "astro": "astro"
   },
   "dependencies": {
