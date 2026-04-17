@@ -30,22 +30,21 @@ function isActive(group: 'all' | 'company', value?: string): boolean {
 ---
 
 <div class="border-b-[0.5px] border-line bg-surface/90 backdrop-blur-md sticky top-[60px] sm:top-[64px] z-30">
-  <div class="max-w-7xl mx-auto px-5 sm:px-7 py-2 sm:py-4 flex items-center justify-between sm:justify-start gap-4">
+  <div class="max-w-7xl mx-auto px-5 sm:px-7 py-2 sm:py-3 flex items-center justify-between sm:justify-start gap-4">
     
     <!-- Mobile Filter Summary & Trigger -->
     <div class="flex sm:hidden items-center justify-between w-full">
       <div class="flex items-center gap-2">
-        <span class="text-[12px] font-mono uppercase tracking-wider text-muted">Marca:</span>
+        <span class="text-[11px] font-mono uppercase tracking-wider text-muted/60">Marca</span>
         <span class="text-[13px] font-medium text-ink">{active.value === 'Tudo' ? 'Todas' : active.value}</span>
       </div>
       <button 
         id="filterTrigger"
-        class="inline-flex items-center gap-2 py-1.5 px-3 bg-ink text-bg rounded-pill text-[11px] font-mono uppercase tracking-wider transition-all active:scale-95 shadow-lg shadow-ink/10"
+        class="inline-flex items-center justify-center w-9 h-9 border border-line bg-surface rounded-xl text-ink transition-all active:scale-90"
         type="button"
-        aria-label="Ver todas las marcas"
+        aria-label="Abrir filtros"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
-        Filtros
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
       </button>
     </div>
 
@@ -89,41 +88,47 @@ function isActive(group: 'all' | 'company', value?: string): boolean {
   <!-- Content Panel -->
   <div class="absolute top-0 right-0 w-[85%] max-w-[340px] h-full bg-surface border-l-[0.5px] border-line flex flex-col translate-x-full transition-transform duration-500 ease-out group-[.open]/drawer:translate-x-0">
     <div class="flex items-center justify-between p-6 border-b-[0.5px] border-line">
-      <h2 class="text-[17px] font-medium tracking-tight">Filtrar por Marca</h2>
-      <button id="drawerClose" class="w-8 h-8 flex items-center justify-center rounded-full border-[0.5px] border-line text-muted transition-colors hover:text-ink hover:border-ink">
+      <h2 class="text-[17px] font-medium tracking-tight">Marcas</h2>
+      <button id="drawerClose" class="w-8 h-8 flex items-center justify-center rounded-full border-[0.5px] border-line text-muted/60 transition-colors hover:text-ink">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
     
-    <div class="flex-1 overflow-y-auto p-6">
-      <div class="flex flex-col gap-3">
+    <div class="flex-1 overflow-y-auto px-6 py-4">
+      <div class="flex flex-col border-t border-line">
         <a
-          class={`group flex items-center justify-between py-3 px-4 border rounded-xl text-[13px] font-medium font-mono uppercase tracking-wider transition-all ${getFilterThemeClasses('default')} ${isActive('all') ? 'ring-1 ring-ink/20' : ''}`}
+          class={`group flex items-center justify-between py-3.5 border-b border-line text-[12px] font-mono uppercase tracking-wider transition-all ${isActive('all') ? 'text-ink' : 'text-muted hover:text-ink'}`}
           href={hrefFor('all')}
         >
-          <span>Tudo</span>
-          <span class="opacity-50 font-mono text-[11px]">{projects.length}</span>
+          <div class="flex items-center gap-3">
+            <span class={`w-1.5 h-1.5 rounded-full transition-all ${isActive('all') ? 'bg-ink scale-110' : 'bg-transparent'}`}></span>
+            <span>Tudo</span>
+          </div>
+          <span class="opacity-40 text-[11px]">{projects.length}</span>
         </a>
 
         {companies.map((c) => {
-          const themeClass = getFilterThemeClasses(getBrandColor(c));
           return (
             <a
-              class={`group flex items-center justify-between py-3 px-4 border rounded-xl text-[13px] font-medium font-mono uppercase tracking-wider transition-all ${themeClass} ${isActive('company', c) ? 'ring-1 ring-offset-1' : ''}`}
+              class={`group flex items-center justify-between py-3.5 border-b border-line text-[12px] font-mono uppercase tracking-wider transition-all ${isActive('company', c) ? 'text-ink' : 'text-muted hover:text-ink'}`}
               href={hrefFor('company', c)}
             >
-              <span>{c}</span>
-              <span class="opacity-50 font-mono text-[11px]">{countForCompany(projects, c)}</span>
+              <div class="flex items-center gap-3">
+                <span class={`w-1.5 h-1.5 rounded-full transition-all ${isActive('company', c) ? 'bg-ink scale-110' : 'bg-transparent'}`}></span>
+                <span>{c}</span>
+              </div>
+              <span class="opacity-40 text-[11px]">{countForCompany(projects, c)}</span>
             </a>
           );
         })}
       </div>
     </div>
     
-    <div class="p-6 border-t-[0.5px] border-line bg-bg/50">
-      <p class="text-[12px] text-muted leading-relaxed">
-        Selecione uma marca para filtrar os proyectos no portfólio.
-      </p>
+    <div class="p-5 border-t-[0.5px] border-line bg-bg/30 mt-auto">
+      <div class="flex items-center gap-2 text-[11px] text-muted/80 font-mono uppercase tracking-wide">
+        <span class="w-1.5 h-1.5 rounded-full bg-ink/20 animate-pulse"></span>
+        Select to filter
+      </div>
     </div>
   </div>
 </div>
@@ -140,7 +145,6 @@ function isActive(group: 'all' | 'company', value?: string): boolean {
     function open() {
       drawer.hidden = false;
       document.body.style.overflow = 'hidden';
-      // Use requestAnimationFrame to ensure the 'hidden' removal is processed
       requestAnimationFrame(() => {
         drawer.classList.add('open');
         drawer.style.opacity = '1';
@@ -162,7 +166,6 @@ function isActive(group: 'all' | 'company', value?: string): boolean {
     close.addEventListener('click', closeDrawer);
     backdrop.addEventListener('click', closeDrawer);
 
-    // Close on escape
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && !drawer.hidden) closeDrawer();
     });
