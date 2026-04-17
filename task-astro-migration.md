@@ -204,12 +204,13 @@ Los tokens actuales de [styles.css](styles.css) se modelan como theme extendido 
 - [x] Seed `src/data/projects.json` con las 28 filas del PDF + descripciones existentes.
 - [x] Build + dev OK. Filtros `?company=` y `?production=` funcionando (18 cards para Condor, etc.).
 
-### Fase 3 — Datos
-- [ ] Crear `src/data/projects.json` con los 15 proyectos actuales de `data.js` como seed.
-- [ ] Crear `src/lib/storage.ts` con read/write atómico.
-- [ ] Crear `src/lib/projects.ts` con `upsert(id, project)`, `remove(id)`, `replaceAll(projects)`.
-- [ ] Crear `src/pages/api/projects.ts` con validación + lock + aplicación de op.
-- [ ] Test manual: `curl -X POST` con cada op.
+### Fase 3 — Datos ✅
+- [x] Seed con las 28 filas del PDF ya creado en Fase 2 (`src/data/projects.json` bundled como seed inmutable).
+- [x] Runtime state en `./data/projects.json` (gitignored, override con `DATA_FILE` env var).
+- [x] `src/lib/storage.ts`: in-memory cache + write atômico (tmp + rename) + queue de serialização para writes concorrentes. Primeira boot escreve seed ao disco automaticamente.
+- [x] Operações `loadProjects`, `upsertProject`, `removeProject`, `replaceAllProjects`.
+- [x] `src/pages/api/projects.ts`: valida `x-sync-token`, shape do payload e `production ∈ {Interno, Terceiro, Agência}`. Rejeita 400/401/500 conforme.
+- [x] Testes manuais com curl: upsert (201), update, delete, replace_all, 401 sem token, 400 com production inválida, 400 com op desconhecida.
 
 ### Fase 4 — Auth
 - [ ] Crear `src/lib/auth.ts` (HMAC sign/verify).

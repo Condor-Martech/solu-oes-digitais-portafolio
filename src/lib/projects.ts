@@ -1,5 +1,3 @@
-import projectsData from '../data/projects.json';
-
 export type Production = 'Interno' | 'Terceiro' | 'Agência';
 
 export interface Project {
@@ -35,9 +33,7 @@ export function colorForTag(tag: string) {
   return tagPalette[hash(tag) % tagPalette.length];
 }
 
-export function getProjects(): Project[] {
-  return projectsData as Project[];
-}
+export { loadProjects as getProjects } from './storage';
 
 export function firstParagraph(desc: string): string {
   return (desc ?? '').split(/\n+/)[0] ?? '';

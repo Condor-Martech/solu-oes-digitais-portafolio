@@ -17,6 +17,9 @@
 /dist
 /.astro
 
+# runtime state (the canonical projects.json — seed lives in src/data/)
+/data
+
 # next.js (legacy)
 /.next/
 /out/

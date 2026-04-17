@@ -6,7 +6,7 @@ import ProjectCard from '../components/ProjectCard.astro';
 import ProjectModal from '../components/ProjectModal.astro';
 import { getProjects, parseFilter, applyFilter } from '../lib/projects';
 
-const projects = getProjects();
+const projects = await getProjects();
 const filter = parseFilter(Astro.url.searchParams);
 const visible = applyFilter(projects, filter);
 
