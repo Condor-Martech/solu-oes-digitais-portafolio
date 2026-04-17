@@ -1,10 +1,10 @@
 ---
-import Base from '../layouts/Base.astro';
-import Header from '../components/Header.astro';
-import FilterBar from '../components/FilterBar.astro';
-import ProjectCard from '../components/ProjectCard.astro';
-import ProjectModal from '../components/ProjectModal.astro';
-import { getProjects, parseFilter, applyFilter } from '../lib/projects';
+import Base from "../layouts/Base.astro";
+import Header from "../components/Header.astro";
+import FilterBar from "../components/FilterBar.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import ProjectModal from "../components/ProjectModal.astro";
+import { getProjects, parseFilter, applyFilter } from "../lib/projects";
 
 const projects = await getProjects();
 const filter = parseFilter(Astro.url.searchParams);
@@ -18,40 +18,45 @@ const year = new Date().getFullYear();
   <FilterBar projects={projects} active={filter} />
 
   <main id="main">
-    <section class="wrap hero">
-      <span class="hero-kicker">Coleção 2020 — 2026</span>
-      <h1>
-        Sites e landing pages<br />
-        <em>produzidos pelo time.</em>
-      </h1>
-      <p>
-        Seleção de projetos entregues para o Grupo Condor e parceiros — e-commerce,
-        portais institucionais, hotsites promocionais e campanhas de temporada.
-      </p>
-    </section>
-
-    <section class="wrap" aria-labelledby="projectsHeading">
-      <h2 class="sr-only" id="projectsHeading">Projetos</h2>
-      <div class="grid">
-        {visible.length === 0 && (
-          <div class="empty" role="status">
-            <h3 class="empty-title">Nenhum projeto encontrado</h3>
-            <p class="empty-sub">
-              Nenhum item corresponde ao filtro "{filter.value}"
-            </p>
-            <a class="empty-action" href="/">Limpar filtro</a>
-          </div>
-        )}
-        {visible.map((project, index) => (
-          <ProjectCard project={project} index={index} />
-        ))}
+    <section
+      class="max-w-7xl mx-auto px-5 sm:px-7"
+      aria-labelledby="projectsHeading"
+    >
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7 mt-10">
+        {
+          visible.length === 0 && (
+            <div
+              class="col-span-full py-32 text-center text-muted"
+              role="status"
+            >
+              <h3 class="text-[17px] font-medium text-ink mb-1">
+                Nenhum projeto encontrado
+              </h3>
+              <p class="font-mono text-[13px] mb-5">
+                Nenhum item corresponde ao filtro "{filter.value}"
+              </p>
+              <a
+                class="inline-flex text-[15px] font-medium underline underline-offset-4 text-ink hover:opacity-80 transition-opacity"
+                href="/"
+              >
+                Limpar filtro
+              </a>
+            </div>
+          )
+        }
+        {
+          visible.map((project, index) => (
+            <ProjectCard project={project} index={index} />
+          ))
+        }
       </div>
     </section>
   </main>
 
-  <footer class="wrap site-footer">
+  <footer
+    class="max-w-7xl mx-auto px-5 sm:px-7 py-10 text-[13px] text-muted text-center"
+  >
     <span>&copy; {year} — LP Hub</span>
-    <span>Feito em Astro + Tailwind</span>
   </footer>
 
   <ProjectModal projects={projects} />

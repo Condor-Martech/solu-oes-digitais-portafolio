@@ -4,24 +4,27 @@ interface Props {
 }
 
 const { count } = Astro.props;
-const user = Astro.locals.user;
 ---
 
-<header class="site-header">
-  <div class="wrap head">
-    <div class="brand">
-      <span class="brand-dot" aria-hidden="true"></span>
-      <b>LP Hub</b> <span class="sep" aria-hidden="true">/</span> Portfólio
+<header class="py-5 bg-surface sticky top-0 z-40">
+  <div
+    class="max-w-7xl mx-auto px-5 sm:px-7 flex justify-between items-center group/header"
+  >
+    <div
+      class="inline-flex items-center gap-2 font-mono text-[12px] uppercase tracking-widest opacity-0 animate-[rise_0.6s_ease-out_forwards]"
+    >
+      <span class="w-2 h-2 rounded-full bg-ink animate-pulse" aria-hidden="true"
+      ></span>
+      <span class="opacity-40" aria-hidden="true">/</span> Portfólio
     </div>
-    <div style="display:flex;align-items:center;gap:12px">
-      <div class="count" aria-live="polite" aria-atomic="true">
-        <b>{count}</b> {count === 1 ? 'projeto' : 'projetos'}
+    <div
+      style="display:flex;align-items:center;gap:12px"
+      class="opacity-0 animate-[rise_0.6s_ease-out_0.2s_forwards]"
+    >
+      <div class="text-muted text-[15px]" aria-live="polite" aria-atomic="true">
+        <b>{count}</b>
+        <span class="opacity-60">{count === 1 ? "projeto" : "projetos"}</span>
       </div>
-      {user && (
-        <form method="POST" action="/api/logout">
-          <button class="logout" type="submit">Sair</button>
-        </form>
-      )}
     </div>
   </div>
 </header>

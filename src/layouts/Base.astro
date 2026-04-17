@@ -28,8 +28,13 @@ const {
       rel="stylesheet"
     />
   </head>
-  <body>
-    <a class="skip-link" href="#main">Pular para projetos</a>
+  <body class="bg-bg text-ink font-sans text-[15px] antialiased">
+    <a 
+      class="absolute -top-32 focus:top-3 left-3 px-4 py-2 bg-ink text-bg font-mono text-xs tracking-widest uppercase rounded-pill z-50 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ink" 
+      href="#main"
+    >
+      Pular para projetos
+    </a>
     <slot />
   </body>
 </html>
