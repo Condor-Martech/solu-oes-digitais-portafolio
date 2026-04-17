@@ -236,9 +236,9 @@ Los tokens actuales de [styles.css](styles.css) se modelan como theme extendido 
 - [ ] `projects.json` vive en `src/data/` dentro del deploy (sin volumen externo).
 - [ ] Validar que el seed quedó correcto tras el primer `replace_all` desde n8n.
 
-### Fase 7 — Cleanup
-- [ ] Borrar `portfolio.html`, `styles.css`, `js/` del repo activo (ya están en `archive/pre-astro`).
-- [ ] Actualizar `README.md` con nuevo flujo dev + deploy.
+### Fase 7 — Cleanup ✅
+- [x] Removidos `portfolio.html`, `styles.css` e `js/` (preservados em `archive/pre-astro`).
+- [x] `README.md` reescrito: stack, dev, vars, estrutura, contrato n8n, auth, fonte de verdade.
 
 ## 10. Variables de entorno
 
