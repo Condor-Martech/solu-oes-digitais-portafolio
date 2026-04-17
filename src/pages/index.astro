@@ -1,15 +1,58 @@
 ---
 import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import FilterBar from '../components/FilterBar.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import ProjectModal from '../components/ProjectModal.astro';
+import { getProjects, parseFilter, applyFilter } from '../lib/projects';
+
+const projects = getProjects();
+const filter = parseFilter(Astro.url.searchParams);
+const visible = applyFilter(projects, filter);
+
+const year = new Date().getFullYear();
 ---
 
 <Base>
-  <main class="mx-auto max-w-6xl px-6 py-16">
-    <span class="font-mono text-xs uppercase tracking-widest text-[color:var(--color-ink-muted)]">
-      Fase 1 — scaffold
-    </span>
-    <h1 class="mt-4 text-4xl font-bold">LP Hub</h1>
-    <p class="mt-3 max-w-xl text-[color:var(--color-ink-muted)]">
-      Astro + Tailwind v4 + adapter Node está operativo. Próximo paso: portar el grid de projetos.
-    </p>
+  <Header count={visible.length} />
+  <FilterBar projects={projects} active={filter} />
+
+  <main id="main">
+    <section class="wrap hero">
+      <span class="hero-kicker">Coleção 2020 — 2026</span>
+      <h1>
+        Sites e landing pages<br />
+        <em>produzidos pelo time.</em>
+      </h1>
+      <p>
+        Seleção de projetos entregues para o Grupo Condor e parceiros — e-commerce,
+        portais institucionais, hotsites promocionais e campanhas de temporada.
+      </p>
+    </section>
+
+    <section class="wrap" aria-labelledby="projectsHeading">
+      <h2 class="sr-only" id="projectsHeading">Projetos</h2>
+      <div class="grid">
+        {visible.length === 0 && (
+          <div class="empty" role="status">
+            <h3 class="empty-title">Nenhum projeto encontrado</h3>
+            <p class="empty-sub">
+              Nenhum item corresponde ao filtro "{filter.value}"
+            </p>
+            <a class="empty-action" href="/">Limpar filtro</a>
+          </div>
+        )}
+        {visible.map((project, index) => (
+          <ProjectCard project={project} index={index} />
+        ))}
+      </div>
+    </section>
   </main>
+
+  <footer class="wrap site-footer">
+    <span>&copy; {year} — LP Hub</span>
+    <span>Feito em Astro + Tailwind</span>
+  </footer>
+
+  <ProjectModal projects={projects} />
 </Base>

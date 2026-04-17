@@ -193,13 +193,16 @@ Los tokens actuales de [styles.css](styles.css) se modelan como theme extendido 
 - [x] Probar dev server (`npm run dev` — HTTP 200, Tailwind inyectado).
 - [x] Probar `npm run build` (output SSR ok).
 
-### Fase 2 — Portar UI
-- [ ] Mover `screenshots/` y `logos/` a `public/`.
-- [ ] Crear `Base.astro` con header/footer y carga de fuentes.
-- [ ] Crear `ProjectCard.astro` (imagen + título + empresa + tags, hover con overlay).
-- [ ] Crear `ProjectModal.astro` con focus-trap (portar `modal.js` como script client).
-- [ ] Crear `FilterBar.astro` (chips derivadas de `company` y `production`).
-- [ ] `index.astro`: lee `projects.json`, renderiza grid, wireing de filtros por URL param.
+### Fase 2 — Portar UI ✅
+- [x] Mover `screenshots/` y `logos/` a `public/`.
+- [x] Crear `Base.astro` con skip-link y carga de fuentes.
+- [x] Crear `Header.astro` con contador.
+- [x] Crear `ProjectCard.astro` (imagen + título + empresa + production como tags, hover overlay, placeholder para sin captura).
+- [x] Crear `ProjectModal.astro` con focus-trap y scroll-lock (script inline con data serializada por Astro).
+- [x] Crear `FilterBar.astro` con dos grupos (produção, empresa) derivados del JSON.
+- [x] `index.astro`: SSR de filtros via `Astro.url.searchParams`, grid renderizado server-side.
+- [x] Seed `src/data/projects.json` con las 28 filas del PDF + descripciones existentes.
+- [x] Build + dev OK. Filtros `?company=` y `?production=` funcionando (18 cards para Condor, etc.).
 
 ### Fase 3 — Datos
 - [ ] Crear `src/data/projects.json` con los 15 proyectos actuales de `data.js` como seed.

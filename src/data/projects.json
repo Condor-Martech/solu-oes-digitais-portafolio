@@ -1,0 +1,254 @@
+[
+  {
+    "id": "condor-em-casa",
+    "title": "Condor em Casa",
+    "company": "Condor",
+    "link": "https://www.condoremcasa.com.br/",
+    "production": "Terceiro",
+    "image": "/screenshots/condor_em_casa_full.png",
+    "desc": "Plataforma completa de e-commerce do Supermercado Condor, oferecendo conveniência e agilidade na compra de mantimentos online.\nConstruída para escalar durante picos promocionais e integrada à operação logística das lojas físicas."
+  },
+  {
+    "id": "grupo-zonta",
+    "title": "Grupo Zonta",
+    "company": "Grupo Zonta",
+    "link": "https://grupozonta.com.br/",
+    "production": "Interno",
+    "image": "/screenshots/grupo_zonta_full.png",
+    "desc": "Portal corporativo do Grupo Zonta, apresentando a história, valores e as diversas áreas de atuação do conglomerado."
+  },
+  {
+    "id": "institucional-condor",
+    "title": "Institucional Condor",
+    "company": "Condor",
+    "link": "https://institucional.condor.com.br/",
+    "production": "Interno",
+    "image": "/screenshots/institucional_condor_full.png",
+    "desc": "O novo portal institucional do Condor, com informações sobre a rede, lojas e o compromisso com a satisfação do cliente.\nFoco em performance, acessibilidade e navegação clara entre as unidades de negócio."
+  },
+  {
+    "id": "gigante",
+    "title": "Gigante Atacadista",
+    "company": "Gigante",
+    "link": "https://giganteatacadista.com/",
+    "production": "Interno",
+    "image": "/screenshots/gigante.png",
+    "desc": "Site oficial do Gigante Atacadista, focado em economia e variedade para compras em grandes volumes."
+  },
+  {
+    "id": "hipermais",
+    "title": "Hipermais",
+    "company": "Hipermais",
+    "link": "https://hipermaisatacadoevarejo.com.br/",
+    "production": "Interno",
+    "image": "/screenshots/hipermais_full.png",
+    "desc": "Portal do Hipermais Atacado e Varejo, unindo a praticidade do varejo com a economia do atacado."
+  },
+  {
+    "id": "shopping-estacao-joinville",
+    "title": "Shopping Estação Joinville",
+    "company": "Shopping",
+    "link": "https://shoppingestacaojoinville.com.br/",
+    "production": "Interno",
+    "image": "/screenshots/shopping_estacao_full.png",
+    "desc": "Página oficial do Shopping Estação Joinville, com guia de lojas, serviços e entretenimento."
+  },
+  {
+    "id": "hipermais-joinville-atacado",
+    "title": "Hipermais Joinville Atacado",
+    "company": "Hipermais Atacado",
+    "link": "https://joinvilleatacado.com.br/",
+    "production": "Interno",
+    "image": "",
+    "desc": ""
+  },
+  {
+    "id": "receitas-da-nonna",
+    "title": "Receitas da Nonna",
+    "company": "Receitas da Nonna",
+    "link": "https://receitasdanonna.com.br/",
+    "production": "Interno",
+    "image": "/screenshots/receitas_nonna_full.png",
+    "desc": "Blog exclusivo de receitas e dicas culinárias com o toque tradicional da cozinha italiana.\nEstrutura pensada para SEO e navegação por categorias de pratos e ingredientes."
+  },
+  {
+    "id": "pet",
+    "title": "Pet",
+    "company": "Pet CãoCurso",
+    "link": "https://pet.condor.com.br/",
+    "production": "Interno",
+    "image": "/screenshots/pet_condor_full.png",
+    "desc": "Seção dedicada ao cuidado animal, com produtos e informações para o bem-estar dos seus pets."
+  },
+  {
+    "id": "sabor-do-verao-kellanova",
+    "title": "Sabor do Verão (Kellanova)",
+    "company": "Kellanova",
+    "link": "https://campanha.condor.com.br/sabordoveraokellanova/",
+    "production": "Interno",
+    "image": "/screenshots/sabor_verao.png",
+    "desc": "Campanha promocional de verão em parceria com a Kellanova, repleta de prêmios e ofertas."
+  },
+  {
+    "id": "rumo-ao-paraiso-auto-posto",
+    "title": "Rumo ao Paraíso (Auto Posto)",
+    "company": "Condor AutoPosto",
+    "link": "https://campanha.condor.com.br/rumo-ao-paraiso/",
+    "production": "Interno",
+    "image": "/screenshots/rumo_ao_paraiso_full.png",
+    "desc": "Promoção exclusiva dos AutoPostos Condor para viagens e experiências paradisíacas."
+  },
+  {
+    "id": "sabores-de-inverno",
+    "title": "Sabores de Inverno",
+    "company": "Condor",
+    "link": "https://campanha.condor.com.br/saboresdeinverno/",
+    "production": "Interno",
+    "image": "",
+    "desc": ""
+  },
+  {
+    "id": "ganhadores-semanas-premiada",
+    "title": "Ganhadores Semanas Premiada",
+    "company": "Condor",
+    "link": "https://campanha.condor.com.br/ganhadores-semanas-premiadas/",
+    "production": "Interno",
+    "image": "",
+    "desc": ""
+  },
+  {
+    "id": "dia-das-maes",
+    "title": "Dia das Mães",
+    "company": "Condor",
+    "link": "https://campanha.condor.com.br/dia-das-maes/",
+    "production": "Interno",
+    "image": "",
+    "desc": ""
+  },
+  {
+    "id": "pascoa",
+    "title": "Páscoa",
+    "company": "Condor",
+    "link": "https://campanha.condor.com.br/pascoa/",
+    "production": "Interno",
+    "image": "",
+    "desc": ""
+  },
+  {
+    "id": "passeio-ciclistico",
+    "title": "Passeio Ciclístico",
+    "company": "Condor",
+    "link": "https://campanha.condor.com.br/passeio-ciclistico/",
+    "production": "Interno",
+    "image": "",
+    "desc": ""
+  },
+  {
+    "id": "mes-da-mulher",
+    "title": "Mês da Mulher",
+    "company": "Condor",
+    "link": "https://campanha.condor.com.br/mes-da-mulher-2025/",
+    "production": "Interno",
+    "image": "/screenshots/mes_mulher_full.png",
+    "desc": "Campanha especial celebrando o protagonismo feminino com ofertas exclusivas em março."
+  },
+  {
+    "id": "condor-running",
+    "title": "Condor Running",
+    "company": "Condor",
+    "link": "https://campanha.condor.com.br/condor-running/",
+    "production": "Interno",
+    "image": "",
+    "desc": ""
+  },
+  {
+    "id": "semanas-premiadas",
+    "title": "Semanas Premiadas",
+    "company": "Condor",
+    "link": "https://campanha.condor.com.br/semanaspremiadas/",
+    "production": "Interno",
+    "image": "",
+    "desc": ""
+  },
+  {
+    "id": "campanha-solidaria",
+    "title": "Campanha Solidária",
+    "company": "Condor",
+    "link": "https://campanhasolidariacondor.com.br/",
+    "production": "Interno",
+    "image": "",
+    "desc": ""
+  },
+  {
+    "id": "novas-lojas",
+    "title": "Novas Lojas",
+    "company": "Condor",
+    "link": "https://novaslojas.condor.com.br",
+    "production": "Agência",
+    "image": "",
+    "desc": ""
+  },
+  {
+    "id": "black-friday",
+    "title": "Black Friday",
+    "company": "Condor",
+    "link": "https://blackfriday.condor.com.br",
+    "production": "Agência",
+    "image": "/screenshots/black_friday.png",
+    "desc": "Hotsite da maior campanha de ofertas do ano, com descontos imperdíveis em todos os setores."
+  },
+  {
+    "id": "ganhadores-promocao-semanas-premiadas",
+    "title": "Ganhadores da Promoção Semanas Premiadas",
+    "company": "Condor",
+    "link": "https://ganhadores.condor.com.br/",
+    "production": "Agência",
+    "image": "",
+    "desc": ""
+  },
+  {
+    "id": "clube-condor",
+    "title": "Clube Condor",
+    "company": "Condor",
+    "link": "https://www.clubecondor.com/",
+    "production": "Agência",
+    "image": "",
+    "desc": ""
+  },
+  {
+    "id": "aniversario",
+    "title": "Aniversário",
+    "company": "Condor",
+    "link": "https://aniversario.condor.com.br/",
+    "production": "Agência",
+    "image": "",
+    "desc": ""
+  },
+  {
+    "id": "natal",
+    "title": "Natal",
+    "company": "Condor",
+    "link": "https://natal.condor.com.br/",
+    "production": "Agência",
+    "image": "",
+    "desc": ""
+  },
+  {
+    "id": "volta-as-aulas",
+    "title": "Volta às Aulas",
+    "company": "Condor",
+    "link": "https://volta-as-aulas.condor.com.br/",
+    "production": "Agência",
+    "image": "",
+    "desc": ""
+  },
+  {
+    "id": "carnaval-ourofino",
+    "title": "Carnaval Ourofino",
+    "company": "Ourofino",
+    "link": "https://ourofino.grupozonta.com.br/",
+    "production": "Interno",
+    "image": "",
+    "desc": ""
+  }
+]

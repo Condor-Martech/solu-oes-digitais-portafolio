@@ -1,0 +1,164 @@
+---
+import type { Project } from '../lib/projects';
+import { colorForTag, descParagraphs } from '../lib/projects';
+
+interface Props {
+  projects: Project[];
+}
+
+const { projects } = Astro.props;
+
+const modalData = projects.map((p) => ({
+  id: p.id,
+  title: p.title,
+  company: p.company,
+  production: p.production,
+  link: p.link,
+  image: p.image,
+  descParagraphs: descParagraphs(p.desc),
+  companyColor: colorForTag(p.company),
+  productionColor: colorForTag(p.production),
+}));
+---
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle" hidden>
+  <div class="sheet" role="document">
+    <div class="sheet-top">
+      <span class="sheet-crumb" id="mCrumb">Projeto</span>
+      <button class="close" id="mClose" type="button" aria-label="Fechar detalhes">&#x2715;</button>
+    </div>
+    <div class="sheet-cover"><img id="mImg" alt="" /></div>
+    <div class="sheet-body">
+      <h2 id="mTitle"></h2>
+      <div class="sheet-desc" id="mDesc"></div>
+      <div class="sheet-tags" id="mTags"></div>
+      <a class="visit" id="mLink" href="#" target="_blank" rel="noopener noreferrer">Visitar site</a>
+    </div>
+  </div>
+</div>
+
+<script is:inline define:vars={{ modalData }}>
+  (function () {
+    const data = Object.fromEntries(modalData.map((p) => [p.id, p]));
+    const modal = document.getElementById('modal');
+    if (!modal) return;
+    const sheet = modal.querySelector('.sheet');
+    const mImg = document.getElementById('mImg');
+    const mTitle = document.getElementById('mTitle');
+    const mCrumb = document.getElementById('mCrumb');
+    const mDesc = document.getElementById('mDesc');
+    const mTags = document.getElementById('mTags');
+    const mLink = document.getElementById('mLink');
+    const mClose = document.getElementById('mClose');
+
+    let lastFocus = null;
+    let scrollY = 0;
+
+    function lockScroll() {
+      scrollY = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollY}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.width = '100%';
+    }
+
+    function unlockScroll() {
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.width = '';
+      window.scrollTo(0, scrollY);
+    }
+
+    function escapeHTML(s) {
+      return String(s).replace(/[&<>"']/g, (c) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+      })[c]);
+    }
+
+    function tagHTML(label, color) {
+      const c = color;
+      return `<span class="tag" style="background:${c.bg};color:${c.fg};border-color:${c.fg}24">${escapeHTML(label)}</span>`;
+    }
+
+    function openModal(p) {
+      lastFocus = document.activeElement;
+      if (p.image) {
+        mImg.src = p.image;
+        mImg.alt = `Captura de ${p.title}`;
+        mImg.style.display = '';
+      } else {
+        mImg.removeAttribute('src');
+        mImg.alt = '';
+        mImg.style.display = 'none';
+      }
+      mTitle.textContent = p.title;
+      mCrumb.textContent = p.company || 'Projeto';
+      mDesc.innerHTML = p.descParagraphs.length
+        ? p.descParagraphs.map((para) => `<p>${escapeHTML(para)}</p>`).join('')
+        : '<p style="color:var(--muted)">Sem descrição por enquanto.</p>';
+      mTags.innerHTML = [
+        tagHTML(p.company, p.companyColor),
+        tagHTML(p.production, p.productionColor),
+      ].join('');
+      mLink.href = p.link;
+
+      modal.hidden = false;
+      requestAnimationFrame(() => modal.classList.add('open'));
+      lockScroll();
+      mClose.focus();
+    }
+
+    function closeModal() {
+      modal.classList.remove('open');
+      unlockScroll();
+      setTimeout(() => {
+        modal.hidden = true;
+        if (lastFocus && lastFocus.isConnected) lastFocus.focus();
+      }, 220);
+    }
+
+    const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+    function trapFocus(container, event) {
+      if (event.key !== 'Tab') return;
+      const focusable = [...container.querySelectorAll(FOCUSABLE)].filter(
+        (el) => el.offsetParent !== null || el === document.activeElement
+      );
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+
+    mClose.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (modal.hidden) return;
+      if (e.key === 'Escape') { closeModal(); return; }
+      trapFocus(sheet, e);
+    });
+
+    document.querySelectorAll('[data-open-project]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-open-project');
+        const p = data[id];
+        if (p) openModal(p);
+      });
+    });
+
+    document.querySelectorAll('.cover img[data-fallback]').forEach((img) => {
+      img.addEventListener('error', () => img.classList.add('is-broken'));
+    });
+  })();
+</script>

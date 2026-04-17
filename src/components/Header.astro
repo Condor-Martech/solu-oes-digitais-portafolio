@@ -1,0 +1,19 @@
+---
+interface Props {
+  count: number;
+}
+
+const { count } = Astro.props;
+---
+
+<header class="site-header">
+  <div class="wrap head">
+    <div class="brand">
+      <span class="brand-dot" aria-hidden="true"></span>
+      <b>LP Hub</b> <span class="sep" aria-hidden="true">/</span> Portfólio
+    </div>
+    <div class="count" aria-live="polite" aria-atomic="true">
+      <b>{count}</b> {count === 1 ? 'projeto' : 'projetos'}
+    </div>
+  </div>
+</header>

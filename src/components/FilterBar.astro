@@ -1,0 +1,76 @@
+---
+import type { Project, ActiveFilter } from '../lib/projects';
+import {
+  uniqueCompanies,
+  uniqueProductions,
+  countForCompany,
+  countForProduction,
+} from '../lib/projects';
+
+interface Props {
+  projects: Project[];
+  active: ActiveFilter;
+}
+
+const { projects, active } = Astro.props;
+
+const companies = uniqueCompanies(projects);
+const productions = uniqueProductions(projects);
+
+function hrefFor(group: 'all' | 'company' | 'production', value?: string): string {
+  if (group === 'all') return '/';
+  const params = new URLSearchParams();
+  params.set(group, value ?? '');
+  return `/?${params.toString()}`;
+}
+
+function isActive(group: 'all' | 'company' | 'production', value?: string): boolean {
+  if (group === 'all') return active.group === 'all';
+  return active.group === group && active.value === value;
+}
+---
+
+<div class="filter-row">
+  <div class="wrap">
+    <div class="filter-group">
+      <span class="filter-group-label">Produção</span>
+      <nav class="filters" aria-label="Filtros por produção">
+        <a
+          class="chip"
+          href={hrefFor('all')}
+          aria-pressed={isActive('all') ? 'true' : 'false'}
+        >
+          Tudo
+          <span class="n" aria-hidden="true">{projects.length}</span>
+          <span class="sr-only">{projects.length} projetos</span>
+        </a>
+        {productions.map((p) => (
+          <a
+            class="chip"
+            href={hrefFor('production', p)}
+            aria-pressed={isActive('production', p) ? 'true' : 'false'}
+          >
+            {p}
+            <span class="n" aria-hidden="true">{countForProduction(projects, p)}</span>
+          </a>
+        ))}
+      </nav>
+    </div>
+
+    <div class="filter-group">
+      <span class="filter-group-label">Empresa</span>
+      <nav class="filters" aria-label="Filtros por empresa">
+        {companies.map((c) => (
+          <a
+            class="chip"
+            href={hrefFor('company', c)}
+            aria-pressed={isActive('company', c) ? 'true' : 'false'}
+          >
+            {c}
+            <span class="n" aria-hidden="true">{countForCompany(projects, c)}</span>
+          </a>
+        ))}
+      </nav>
+    </div>
+  </div>
+</div>

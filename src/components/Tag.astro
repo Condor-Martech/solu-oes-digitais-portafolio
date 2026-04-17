@@ -1,0 +1,17 @@
+---
+import { colorForTag } from '../lib/projects';
+
+interface Props {
+  label: string;
+}
+
+const { label } = Astro.props;
+const c = colorForTag(label);
+---
+
+<span
+  class="tag"
+  style={`background:${c.bg};color:${c.fg};border-color:${c.fg}24`}
+>
+  {label}
+</span>

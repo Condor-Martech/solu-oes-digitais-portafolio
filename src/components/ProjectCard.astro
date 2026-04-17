@@ -1,0 +1,59 @@
+---
+import type { Project } from '../lib/projects';
+import { firstParagraph } from '../lib/projects';
+import Tag from './Tag.astro';
+
+interface Props {
+  project: Project;
+  index: number;
+}
+
+const { project, index } = Astro.props;
+const delay = Math.min(index * 55, 420);
+const hasImage = Boolean(project.image);
+---
+
+<article class="card" style={`animation-delay:${delay}ms`} data-project-id={project.id}>
+  <div class="cover">
+    {hasImage && (
+      <img src={project.image} alt="" loading="lazy" data-fallback />
+    )}
+    {!hasImage && (
+      <div class="cover-placeholder">sem captura</div>
+    )}
+    <div class="cover-label" aria-hidden="true"><span>Ver detalhes</span></div>
+  </div>
+
+  <div class="body">
+    <div class="head-row">
+      <h3 class="name">
+        <button
+          class="name-btn"
+          type="button"
+          data-open-project={project.id}
+          aria-label={`Abrir detalhes de ${project.title}`}
+        >
+          {project.title}
+        </button>
+      </h3>
+      <a
+        class="ext"
+        href={project.link}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`Visitar ${project.title} (abre em nova aba)`}
+      >
+        Visitar
+      </a>
+    </div>
+
+    {project.desc && (
+      <p class="snippet">{firstParagraph(project.desc)}</p>
+    )}
+
+    <div class="tags" aria-label="Tags">
+      <Tag label={project.company} />
+      <Tag label={project.production} />
+    </div>
+  </div>
+</article>
