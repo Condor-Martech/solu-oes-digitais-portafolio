@@ -180,17 +180,18 @@ Los tokens actuales de [styles.css](styles.css) se modelan como theme extendido 
 
 ## 9. Checklist de implementación
 
-### Fase 0 — Preparación
-- [ ] Backup del repo actual en branch `archive/pre-astro`.
-- [ ] Actualizar [CLAUDE.md](CLAUDE.md): nuevo stack, comando dev (`npm run dev`), comando build, vars de entorno.
-- [ ] Crear `.env.example` con `SYNC_SECRET`, `AUTH_SECRET`, `ADMIN_USER`, `ADMIN_PASS`.
+### Fase 0 — Preparación ✅
+- [x] Backup del repo actual en branch `archive/pre-astro` (commit `cc37711`).
+- [x] Actualizar [CLAUDE.md](CLAUDE.md): nuevo stack, comando dev (`npm run dev`), comando build, vars de entorno.
+- [x] Crear `.env.example` con `SYNC_SECRET`, `AUTH_SECRET`, `ADMIN_USER`, `ADMIN_PASS`.
 
-### Fase 1 — Scaffold
-- [ ] `npm create astro@latest` (template minimal, TypeScript strict).
-- [ ] Instalar `@astrojs/node`, `tailwindcss`, `@tailwindcss/vite`.
-- [ ] Configurar `astro.config.mjs` con adapter Node (standalone) + vite plugin Tailwind.
-- [ ] Crear `src/styles/globals.css` con `@import "tailwindcss"` y `@theme`.
-- [ ] Probar dev server (`npm run dev`).
+### Fase 1 — Scaffold ✅
+- [x] Scaffold manual (dir no vacío, se evitó `npm create astro`).
+- [x] Instalar `@astrojs/node`, `tailwindcss`, `@tailwindcss/vite`, `astro`.
+- [x] Configurar `astro.config.mjs` con adapter Node (standalone) + vite plugin Tailwind.
+- [x] Crear `src/styles/globals.css` con `@import "tailwindcss"` y `@theme`.
+- [x] Probar dev server (`npm run dev` — HTTP 200, Tailwind inyectado).
+- [x] Probar `npm run build` (output SSR ok).
 
 ### Fase 2 — Portar UI
 - [ ] Mover `screenshots/` y `logos/` a `public/`.

@@ -1,6 +1,8 @@
 # Projeto: LP Hub — Portfólio
 
-Página estática (HTML + CSS + JS puros, sem bundler) que apresenta os projetos do time.
+Aplicação Astro (SSR, adapter Node) com Tailwind v4 que apresenta os projetos do time. O conteúdo é sincronizado a partir de uma Google Sheet via n8n — o Sheet + n8n são o backoffice, não há admin UI própria.
+
+O plano completo da migração está em [task-astro-migration.md](task-astro-migration.md). O snapshot da versão anterior (HTML/CSS/JS puros) vive na branch `archive/pre-astro`.
 
 ## Auto-routing do framework `.agent/`
 
@@ -30,20 +32,25 @@ Para tarefas classificadas como **COMPLEX CODE** ou **DESIGN/UI** (conforme GEMI
 
 ## Stack e convenções deste projeto
 
-- **Sem React, sem Next.js, sem TypeScript, sem Tailwind.** HTML semântico + CSS custom + ES modules nativos.
-- Skills como `react-best-practices`, `tailwind-patterns` e `nextjs-react-expert` **não se aplicam** aqui — ignore-as mesmo quando o frontmatter do agente as liste.
-- Servir com `python3 -m http.server 8765` durante desenvolvimento. Módulos ES exigem HTTP (não `file://`).
-- Imagens em `screenshots/` e `logos/`. Dados em `js/data.js` (array `projects`).
-- Embed via iframe: caminhos relativos — o iframe deve carregar do mesmo host que os assets.
+- **Astro 5 (SSR) + TypeScript + Tailwind v4** via `@tailwindcss/vite`.
+- Adapter `@astrojs/node` em mode `standalone`. Deploy: VPS próprio com PM2 + Nginx.
+- Skills aplicáveis: `tailwind-patterns`, `frontend-ui-engineering`, `api-and-interface-design`. Skills `react-best-practices` e `nextjs-react-expert` **não** se aplicam (Astro ≠ React/Next).
+- Dev: `npm run dev` (porta 4321). Build: `npm run build`. Start: `npm run start`.
+- Dados canônicos: `src/data/projects.json`. Reescrito pelo endpoint `/api/projects` quando n8n dispara (atomic write-then-rename).
+- Assets públicos: `public/screenshots/` e `public/logos/`.
 
 ## Arquivos principais
 
-- `portfolio.html` — estrutura
-- `styles.css` — tokens, componentes, estados, responsive
-- `js/app.js` — entrypoint (render + state + URL sync)
-- `js/data.js` — `projects[]` e `tagPalette[]`
-- `js/utils.js` — helpers puros (escape, hash, tags, focus trap)
-- `js/modal.js` — modal com focus trap e scroll lock
+- `src/pages/index.astro` — grid de projetos com filtros por company/production.
+- `src/pages/login.astro` + `src/pages/api/login.ts` — autenticação por cookie HMAC.
+- `src/pages/api/projects.ts` — endpoint que recebe payloads de n8n (`upsert`, `delete`, `replace_all`). Header `x-sync-token`.
+- `src/middleware.ts` — gate de sessão.
+- `src/layouts/Base.astro` — layout base (fontes, meta).
+- `src/components/ProjectCard.astro`, `ProjectModal.astro`, `FilterBar.astro`, `Header.astro`.
+- `src/lib/storage.ts` — read/write atômico do JSON.
+- `src/lib/projects.ts` — upsert/delete/replaceAll no array em memória.
+- `src/lib/auth.ts` — sign/verify cookie HMAC.
+- `src/styles/globals.css` — `@import "tailwindcss"` + `@theme` com tokens.
 
 ## Regras fixas do produto
 
@@ -51,5 +58,17 @@ Para tarefas classificadas como **COMPLEX CODE** ou **DESIGN/UI** (conforme GEMI
 - Tipografia: DM Sans (textos) + DM Mono (labels, links, contador).
 - Bordas 0.5px, **sem sombras, sem gradientes**.
 - Hover nos cards: escurecer a imagem + label "Ver detalhes" centralizada.
-- Cores das tags: atribuição automática via hash da tag (paleta em `data.js`).
-- Funcionar embedado via iframe — sem dependências externas além do Google Fonts.
+- Cores das tags: atribuição automática via hash (paleta definida em `src/lib/projects.ts`).
+- Filtros derivados automaticamente do JSON (chips de `company` e `production`).
+
+## Contrato Sheet ↔ n8n ↔ Astro
+
+Colunas da Google Sheet: `id | title | company | link | production | image | desc | _marked_delete`.
+
+n8n envia para `POST /api/projects` com header `x-sync-token`:
+
+- `{ op: "upsert", project }` em onEdit de fila.
+- `{ op: "delete", id }` somente após aprovação manual (n8n usa nó _Send and Wait for Response_).
+- `{ op: "replace_all", projects: [...] }` para bootstrap/resync.
+
+Fonte de verdade é a Sheet. Não há backup de `projects.json` — se perder, basta rodar `replace_all` de novo.
