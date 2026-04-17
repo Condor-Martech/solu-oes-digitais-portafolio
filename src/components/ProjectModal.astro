@@ -1,6 +1,6 @@
 ---
 import type { Project } from '../lib/projects';
-import { colorForTag, descParagraphs } from '../lib/projects';
+import { getBrandColor, getBadgeThemeClasses, descParagraphs, getCompanyLogo } from '../lib/projects';
 
 interface Props {
   projects: Project[];
@@ -15,24 +15,34 @@ const modalData = projects.map((p) => ({
   production: p.production,
   link: p.link,
   image: p.image,
+  logo: getCompanyLogo(p.company),
   descParagraphs: descParagraphs(p.desc),
-  companyColor: colorForTag(p.company),
-  productionColor: colorForTag(p.production),
+  companyClass: getBadgeThemeClasses(getBrandColor(p.company)),
+  productionClass: getBadgeThemeClasses(getBrandColor(p.production)),
+  types: (p.type || []).map(t => ({
+    label: t,
+    themeClass: getBadgeThemeClasses(getBrandColor(t))
+  })),
 }));
 ---
 
-<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle" hidden>
-  <div class="sheet" role="document">
-    <div class="sheet-top">
-      <span class="sheet-crumb" id="mCrumb">Projeto</span>
-      <button class="close" id="mClose" type="button" aria-label="Fechar detalhes">&#x2715;</button>
+<div class="group/modal fixed inset-0 bg-ink/30 z-50 flex items-start justify-center p-4 sm:p-10 overflow-y-auto backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-400 [&.open]:opacity-100 [&.open]:pointer-events-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle" hidden>
+  <div class="sheet bg-surface w-full max-w-[720px] rounded-2xl border-[0.5px] border-line overflow-hidden translate-y-8 scale-[0.97] opacity-0 transition-all duration-500 ease-out shadow-2xl m-auto group-[.open]/modal:translate-y-0 group-[.open]/modal:scale-100 group-[.open]/modal:opacity-100" role="document">
+    <div class="flex items-center justify-between px-6 py-4 border-b-[0.5px] border-line bg-surface/50 backdrop-blur-sm">
+      <div class="flex items-center gap-3">
+        <img class="h-6 w-auto object-contain hidden" id="mLogo" alt="" />
+        <span class="font-mono text-[12px] font-medium uppercase tracking-[0.05em] text-muted" id="mCrumb">Projeto</span>
+      </div>
+      <button class="w-8 h-8 flex items-center justify-center rounded-full border-[0.5px] border-line text-muted text-[16px] bg-surface transition-all duration-200 hover:text-ink hover:border-ink hover:bg-ink/5 hover:scale-105 active:scale-95 outline-none focus-visible:border-ink focus-visible:ring-1 focus-visible:ring-ink" id="mClose" type="button" aria-label="Fechar detalhes">&#x2715;</button>
     </div>
-    <div class="sheet-cover"><img id="mImg" alt="" /></div>
-    <div class="sheet-body">
-      <h2 id="mTitle"></h2>
-      <div class="sheet-desc" id="mDesc"></div>
-      <div class="sheet-tags" id="mTags"></div>
-      <a class="visit" id="mLink" href="#" target="_blank" rel="noopener noreferrer">Visitar site</a>
+    <div class="aspect-[16/9] bg-[#ECEBE7] overflow-hidden border-b-[0.5px] border-line">
+      <img class="w-full h-full object-cover object-top" id="mImg" alt="" />
+    </div>
+    <div class="p-6 sm:px-10 sm:pt-8 sm:pb-10 flex flex-col gap-5 sm:gap-6">
+      <h2 class="m-0 text-[26px] sm:text-[32px] font-medium tracking-tight leading-[1.1]" id="mTitle"></h2>
+      <div class="flex flex-col gap-4 text-[16px] leading-[1.6] text-muted [&>p]:m-0 [&>p]:text-muted" id="mDesc"></div>
+      <div class="flex flex-wrap gap-2 mt-2" id="mTags"></div>
+      <a class="inline-flex items-center justify-center h-[42px] px-5 bg-ink text-bg font-mono text-[13px] tracking-widest uppercase rounded-pill transition-all active:scale-[0.98] hover:shadow-lg hover:-translate-y-0.5 outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ink w-max hidden [&.has-href]:inline-flex mt-2" id="mLink" href="#" target="_blank" rel="noopener noreferrer">Visitar site</a>
     </div>
   </div>
 </div>
@@ -44,6 +54,7 @@ const modalData = projects.map((p) => ({
     if (!modal) return;
     const sheet = modal.querySelector('.sheet');
     const mImg = document.getElementById('mImg');
+    const mLogo = document.getElementById('mLogo');
     const mTitle = document.getElementById('mTitle');
     const mCrumb = document.getElementById('mCrumb');
     const mDesc = document.getElementById('mDesc');
@@ -78,9 +89,8 @@ const modalData = projects.map((p) => ({
       })[c]);
     }
 
-    function tagHTML(label, color) {
-      const c = color;
-      return `<span class="tag" style="background:${c.bg};color:${c.fg};border-color:${c.fg}24">${escapeHTML(label)}</span>`;
+    function tagHTML(label, themeClass) {
+      return `<span class="inline-flex items-center px-1.5 py-0.5 rounded-sm text-[10px] sm:text-[11px] font-medium font-mono uppercase tracking-[0.05em] border-[0.5px] border-line border-opacity-10 ${themeClass}">${escapeHTML(label)}</span>`;
     }
 
     function openModal(p) {
@@ -95,15 +105,30 @@ const modalData = projects.map((p) => ({
         mImg.style.display = 'none';
       }
       mTitle.textContent = p.title;
+      if (p.logo) {
+        mLogo.src = p.logo;
+        mLogo.alt = `Logo de ${p.company}`;
+        mLogo.classList.remove('hidden');
+      } else {
+        mLogo.classList.add('hidden');
+        mLogo.removeAttribute('src');
+      }
       mCrumb.textContent = p.company || 'Projeto';
       mDesc.innerHTML = p.descParagraphs.length
         ? p.descParagraphs.map((para) => `<p>${escapeHTML(para)}</p>`).join('')
         : '<p style="color:var(--muted)">Sem descrição por enquanto.</p>';
       mTags.innerHTML = [
-        tagHTML(p.company, p.companyColor),
-        tagHTML(p.production, p.productionColor),
+        tagHTML(p.company, p.companyClass),
+        tagHTML(p.production, p.productionClass),
+        ...(p.types || []).map(t => tagHTML(t.label, t.themeClass)),
       ].join('');
-      mLink.href = p.link;
+      if (p.link) {
+        mLink.href = p.link;
+        mLink.classList.add('has-href');
+      } else {
+        mLink.removeAttribute('href');
+        mLink.classList.remove('has-href');
+      }
 
       modal.hidden = false;
       requestAnimationFrame(() => modal.classList.add('open'));

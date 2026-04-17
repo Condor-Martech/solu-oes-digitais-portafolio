@@ -13,22 +13,24 @@ const delay = Math.min(index * 55, 420);
 const hasImage = Boolean(project.image);
 ---
 
-<article class="card" style={`animation-delay:${delay}ms`} data-project-id={project.id}>
-  <div class="cover">
+<article class="flex flex-col border-[0.5px] border-line rounded-[18px] bg-surface overflow-hidden opacity-0 animate-[rise_0.8s_both] isolate shadow-sm hover:shadow-[var(--shadow-premium)] hover:-translate-y-2 transition-all duration-500 ease-custom group/card" style={`animation-delay:${delay}ms`} data-project-id={project.id}>
+  <div class="relative aspect-[16/9] bg-[#ECEBE7] overflow-hidden group/cover">
     {hasImage && (
-      <img src={project.image} alt="" loading="lazy" data-fallback />
+      <img class="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover/card:scale-[1.03]" src={project.image} alt="" loading="lazy" data-fallback />
     )}
     {!hasImage && (
-      <div class="cover-placeholder">sem captura</div>
+      <div class="absolute inset-0 flex items-center justify-center font-mono text-[13px] text-muted uppercase tracking-widest transition-transform duration-700 group-hover/card:scale-[1.03]">sem captura</div>
     )}
-    <div class="cover-label" aria-hidden="true"><span>Ver detalhes</span></div>
+    <div class="absolute inset-0 flex items-center justify-center bg-ink/10 opacity-0 transition-opacity duration-400 pointer-events-none group-hover/card:opacity-100 group-hover/card:backdrop-blur-[2px]" aria-hidden="true">
+      <span class="bg-surface/95 backdrop-blur-md px-[16px] py-2.5 rounded-pill text-[13px] font-semibold text-ink shadow-lg shadow-ink/10 translate-y-4 group-hover/card:translate-y-0 transition-transform duration-400 ease-out">Ver detalhes</span>
+    </div>
   </div>
 
-  <div class="body">
-    <div class="head-row">
-      <h3 class="name">
+  <div class="p-5 sm:p-6 flex flex-col flex-1 gap-4">
+    <div class="flex items-start justify-between gap-4">
+      <h3 class="m-0 flex-1 min-w-0">
         <button
-          class="name-btn"
+          class="text-left text-[17px] sm:text-[19px] font-medium leading-[1.2] tracking-tight hover:opacity-75 transition-opacity outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 rounded-sm before:content-[''] before:absolute before:inset-0 before:z-10"
           type="button"
           data-open-project={project.id}
           aria-label={`Abrir detalhes de ${project.title}`}
@@ -37,7 +39,7 @@ const hasImage = Boolean(project.image);
         </button>
       </h3>
       <a
-        class="ext"
+        class="shrink-0 inline-flex text-[13px] font-medium text-muted underline underline-offset-4 hover:text-ink transition-colors relative z-20"
         href={project.link}
         target="_blank"
         rel="noopener noreferrer"
@@ -48,12 +50,13 @@ const hasImage = Boolean(project.image);
     </div>
 
     {project.desc && (
-      <p class="snippet">{firstParagraph(project.desc)}</p>
+      <p class="m-0 text-[14px] leading-relaxed text-muted line-clamp-3">{firstParagraph(project.desc)}</p>
     )}
 
-    <div class="tags" aria-label="Tags">
+    <div class="flex flex-wrap gap-2 mt-auto relative z-20" aria-label="Tags">
       <Tag label={project.company} />
       <Tag label={project.production} />
+      {project.type?.map((t) => <Tag label={t} />)}
     </div>
   </div>
 </article>
