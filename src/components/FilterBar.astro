@@ -2,9 +2,9 @@
 import type { Project, ActiveFilter } from '../lib/projects';
 import {
   uniqueCompanies,
-  uniqueProductions,
   countForCompany,
-  countForProduction,
+  getBrandColor,
+  getFilterThemeClasses
 } from '../lib/projects';
 
 interface Props {
@@ -15,7 +15,6 @@ interface Props {
 const { projects, active } = Astro.props;
 
 const companies = uniqueCompanies(projects);
-const productions = uniqueProductions(projects);
 
 function hrefFor(group: 'all' | 'company' | 'production', value?: string): string {
   if (group === 'all') return '/';
@@ -24,53 +23,37 @@ function hrefFor(group: 'all' | 'company' | 'production', value?: string): strin
   return `/?${params.toString()}`;
 }
 
-function isActive(group: 'all' | 'company' | 'production', value?: string): boolean {
+function isActive(group: 'all' | 'company', value?: string): boolean {
   if (group === 'all') return active.group === 'all';
   return active.group === group && active.value === value;
 }
 ---
 
-<div class="filter-row">
-  <div class="wrap">
-    <div class="filter-group">
-      <span class="filter-group-label">Produção</span>
-      <nav class="filters" aria-label="Filtros por produção">
-        <a
-          class="chip"
-          href={hrefFor('all')}
-          aria-pressed={isActive('all') ? 'true' : 'false'}
-        >
-          Tudo
-          <span class="n" aria-hidden="true">{projects.length}</span>
-          <span class="sr-only">{projects.length} projetos</span>
-        </a>
-        {productions.map((p) => (
-          <a
-            class="chip"
-            href={hrefFor('production', p)}
-            aria-pressed={isActive('production', p) ? 'true' : 'false'}
-          >
-            {p}
-            <span class="n" aria-hidden="true">{countForProduction(projects, p)}</span>
-          </a>
-        ))}
-      </nav>
-    </div>
+<div class="border-b-[0.5px] border-line bg-surface/90 backdrop-blur-md sticky top-[60px] sm:top-[64px] z-30">
+  <div class="max-w-7xl mx-auto px-5 sm:px-7 pt-1 pb-4 sm:pb-5 flex flex-wrap items-center gap-2 sm:gap-3">
+    <nav class="flex flex-wrap gap-2 sm:gap-3" aria-label="Filtros por projeto">
+      <a
+        class={`group inline-flex items-center gap-1.5 py-[6px] px-3 sm:py-2 sm:px-4 border rounded-pill text-[11px] sm:text-[13px] font-medium font-mono uppercase tracking-[0.03em] transition-all duration-300 outline-none focus-visible:ring-1 ${getFilterThemeClasses('default')} hover:scale-[1.03] active:scale-95`}
+        href={hrefFor('all')}
+        aria-pressed={isActive('all') ? 'true' : 'false'}
+      >
+        Tudo
+        <span class="opacity-50 text-[10px] sm:text-[11px] group-aria-[pressed=true]:opacity-90" aria-hidden="true">{projects.length}</span>
+      </a>
 
-    <div class="filter-group">
-      <span class="filter-group-label">Empresa</span>
-      <nav class="filters" aria-label="Filtros por empresa">
-        {companies.map((c) => (
+      {companies.map((c) => {
+        const themeClass = getFilterThemeClasses(getBrandColor(c));
+        return (
           <a
-            class="chip"
+            class={`group inline-flex items-center gap-1.5 py-[6px] px-3 sm:py-2 sm:px-4 border rounded-pill text-[11px] sm:text-[13px] font-medium font-mono uppercase tracking-[0.03em] transition-all duration-300 outline-none focus-visible:ring-1 ${themeClass} hover:scale-[1.03] active:scale-95`}
             href={hrefFor('company', c)}
             aria-pressed={isActive('company', c) ? 'true' : 'false'}
           >
             {c}
-            <span class="n" aria-hidden="true">{countForCompany(projects, c)}</span>
+            <span class="opacity-50 text-[10px] sm:text-[11px] group-aria-[pressed=true]:opacity-90" aria-hidden="true">{countForCompany(projects, c)}</span>
           </a>
-        ))}
-      </nav>
-    </div>
+        );
+      })}
+    </nav>
   </div>
 </div>

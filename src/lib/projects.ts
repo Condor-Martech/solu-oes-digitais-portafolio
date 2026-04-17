@@ -1,4 +1,5 @@
-export type Production = 'Interno' | 'Terceiro' | 'Agência';
+export type Production = 'Interno' | 'Externo';
+export type ProjectType = 'Lp' | 'Software' | 'Site';
 
 export interface Project {
   id: string;
@@ -8,6 +9,7 @@ export interface Project {
   production: Production;
   image: string;
   desc: string;
+  type: ProjectType[];
 }
 
 export const tagPalette = [
@@ -68,14 +70,81 @@ export function uniqueCompanies(projects: Project[]): string[] {
   return Array.from(new Set(projects.map((p) => p.company))).sort((a, b) => a.localeCompare(b));
 }
 
-export function uniqueProductions(projects: Project[]): string[] {
-  return Array.from(new Set(projects.map((p) => p.production))).sort((a, b) => a.localeCompare(b));
-}
-
 export function countForCompany(projects: Project[], company: string): number {
   return projects.filter((p) => p.company === company).length;
 }
 
-export function countForProduction(projects: Project[], production: string): number {
-  return projects.filter((p) => p.production === production).length;
+export type ThemeColor = 'blue' | 'amber' | 'red' | 'slate' | 'fuchsia' | 'orange' | 'teal' | 'rose' | 'cyan' | 'green' | 'default';
+
+const brandColorMap: Record<string, ThemeColor> = {
+  "Condor": "blue",
+  "Gigante": "amber",
+  "Hipermais": "red",
+  "Grupo Zonta": "slate",
+  "Shopping": "fuchsia",
+  "Hipermais Atacado": "red",
+  "Receitas da Nonna": "orange",
+  "Pet CãoCurso": "teal",
+  "Kellanova": "rose",
+  "Condor AutoPosto": "cyan",
+  "Ourofino": "green",
+  "Interno": "green",
+  "Externo": "slate",
+  "Lp": "cyan",
+  "Software": "fuchsia",
+  "Site": "blue",
+};
+
+const companyLogoMap: Record<string, string> = {
+  "Condor": "/logos/Logo-Grande.png",
+  "Gigante": "/logos/gigante.png",
+  "Hipermais": "/logos/hipermais.png",
+  "Grupo Zonta": "/logos/zonta.png",
+  "Shopping": "/logos/shopping.png",
+  "Hipermais Atacado": "/logos/hipermais.png",
+  "Receitas da Nonna": "/logos/receitas-nonna.png",
+  "Ourofino": "/logos/ouro-fino-logo-776C6812E5-seeklogo.com.png",
+  "Condor AutoPosto": "/logos/Logo-Grande.png",
+};
+
+export function getCompanyLogo(company: string): string | null {
+  return companyLogoMap[company] || null;
+}
+
+export function getBrandColor(company: string): ThemeColor {
+  return brandColorMap[company] || 'default';
+}
+
+export function getFilterThemeClasses(color: ThemeColor): string {
+  const themes: Record<ThemeColor, string> = {
+    blue: "border-blue-200 text-blue-700 hover:border-blue-300 hover:bg-blue-50/50 focus-visible:border-blue-500 focus-visible:ring-blue-500 aria-[pressed=true]:bg-blue-600 aria-[pressed=true]:border-blue-600 aria-[pressed=true]:text-white",
+    amber: "border-amber-200 text-amber-700 hover:border-amber-300 hover:bg-amber-50/50 focus-visible:border-amber-500 focus-visible:ring-amber-500 aria-[pressed=true]:bg-amber-500 aria-[pressed=true]:border-amber-500 aria-[pressed=true]:text-white",
+    red: "border-red-200 text-red-700 hover:border-red-300 hover:bg-red-50/50 focus-visible:border-red-500 focus-visible:ring-red-500 aria-[pressed=true]:bg-red-600 aria-[pressed=true]:border-red-600 aria-[pressed=true]:text-white",
+    slate: "border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50/50 focus-visible:border-slate-500 focus-visible:ring-slate-500 aria-[pressed=true]:bg-slate-700 aria-[pressed=true]:border-slate-700 aria-[pressed=true]:text-white",
+    fuchsia: "border-fuchsia-200 text-fuchsia-700 hover:border-fuchsia-300 hover:bg-fuchsia-50/50 focus-visible:border-fuchsia-500 focus-visible:ring-fuchsia-500 aria-[pressed=true]:bg-fuchsia-600 aria-[pressed=true]:border-fuchsia-600 aria-[pressed=true]:text-white",
+    orange: "border-orange-200 text-orange-700 hover:border-orange-300 hover:bg-orange-50/50 focus-visible:border-orange-500 focus-visible:ring-orange-500 aria-[pressed=true]:bg-orange-600 aria-[pressed=true]:border-orange-600 aria-[pressed=true]:text-white",
+    teal: "border-teal-200 text-teal-700 hover:border-teal-300 hover:bg-teal-50/50 focus-visible:border-teal-500 focus-visible:ring-teal-500 aria-[pressed=true]:bg-teal-600 aria-[pressed=true]:border-teal-600 aria-[pressed=true]:text-white",
+    rose: "border-rose-200 text-rose-700 hover:border-rose-300 hover:bg-rose-50/50 focus-visible:border-rose-500 focus-visible:ring-rose-500 aria-[pressed=true]:bg-rose-600 aria-[pressed=true]:border-rose-600 aria-[pressed=true]:text-white",
+    cyan: "border-cyan-200 text-cyan-700 hover:border-cyan-300 hover:bg-cyan-50/50 focus-visible:border-cyan-500 focus-visible:ring-cyan-500 aria-[pressed=true]:bg-cyan-600 aria-[pressed=true]:border-cyan-600 aria-[pressed=true]:text-white",
+    green: "border-green-200 text-green-700 hover:border-green-300 hover:bg-green-50/50 focus-visible:border-green-500 focus-visible:ring-green-500 aria-[pressed=true]:bg-green-600 aria-[pressed=true]:border-green-600 aria-[pressed=true]:text-white",
+    default: "border-line text-ink/80 hover:border-line-strong hover:bg-ink/[0.02] focus-visible:border-ink focus-visible:ring-ink aria-[pressed=true]:bg-ink aria-[pressed=true]:border-ink aria-[pressed=true]:text-surface"
+  };
+  return themes[color] || themes.default;
+}
+
+export function getBadgeThemeClasses(color: ThemeColor): string {
+  const themes: Record<ThemeColor, string> = {
+    blue: "bg-blue-50 text-blue-700",
+    amber: "bg-amber-100/60 text-amber-800",
+    red: "bg-red-50 text-red-700",
+    slate: "bg-slate-100 text-slate-700",
+    fuchsia: "bg-fuchsia-50 text-fuchsia-700",
+    orange: "bg-orange-50 text-orange-800",
+    teal: "bg-teal-50 text-teal-800",
+    rose: "bg-rose-50 text-rose-700",
+    cyan: "bg-cyan-50 text-cyan-800",
+    green: "bg-green-50 text-green-800",
+    default: "bg-ink/5 text-ink/80"
+  };
+  return themes[color] || themes.default;
 }
