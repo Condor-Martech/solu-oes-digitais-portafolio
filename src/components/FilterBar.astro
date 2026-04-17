@@ -97,27 +97,29 @@ function isActive(group: 'all' | 'company', value?: string): boolean {
     <div class="flex-1 overflow-y-auto px-6 py-4">
       <div class="flex flex-col border-t border-line">
         <a
-          class={`group flex items-center justify-between py-3.5 border-b border-line text-[12px] font-mono uppercase tracking-wider transition-all ${isActive('all') ? 'text-ink' : 'text-muted hover:text-ink'}`}
+          class={`group flex items-center justify-between py-2.5 px-4 mb-1 border rounded-xl text-[12px] font-mono uppercase tracking-wider transition-all ${getFilterThemeClasses('default')} ${isActive('all') ? 'ring-[1.5px] ring-ink/10 opacity-100' : 'opacity-70 hove:opacity-100'}`}
           href={hrefFor('all')}
         >
           <div class="flex items-center gap-3">
-            <span class={`w-1.5 h-1.5 rounded-full transition-all ${isActive('all') ? 'bg-ink scale-110' : 'bg-transparent'}`}></span>
+            <span class={`w-1.5 h-1.5 rounded-full transition-all ${isActive('all') ? 'bg-ink scale-125' : 'bg-ink/10 group-hover:bg-ink/30'}`}></span>
             <span>Tudo</span>
           </div>
-          <span class="opacity-40 text-[11px]">{projects.length}</span>
+          <span class="opacity-60 text-[11px] font-bold">{projects.length}</span>
         </a>
 
         {companies.map((c) => {
+          const brandColor = getBrandColor(c);
+          const themeClass = getFilterThemeClasses(brandColor);
           return (
             <a
-              class={`group flex items-center justify-between py-3.5 border-b border-line text-[12px] font-mono uppercase tracking-wider transition-all ${isActive('company', c) ? 'text-ink' : 'text-muted hover:text-ink'}`}
+              class={`group flex items-center justify-between py-2.5 px-4 mb-1 border rounded-xl text-[12px] font-mono uppercase tracking-wider transition-all ${themeClass} ${isActive('company', c) ? 'ring-[1.5px] ring-ink/10 opacity-100' : 'opacity-70 hover:opacity-100'}`}
               href={hrefFor('company', c)}
             >
               <div class="flex items-center gap-3">
-                <span class={`w-1.5 h-1.5 rounded-full transition-all ${isActive('company', c) ? 'bg-ink scale-110' : 'bg-transparent'}`}></span>
+                <span class={`w-1.5 h-1.5 rounded-full transition-all ${isActive('company', c) ? 'bg-ink scale-125' : 'bg-ink/10 group-hover:bg-ink/30'}`}></span>
                 <span>{c}</span>
               </div>
-              <span class="opacity-40 text-[11px]">{countForCompany(projects, c)}</span>
+              <span class="opacity-60 text-[11px] font-bold">{countForCompany(projects, c)}</span>
             </a>
           );
         })}
