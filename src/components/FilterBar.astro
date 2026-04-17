@@ -30,30 +30,141 @@ function isActive(group: 'all' | 'company', value?: string): boolean {
 ---
 
 <div class="border-b-[0.5px] border-line bg-surface/90 backdrop-blur-md sticky top-[60px] sm:top-[64px] z-30">
-  <div class="max-w-7xl mx-auto px-5 sm:px-7 pt-1 pb-4 sm:pb-5 flex flex-wrap items-center gap-2 sm:gap-3">
-    <nav class="flex flex-wrap gap-2 sm:gap-3" aria-label="Filtros por projeto">
+  <div class="max-w-7xl mx-auto px-5 sm:px-7 py-2 sm:py-4 flex items-center justify-between sm:justify-start gap-4">
+    
+    <!-- Mobile Filter Summary & Trigger -->
+    <div class="flex sm:hidden items-center justify-between w-full">
+      <div class="flex items-center gap-2">
+        <span class="text-[12px] font-mono uppercase tracking-wider text-muted">Marca:</span>
+        <span class="text-[13px] font-medium text-ink">{active.value === 'Tudo' ? 'Todas' : active.value}</span>
+      </div>
+      <button 
+        id="filterTrigger"
+        class="inline-flex items-center gap-2 py-1.5 px-3 bg-ink text-bg rounded-pill text-[11px] font-mono uppercase tracking-wider transition-all active:scale-95 shadow-lg shadow-ink/10"
+        type="button"
+        aria-label="Ver todas las marcas"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+        Filtros
+      </button>
+    </div>
+
+    <!-- Desktop Filter List -->
+    <nav class="hidden sm:flex flex-wrap gap-2.5 sm:gap-3" aria-label="Filtros por projeto">
       <a
-        class={`group inline-flex items-center gap-1.5 py-[6px] px-3 sm:py-2 sm:px-4 border rounded-pill text-[11px] sm:text-[13px] font-medium font-mono uppercase tracking-[0.03em] transition-all duration-300 outline-none focus-visible:ring-1 ${getFilterThemeClasses('default')} hover:scale-[1.03] active:scale-95`}
+        class={`group inline-flex items-center gap-1.5 py-1.5 px-3.5 sm:py-2 sm:px-4 border rounded-pill text-[11px] sm:text-[13px] font-medium font-mono uppercase tracking-[0.03em] transition-all duration-300 outline-none focus-visible:ring-1 ${getFilterThemeClasses('default')} hover:scale-[1.03] active:scale-95`}
         href={hrefFor('all')}
         aria-pressed={isActive('all') ? 'true' : 'false'}
       >
         Tudo
-        <span class="opacity-50 text-[10px] sm:text-[11px] group-aria-[pressed=true]:opacity-90" aria-hidden="true">{projects.length}</span>
+        <span class="opacity-40 text-[10px] sm:text-[11px] group-aria-[pressed=true]:opacity-80" aria-hidden="true">{projects.length}</span>
       </a>
 
       {companies.map((c) => {
         const themeClass = getFilterThemeClasses(getBrandColor(c));
         return (
           <a
-            class={`group inline-flex items-center gap-1.5 py-[6px] px-3 sm:py-2 sm:px-4 border rounded-pill text-[11px] sm:text-[13px] font-medium font-mono uppercase tracking-[0.03em] transition-all duration-300 outline-none focus-visible:ring-1 ${themeClass} hover:scale-[1.03] active:scale-95`}
+            class={`group inline-flex items-center gap-1.5 py-1.5 px-3.5 sm:py-2 sm:px-4 border rounded-pill text-[11px] sm:text-[13px] font-medium font-mono uppercase tracking-[0.03em] transition-all duration-300 outline-none focus-visible:ring-1 ${themeClass} hover:scale-[1.03] active:scale-95`}
             href={hrefFor('company', c)}
             aria-pressed={isActive('company', c) ? 'true' : 'false'}
           >
             {c}
-            <span class="opacity-50 text-[10px] sm:text-[11px] group-aria-[pressed=true]:opacity-90" aria-hidden="true">{countForCompany(projects, c)}</span>
+            <span class="opacity-40 text-[10px] sm:text-[11px] group-aria-[pressed=true]:opacity-80" aria-hidden="true">{countForCompany(projects, c)}</span>
           </a>
         );
       })}
     </nav>
   </div>
 </div>
+
+<!-- Mobile Filter Drawer -->
+<div 
+  id="filterDrawer" 
+  class="fixed inset-0 z-[60] opacity-0 pointer-events-none transition-all duration-400 group/drawer"
+  hidden
+>
+  <!-- Backdrop -->
+  <div class="absolute inset-0 bg-ink/30 backdrop-blur-sm transition-opacity duration-400 opacity-0 group-[.open]/drawer:opacity-100" id="drawerBackdrop"></div>
+  
+  <!-- Content Panel -->
+  <div class="absolute top-0 right-0 w-[85%] max-w-[340px] h-full bg-surface border-l-[0.5px] border-line flex flex-col translate-x-full transition-transform duration-500 ease-out group-[.open]/drawer:translate-x-0">
+    <div class="flex items-center justify-between p-6 border-b-[0.5px] border-line">
+      <h2 class="text-[17px] font-medium tracking-tight">Filtrar por Marca</h2>
+      <button id="drawerClose" class="w-8 h-8 flex items-center justify-center rounded-full border-[0.5px] border-line text-muted transition-colors hover:text-ink hover:border-ink">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    
+    <div class="flex-1 overflow-y-auto p-6">
+      <div class="flex flex-col gap-3">
+        <a
+          class={`group flex items-center justify-between py-3 px-4 border rounded-xl text-[13px] font-medium font-mono uppercase tracking-wider transition-all ${getFilterThemeClasses('default')} ${isActive('all') ? 'ring-1 ring-ink/20' : ''}`}
+          href={hrefFor('all')}
+        >
+          <span>Tudo</span>
+          <span class="opacity-50 font-mono text-[11px]">{projects.length}</span>
+        </a>
+
+        {companies.map((c) => {
+          const themeClass = getFilterThemeClasses(getBrandColor(c));
+          return (
+            <a
+              class={`group flex items-center justify-between py-3 px-4 border rounded-xl text-[13px] font-medium font-mono uppercase tracking-wider transition-all ${themeClass} ${isActive('company', c) ? 'ring-1 ring-offset-1' : ''}`}
+              href={hrefFor('company', c)}
+            >
+              <span>{c}</span>
+              <span class="opacity-50 font-mono text-[11px]">{countForCompany(projects, c)}</span>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+    
+    <div class="p-6 border-t-[0.5px] border-line bg-bg/50">
+      <p class="text-[12px] text-muted leading-relaxed">
+        Selecione uma marca para filtrar os proyectos no portfólio.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (function() {
+    const trigger = document.getElementById('filterTrigger');
+    const drawer = document.getElementById('filterDrawer');
+    const close = document.getElementById('drawerClose');
+    const backdrop = document.getElementById('drawerBackdrop');
+    
+    if (!trigger || !drawer) return;
+
+    function open() {
+      drawer.hidden = false;
+      document.body.style.overflow = 'hidden';
+      // Use requestAnimationFrame to ensure the 'hidden' removal is processed
+      requestAnimationFrame(() => {
+        drawer.classList.add('open');
+        drawer.style.opacity = '1';
+        drawer.style.pointerEvents = 'auto';
+      });
+    }
+
+    function closeDrawer() {
+      drawer.classList.remove('open');
+      drawer.style.opacity = '0';
+      drawer.style.pointerEvents = 'none';
+      document.body.style.overflow = '';
+      setTimeout(() => {
+        drawer.hidden = true;
+      }, 400);
+    }
+
+    trigger.addEventListener('click', open);
+    close.addEventListener('click', closeDrawer);
+    backdrop.addEventListener('click', closeDrawer);
+
+    // Close on escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !drawer.hidden) closeDrawer();
+    });
+  })();
+</script>
