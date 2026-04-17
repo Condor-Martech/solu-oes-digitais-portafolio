@@ -29,6 +29,16 @@
   }
 }
 
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
 @layer base {
   *, *::before, *::after { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }

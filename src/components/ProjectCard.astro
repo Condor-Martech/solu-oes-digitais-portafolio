@@ -13,7 +13,7 @@ const delay = Math.min(index * 55, 420);
 const hasImage = Boolean(project.image);
 ---
 
-<article class="flex flex-col border-[0.5px] border-line rounded-[18px] bg-surface overflow-hidden opacity-0 animate-[rise_0.8s_both] isolate shadow-sm hover:shadow-[var(--shadow-premium)] hover:-translate-y-2 transition-all duration-500 ease-custom group/card" style={`animation-delay:${delay}ms`} data-project-id={project.id}>
+<article class="snap-center shrink-0 w-[85vw] sm:w-auto flex flex-col border-[0.5px] border-line rounded-[18px] bg-surface overflow-hidden opacity-0 animate-[rise_0.8s_both] isolate shadow-sm hover:shadow-[var(--shadow-premium)] hover:-translate-y-2 transition-all duration-500 ease-custom group/card" style={`animation-delay:${delay}ms`} data-project-id={project.id}>
   <div class="relative aspect-[16/9] bg-[#ECEBE7] overflow-hidden group/cover">
     {hasImage && (
       <img class="w-full h-full object-cover object-top transition-transform duration-700 ease-out group-hover/card:scale-[1.03]" src={project.image} alt="" loading="lazy" data-fallback />
