@@ -5,7 +5,7 @@ import type { Project } from './projects';
 
 const DATA_PATH =
   import.meta.env?.DATA_FILE ??
-  join(dirname(fileURLToPath(import.meta.url)), '../../data/projects.json');
+  join(dirname(fileURLToPath(import.meta.url)), '../../public/data/projects.json');
 
 let mem: Project[] | null = null;
 let queue: Promise<unknown> = Promise.resolve();
