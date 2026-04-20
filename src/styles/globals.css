@@ -1,13 +1,13 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #F7F6F3;
+  --color-bg: #F0F4F8;
   --color-surface: #FFFFFF;
   --color-ink: #0E0E0E;
   --color-ink-2: #3a3a3a;
   --color-muted: #6E6E6E;
-  --color-line: rgba(14, 14, 14, 0.14);
-  --color-line-strong: rgba(14, 14, 14, 0.3);
+  --color-line: rgba(14, 14, 14, 0.1);
+  --color-line-strong: rgba(14, 14, 14, 0.2);
 
   --font-sans: "DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --font-mono: "DM Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -17,7 +17,7 @@
   --radius-sm: 12px;
   --radius-pill: 999px;
 
-  --shadow-premium: 0 20px 40px -10px rgba(0, 0, 0, 0.08), 0 0 1px rgba(0, 0, 0, 0.1);
+  --shadow-premium: 0 12px 30px -10px rgba(0, 0, 0, 0.12), 0 0 1px rgba(0, 0, 0, 0.12);
   --ease-custom: cubic-bezier(.2, .7, .2, 1);
   --ease-in-out-soft: cubic-bezier(.4, 0, .2, 1);
   
@@ -36,6 +36,18 @@
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-ink/10 rounded-full;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-ink/20;
   }
 }
 
