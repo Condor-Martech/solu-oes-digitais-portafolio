@@ -17,8 +17,8 @@
 /dist
 /.astro
 
-# runtime state (the canonical projects.json — seed lives in src/data/)
-/data
+# runtime state (the canonical projects.json — now part of repo for builds)
+# /data (removed to allow builds on CI)
 
 # next.js (legacy)
 /.next/
