@@ -37,7 +37,33 @@ export function colorForTag(tag: string) {
   return tagPalette[hash(tag) % tagPalette.length];
 }
 
-export { loadProjects as getProjects } from './storage';
+import { loadProjects } from './storage';
+
+const PUBLIC_JSON_URL = 'https://minio.cndr.me/lp-content/projects.json';
+
+/**
+ * Obtiene la lista de proyectos.
+ * Intenta cargar desde Minio (URL pública) y cae recursivamente al almacenamiento local si falla.
+ */
+export async function getProjects(): Promise<Project[]> {
+  try {
+    const response = await fetch(PUBLIC_JSON_URL, { 
+      cache: 'no-store',
+      // Timeout opcional podría añadirse aquí si fuera necesario
+    });
+    
+    if (!response.ok) {
+      throw new Error(`Error de red: ${response.status} ${response.statusText}`);
+    }
+    
+    const projects = await response.json();
+    return projects as Project[];
+  } catch (error) {
+    console.error('⚠️ Error al sincronizar proyectos remotos. Usando fallback local:', error);
+    return await loadProjects();
+  }
+}
+
 
 export function firstParagraph(desc: string): string {
   return (desc ?? '').split(/\n+/)[0] ?? '';

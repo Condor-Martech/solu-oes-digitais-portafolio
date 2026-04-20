@@ -7,11 +7,33 @@ const DATA_PATH =
   import.meta.env?.DATA_FILE ??
   join(dirname(fileURLToPath(import.meta.url)), '../../data/projects.json');
 
-let mem: Project[] | null = null; // Forced reload: ${new Date().toISOString()}
+let mem: Project[] | null = null;
 let queue: Promise<unknown> = Promise.resolve();
+
+async function fetchRemote(): Promise<Project[] | null> {
+  const url = import.meta.env.PROJECTS_URL;
+  if (!url) return null;
+  try {
+    const res = await fetch(url, { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.json() as Project[];
+  } catch (err) {
+    console.warn(`[storage] Remote fetch failed:`, err);
+    return null;
+  }
+}
 
 async function ensureLoaded(): Promise<Project[]> {
   if (mem) return mem;
+
+  // 1. Try Remote First (Fetch in Tiempo Real)
+  const remote = await fetchRemote();
+  if (remote) {
+    mem = remote;
+    return mem;
+  }
+
+  // 2. Fallback to Local
   try {
     const raw = await readFile(DATA_PATH, 'utf8');
     mem = JSON.parse(raw) as Project[];
@@ -19,7 +41,7 @@ async function ensureLoaded(): Promise<Project[]> {
     const e = err as NodeJS.ErrnoException;
     if (e.code === 'ENOENT') {
       mem = [];
-      await persist(mem);
+      // persist(mem) ignored here for building phase
     } else {
       throw err;
     }

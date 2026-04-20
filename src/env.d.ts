@@ -3,6 +3,7 @@
 interface ImportMetaEnv {
   readonly AUTH_SECRET: string;
   readonly SYNC_SECRET: string;
+  readonly PROJECTS_URL?: string;
   readonly DATA_FILE?: string;
 }
 

@@ -1,6 +1,12 @@
 # Esquema de Datos (Project Schema)
 
-Este documento detalla la estructura y los tipos de datos utilizados en el archivo `data/projects.json` del LP Hub.
+Este documento detalla la estructura y los tipos de datos utilizados en el LP Hub.
+
+## Fuente de Datos
+A partir de la versión v0.1.0 (Opción C), el sistema utiliza una estrategia de **Fetch en Tiempo Real**:
+1. **Primaria:** Consume el JSON desde una URL externa en Minio.
+2. **Fallback:** En caso de error de red o URL inválida, utiliza el archivo local `data/projects.json`.
+
 
 ## La Interfaz `Project`
 
