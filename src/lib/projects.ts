@@ -1,5 +1,6 @@
-export type Production = 'Interno' | 'Externo';
+export type Production = 'Interno' | 'Externo' | 'Terceiro' | 'Agência';
 export type ProjectType = 'Lp' | 'Software' | 'Site';
+export type ProjectStatus = 'No ar' | 'Fora do ar';
 
 export interface Project {
   id: string;
@@ -7,6 +8,7 @@ export interface Project {
   company: string;
   link: string;
   production: Production;
+  status: ProjectStatus;
   image: string;
   desc: string;
   type: ProjectType[];
@@ -93,6 +95,10 @@ const brandColorMap: Record<string, ThemeColor> = {
   "Lp": "cyan",
   "Software": "fuchsia",
   "Site": "blue",
+  "Terceiro": "orange",
+  "Agência": "rose",
+  "No ar": "green",
+  "Fora do ar": "red",
 };
 
 const companyLogoMap: Record<string, string> = {

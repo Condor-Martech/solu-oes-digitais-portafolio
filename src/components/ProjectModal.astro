@@ -13,12 +13,13 @@ const modalData = projects.map((p) => ({
   title: p.title,
   company: p.company,
   production: p.production,
+  status: p.status,
   link: p.link,
   image: p.image,
-  logo: getCompanyLogo(p.company),
   descParagraphs: descParagraphs(p.desc),
   companyClass: getBadgeThemeClasses(getBrandColor(p.company)),
   productionClass: getBadgeThemeClasses(getBrandColor(p.production)),
+  statusClass: getBadgeThemeClasses(getBrandColor(p.status)),
   types: (p.type || []).map(t => ({
     label: t,
     themeClass: getBadgeThemeClasses(getBrandColor(t))
@@ -26,23 +27,45 @@ const modalData = projects.map((p) => ({
 }));
 ---
 
-<div class="group/modal fixed inset-0 bg-ink/30 z-50 flex items-start justify-center p-4 sm:p-10 overflow-y-auto backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-400 [&.open]:opacity-100 [&.open]:pointer-events-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle" hidden>
-  <div class="sheet bg-surface w-full max-w-[720px] rounded-2xl border-[0.5px] border-line overflow-hidden translate-y-8 scale-[0.97] opacity-0 transition-all duration-500 ease-out shadow-2xl m-auto group-[.open]/modal:translate-y-0 group-[.open]/modal:scale-100 group-[.open]/modal:opacity-100" role="document">
-    <div class="flex items-center justify-between px-6 py-4 border-b-[0.5px] border-line bg-surface/50 backdrop-blur-sm">
-      <div class="flex items-center gap-3">
-        <img class="h-6 w-auto object-contain hidden" id="mLogo" alt="" />
-        <span class="font-mono text-[12px] font-medium uppercase tracking-[0.05em] text-muted" id="mCrumb">Projeto</span>
+<div class="group/modal fixed inset-0 bg-ink/40 z-50 flex items-center justify-center p-0 lg:p-10 overflow-hidden backdrop-blur-xl opacity-0 pointer-events-none transition-all duration-500 ease-in-out [&.open]:opacity-100 [&.open]:pointer-events-auto" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle" hidden>
+  <div class="sheet bg-surface w-full h-full lg:h-auto lg:max-h-[90vh] lg:max-w-[1100px] lg:rounded-2xl border-[0.5px] border-line overflow-hidden translate-y-12 scale-[0.98] opacity-0 transition-all duration-600 ease-custom shadow-2xl flex flex-col lg:flex-row group-[.open]/modal:translate-y-0 group-[.open]/modal:scale-100 group-[.open]/modal:opacity-100" role="document">
+    
+    <!-- Lado Izquierdo: Imagen Cinematográfica -->
+    <div class="w-full h-48 sm:h-64 lg:h-auto lg:w-[58%] relative overflow-hidden bg-[#ECEBE7] border-b-[0.5px] lg:border-b-0 lg:border-r border-line group/gallery">
+      <img class="w-full h-full object-cover object-top transition-transform duration-[1200ms] ease-out group-[.open]/modal:scale-105" id="mImg" alt="" />
+      <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/20 to-transparent pointer-events-none lg:hidden"></div>
+    </div>
+
+    <!-- Lado Derecho: Información con Glassmorphism -->
+    <div class="flex-1 flex flex-col h-full bg-surface/80 backdrop-blur-3xl relative overflow-hidden">
+      <!-- Navbar fija interna -->
+      <div class="flex items-center justify-between px-6 py-4 border-b-[0.5px] border-line/10 bg-white/10 backdrop-blur-md sticky top-0 z-20">
+        <div class="flex items-center gap-3">
+          <span class="font-mono text-[11px] font-medium uppercase tracking-[0.1em] text-muted/80" id="mCrumb">Projeto</span>
+          <span class="w-[1px] h-3 bg-line/20"></span>
+          <div class="flex items-center gap-1.5" id="mStatusWrap">
+            <span class="w-1.5 h-1.5 rounded-full" id="mStatusDot"></span>
+            <span class="font-mono text-[10px] font-bold uppercase tracking-wider text-ink/60" id="mStatusLabel"></span>
+          </div>
+        </div>
+        <button class="w-9 h-9 flex items-center justify-center rounded-full border border-line/20 text-muted transition-all duration-300 hover:text-ink hover:bg-white/40 hover:scale-105 active:scale-95 outline-none focus-visible:ring-2 focus-visible:ring-ink" id="mClose" type="button" aria-label="Fechar detalles">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1L13 13M13 1L1 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
       </div>
-      <button class="w-8 h-8 flex items-center justify-center rounded-full border-[0.5px] border-line text-muted text-[16px] bg-surface transition-all duration-200 hover:text-ink hover:border-ink hover:bg-ink/5 hover:scale-105 active:scale-95 outline-none focus-visible:border-ink focus-visible:ring-1 focus-visible:ring-ink" id="mClose" type="button" aria-label="Fechar detalhes">&#x2715;</button>
-    </div>
-    <div class="aspect-[16/9] bg-[#ECEBE7] overflow-hidden border-b-[0.5px] border-line">
-      <img class="w-full h-full object-cover object-top" id="mImg" alt="" />
-    </div>
-    <div class="p-6 sm:px-10 sm:pt-8 sm:pb-10 flex flex-col gap-5 sm:gap-6">
-      <h2 class="m-0 text-[26px] sm:text-[32px] font-medium tracking-tight leading-[1.1]" id="mTitle"></h2>
-      <div class="flex flex-col gap-4 text-[16px] leading-[1.6] text-muted [&>p]:m-0 [&>p]:text-muted" id="mDesc"></div>
-      <div class="flex flex-wrap gap-2 mt-2" id="mTags"></div>
-      <a class="inline-flex items-center justify-center h-[42px] px-5 bg-ink text-bg font-mono text-[13px] tracking-widest uppercase rounded-pill transition-all active:scale-[0.98] hover:shadow-lg hover:-translate-y-0.5 outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ink w-max hidden [&.has-href]:inline-flex mt-2" id="mLink" href="#" target="_blank" rel="noopener noreferrer">Visitar site</a>
+
+      <!-- Contenido scrolleable -->
+      <div class="flex-1 overflow-y-auto p-6 sm:p-10 lg:pt-8 flex flex-col gap-6 custom-scrollbar">
+        <div class="flex flex-col gap-3">
+          <h2 class="m-0 text-[28px] sm:text-[34px] font-medium tracking-tight leading-[1.1] text-ink" id="mTitle"></h2>
+          <div class="flex flex-wrap gap-2" id="mTags"></div>
+        </div>
+        
+        <div class="flex flex-col gap-5 text-[16px] leading-[1.7] text-ink-2 [&>p]:m-0" id="mDesc"></div>
+
+        <div class="mt-auto pt-4 flex flex-col sm:flex-row items-center gap-4">
+          <a class="inline-flex items-center justify-center h-[46px] px-8 bg-ink text-bg font-mono text-[12px] font-bold tracking-widest uppercase rounded-pill transition-all active:scale-[0.98] hover:shadow-[0_10px_20px_-5px_rgba(0,0,0,0.3)] hover:-translate-y-0.5 outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ink w-full sm:w-max hidden [&.has-href]:inline-flex shadow-premium" id="mLink" href="#" target="_blank" rel="noopener noreferrer">Visitar site</a>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -54,7 +77,6 @@ const modalData = projects.map((p) => ({
     if (!modal) return;
     const sheet = modal.querySelector('.sheet');
     const mImg = document.getElementById('mImg');
-    const mLogo = document.getElementById('mLogo');
     const mTitle = document.getElementById('mTitle');
     const mCrumb = document.getElementById('mCrumb');
     const mDesc = document.getElementById('mDesc');
@@ -105,14 +127,6 @@ const modalData = projects.map((p) => ({
         mImg.style.display = 'none';
       }
       mTitle.textContent = p.title;
-      if (p.logo) {
-        mLogo.src = p.logo;
-        mLogo.alt = `Logo de ${p.company}`;
-        mLogo.classList.remove('hidden');
-      } else {
-        mLogo.classList.add('hidden');
-        mLogo.removeAttribute('src');
-      }
       mCrumb.textContent = p.company || 'Projeto';
       mDesc.innerHTML = p.descParagraphs.length
         ? p.descParagraphs.map((para) => `<p>${escapeHTML(para)}</p>`).join('')
@@ -122,6 +136,13 @@ const modalData = projects.map((p) => ({
         tagHTML(p.production, p.productionClass),
         ...(p.types || []).map(t => tagHTML(t.label, t.themeClass)),
       ].join('');
+
+      // Status in navbar
+      const mStatusDot = document.getElementById('mStatusDot');
+      const mStatusLabel = document.getElementById('mStatusLabel');
+      mStatusLabel.textContent = p.status;
+      mStatusDot.className = `w-1.5 h-1.5 rounded-full ${p.status === 'No ar' ? 'bg-green-500 shadow-[0_0_5px_rgba(34,197,94,0.4)]' : 'bg-red-500'}`;
+
       if (p.link) {
         mLink.href = p.link;
         mLink.classList.add('has-href');
