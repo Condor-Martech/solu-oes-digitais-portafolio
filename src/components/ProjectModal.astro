@@ -1,5 +1,4 @@
----
-import type { Project } from '../lib/projects';
+import { getImage } from 'astro:assets';
 import { getBrandColor, getBadgeThemeClasses, descParagraphs, getCompanyLogo } from '../lib/projects';
 
 interface Props {
@@ -8,24 +7,42 @@ interface Props {
 
 const { projects } = Astro.props;
 
-const modalData = projects.map((p) => ({
-  id: p.id,
-  title: p.title,
-  company: p.company,
-  production: p.production,
-  status: p.status,
-  link: p.link,
-  image: p.image,
-  descParagraphs: descParagraphs(p.desc),
-  companyClass: getBadgeThemeClasses(getBrandColor(p.company)),
-  productionClass: getBadgeThemeClasses(getBrandColor(p.production)),
-  statusClass: getBadgeThemeClasses(getBrandColor(p.status)),
-  types: (p.type || []).map(t => ({
-    label: t,
-    themeClass: getBadgeThemeClasses(getBrandColor(t))
-  })),
+// Pre-optimizar todas las imágenes para usarlas en el script cliente dinámico
+const modalData = await Promise.all(projects.map(async (p) => {
+  let optimizedImg = p.image;
+  
+  if (p.image) {
+    try {
+      const img = await getImage({
+        src: p.image,
+        width: 1200,
+        height: 675, // 16:9 ratio
+        format: 'webp'
+      });
+      optimizedImg = img.src;
+    } catch (e) {
+      console.warn(`[Image Optimization] Failed for ${p.image}:`, e);
+    }
+  }
+
+  return {
+    id: p.id,
+    title: p.title,
+    company: p.company,
+    production: p.production,
+    status: p.status,
+    link: p.link,
+    image: optimizedImg,
+    descParagraphs: descParagraphs(p.desc),
+    companyClass: getBadgeThemeClasses(getBrandColor(p.company)),
+    productionClass: getBadgeThemeClasses(getBrandColor(p.production)),
+    statusClass: getBadgeThemeClasses(getBrandColor(p.status)),
+    types: (p.type || []).map(t => ({
+      label: t,
+      themeClass: getBadgeThemeClasses(getBrandColor(t))
+    })),
+  };
 }));
----
 
 <div class="group/modal fixed inset-0 bg-ink/40 z-50 flex items-center justify-center p-0 lg:p-10 overflow-hidden backdrop-blur-xl opacity-0 pointer-events-none transition-all duration-500 ease-in-out [&.open]:opacity-100 [&.open]:pointer-events-auto" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle" hidden>
   <div class="sheet bg-surface w-full h-full lg:h-auto lg:max-h-[90vh] lg:max-w-[1100px] lg:rounded-2xl border-[0.5px] border-line overflow-hidden translate-y-12 scale-[0.98] opacity-0 transition-all duration-600 ease-custom shadow-2xl flex flex-col lg:flex-row group-[.open]/modal:translate-y-0 group-[.open]/modal:scale-100 group-[.open]/modal:opacity-100" role="document">

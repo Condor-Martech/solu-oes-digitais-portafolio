@@ -7,6 +7,12 @@ export default defineConfig({
   adapter: vercel({
     webAnalytics: { enabled: true }
   }),
+  image: {
+    remotePatterns: [{
+      protocol: 'https',
+      hostname: 's3.cndr.me',
+    }],
+  },
   vite: {
     plugins: [tailwindcss()],
   },

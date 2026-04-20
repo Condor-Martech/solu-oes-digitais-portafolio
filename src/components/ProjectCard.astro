@@ -3,6 +3,8 @@ import type { Project } from '../lib/projects';
 import { firstParagraph } from '../lib/projects';
 import Tag from './Tag.astro';
 
+import { Image } from 'astro:assets';
+
 interface Props {
   project: Project;
   index: number;
@@ -21,13 +23,14 @@ const hasImage = Boolean(project.image);
       <span class="text-[10px] font-bold uppercase tracking-wider text-ink/80">{project.status}</span>
     </div>
 
-    {hasImage && (
-      <img 
+    {hasImage && project.image && (
+      <Image 
+        src={project.image}
+        alt={`Captura de ${project.title}`}
+        width={800}
+        height={450}
         class={`w-full h-full object-cover object-top transition-all duration-700 ease-out group-hover/card:scale-[1.03] ${project.status === 'Fora do ar' ? 'grayscale opacity-80 contrast-75' : ''}`} 
-        src={project.image} 
-        alt="" 
-        loading="lazy" 
-        data-fallback 
+        data-fallback
       />
     )}
     {!hasImage && (
