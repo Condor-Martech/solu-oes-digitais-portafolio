@@ -1,11 +1,11 @@
 import { readFile, writeFile, rename, mkdir } from 'node:fs/promises';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { Project } from './projects';
+import backupProjects from '../data/projects.json';
 
 const DATA_PATH =
   import.meta.env?.DATA_FILE ??
-  join(dirname(fileURLToPath(import.meta.url)), '../../public/data/projects.json');
+  join(dirname(fileURLToPath(import.meta.url)), '../../src/data/projects.json');
 
 let mem: Project[] | null = null;
 let queue: Promise<unknown> = Promise.resolve();
@@ -16,7 +16,7 @@ async function fetchRemote(): Promise<Project[] | null> {
   try {
     const res = await fetch(url, { cache: 'no-store' });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    return await res.json() as Project[];
+    return (await res.json()) as Project[];
   } catch (err) {
     console.warn(`[storage] Remote fetch failed:`, err);
     return null;
@@ -26,25 +26,25 @@ async function fetchRemote(): Promise<Project[] | null> {
 async function ensureLoaded(): Promise<Project[]> {
   if (mem) return mem;
 
-  // 1. Try Remote First (Fetch in Tiempo Real)
+  // 1. Try Remote First (Fetch in Tiempo Real - n8n)
   const remote = await fetchRemote();
   if (remote) {
     mem = remote;
     return mem;
   }
 
-  // 2. Fallback to Local
+  // 2. Fallback to Bundled Data (Reliable on Vercel)
   try {
-    const raw = await readFile(DATA_PATH, 'utf8');
-    mem = JSON.parse(raw) as Project[];
-  } catch (err) {
-    const e = err as NodeJS.ErrnoException;
-    if (e.code === 'ENOENT') {
-      mem = [];
-      // persist(mem) ignored here for building phase
+    // In dev, we still try to read from disk to support local edits
+    if (import.meta.env.DEV) {
+      const raw = await readFile(DATA_PATH, 'utf8');
+      mem = JSON.parse(raw) as Project[];
     } else {
-      throw err;
+      mem = backupProjects as Project[];
     }
+  } catch (err) {
+    // If disk fails or doesn't exist, use the imported backup
+    mem = backupProjects as Project[];
   }
   return mem!;
 }
