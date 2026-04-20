@@ -36,7 +36,7 @@ function isProject(obj: unknown): obj is Project {
 }
 
 export const POST: APIRoute = async ({ request }) => {
-  const expected = process.env.SYNC_SECRET;
+  const expected = import.meta.env.SYNC_SECRET;
   if (!expected) {
     return json({ error: 'SYNC_SECRET not configured' }, 500);
   }

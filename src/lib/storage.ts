@@ -1,12 +1,13 @@
 import { readFile, writeFile, rename, mkdir } from 'node:fs/promises';
 import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import type { Project } from './projects';
-import seed from '../data/projects.json';
 
 const DATA_PATH =
-  process.env.DATA_FILE ?? join(process.cwd(), 'data', 'projects.json');
+  import.meta.env?.DATA_FILE ??
+  join(dirname(fileURLToPath(import.meta.url)), '../../data/projects.json');
 
-let mem: Project[] | null = null;
+let mem: Project[] | null = null; // Forced reload: ${new Date().toISOString()}
 let queue: Promise<unknown> = Promise.resolve();
 
 async function ensureLoaded(): Promise<Project[]> {
@@ -17,7 +18,7 @@ async function ensureLoaded(): Promise<Project[]> {
   } catch (err) {
     const e = err as NodeJS.ErrnoException;
     if (e.code === 'ENOENT') {
-      mem = [...(seed as Project[])];
+      mem = [];
       await persist(mem);
     } else {
       throw err;
