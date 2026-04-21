@@ -79,6 +79,7 @@ El proyecto sigue el patrón **Pure UI**. Los componentes `.astro` son plantilla
 
 ## Documentación
 
+- [📋 Resumen de Producto (PO)](./docs/product-overview.md) — Qué es, cómo funciona, para stakeholders
 - [Esquema de Datos](./docs/data-schema.md) — Interfaces y valores permitidos
 - [ADR-001: Pure UI](./docs/ADR-001-pure-ui.md) — Decisión de arquitectura
 - [CHANGELOG](./CHANGELOG.md) — Historial de versiones
