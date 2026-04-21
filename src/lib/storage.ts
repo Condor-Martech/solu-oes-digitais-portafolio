@@ -1,5 +1,4 @@
 import type { Project } from '../types';
-import localData from '../data/projects.json';
 import https from 'node:https';
 
 let mem: Project[] | null = null;
@@ -42,21 +41,23 @@ async function fetchRemote(): Promise<Project[] | null> {
 }
 
 /**
- * Carrega os projetos. Tenta fetch remoto e usa dados locais se falhar.
+ * Carrega os projetos EXCLUSIVAMENTE do Minio.
+ * Lança erro fatal se falhar.
  */
 export async function loadProjects(): Promise<Project[]> {
   if (mem) return mem;
   
   const remote = await fetchRemote();
   
-  if (remote && remote.length > 0) {
-    console.log(`[storage] ✅ ${remote.length} projetos carregados via Minio.`);
-    mem = remote;
-  } else {
-    console.warn(`[storage] 💡 Usando dados locais (fallback).`);
-    mem = localData as Project[];
+  if (!remote || remote.length === 0) {
+    const msg = !remote 
+      ? "Não foi possível conectar ao Minio." 
+      : "O arquivo no Minio está vazio [ ].";
+    throw new Error(`[storage] CRITICAL: ${msg}`);
   }
 
+  console.log(`[storage] 🚀 Sucesso: ${remote.length} projetos carregados do Minio.`);
+  mem = remote;
   return mem;
 }
 
