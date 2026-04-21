@@ -1,230 +1,81 @@
 ---
-import { getImage } from 'astro:assets';
-import type { Project } from '../lib/projects';
-import { getBrandColor, getBadgeThemeClasses, descParagraphs, getCompanyLogo } from '../lib/projects';
+import BaseModal from './ui/BaseModal.astro';
+import Icon from './ui/Icon.astro';
+import { prepareProjectsForUI } from '../lib/view-models';
+import type { Project } from '../types';
 
 interface Props {
   projects: Project[];
 }
 
 const { projects } = Astro.props;
-
-// Pre-optimizar todas las imágenes para usarlas en el script cliente dinámico
-const modalData = await Promise.all(projects.map(async (p) => {
-  let optimizedImg = p.image;
-  
-  if (p.image) {
-    try {
-      const img = await getImage({
-        src: p.image,
-        width: 1200,
-        height: 675, // 16:9 ratio
-        format: 'webp'
-      });
-      optimizedImg = img.src;
-    } catch (e) {
-      console.warn(`[Image Optimization] Failed for ${p.image}:`, e);
-    }
-  }
-
-  return {
-    id: p.id,
-    title: p.title,
-    company: p.company,
-    production: p.production,
-    status: p.status,
-    link: p.link,
-    image: optimizedImg,
-    descParagraphs: descParagraphs(p.desc),
-    companyClass: getBadgeThemeClasses(getBrandColor(p.company)),
-    productionClass: getBadgeThemeClasses(getBrandColor(p.production)),
-    statusClass: getBadgeThemeClasses(getBrandColor(p.status)),
-    types: (p.type || []).map(t => ({
-      label: t,
-      themeClass: getBadgeThemeClasses(getBrandColor(t))
-    })),
-  };
-}));
+const modalDataList = await prepareProjectsForUI(projects);
 ---
 
-<div class="group/modal fixed inset-0 bg-ink/40 z-50 flex items-center justify-center p-0 lg:p-10 overflow-hidden backdrop-blur-xl opacity-0 pointer-events-none transition-all duration-500 ease-in-out [&.open]:opacity-100 [&.open]:pointer-events-auto" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle" hidden>
-  <div class="sheet bg-surface w-full h-full lg:h-auto lg:max-h-[90vh] lg:max-w-[1100px] lg:rounded-2xl border-[0.5px] border-line overflow-hidden translate-y-12 scale-[0.98] opacity-0 transition-all duration-600 ease-custom shadow-2xl flex flex-col lg:flex-row group-[.open]/modal:translate-y-0 group-[.open]/modal:scale-100 group-[.open]/modal:opacity-100" role="document">
-    
-    <!-- Lado Izquierdo: Imagen Cinematográfica -->
-    <div class="w-full h-48 sm:h-64 lg:h-auto lg:w-[58%] relative overflow-hidden bg-[#ECEBE7] border-b-[0.5px] lg:border-b-0 lg:border-r border-line group/gallery">
-      <img class="w-full h-full object-cover object-top transition-transform duration-[1200ms] ease-out group-[.open]/modal:scale-105" id="mImg" alt="" />
-      <div class="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/20 to-transparent pointer-events-none lg:hidden"></div>
+<BaseModal id="projectModal">
+  <!-- Lado Izquierdo: Imagen -->
+  <div class="w-full h-48 sm:h-64 lg:h-auto lg:w-[58%] relative overflow-hidden bg-line/5 border-b-[0.5px] lg:border-b-0 lg:border-r border-line">
+    <img class="w-full h-full object-cover object-top transition-transform duration-[1200ms] ease-out" id="modalImg" alt="" />
+  </div>
+
+  <!-- Lado Derecho: Info -->
+  <div class="flex-1 flex flex-col h-full bg-surface relative overflow-hidden">
+    <!-- Navbar interna -->
+    <div class="flex items-center justify-between px-6 py-4 border-b-[0.5px] border-line/10 sticky top-0 z-20 bg-surface/80 backdrop-blur-md">
+      <div class="flex items-center gap-3">
+        <span class="font-mono text-[11px] font-medium uppercase tracking-[0.1em] text-muted/80" id="modalCrumb">Projeto</span>
+        <span class="w-[1px] h-3 bg-line/20"></span>
+        <div class="flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full" id="modalStatusDot"></span>
+          <span class="font-mono text-[10px] font-bold uppercase tracking-wider text-ink/60" id="modalStatusLabel"></span>
+        </div>
+      </div>
+      <button 
+        class="w-9 h-9 flex items-center justify-center rounded-full border border-line/20 text-muted hover:text-ink hover:bg-line/5 transition-all outline-none focus-visible:ring-2 focus-visible:ring-ink" 
+        data-modal-close
+        aria-label="Fechar"
+      >
+        <Icon name="close-modal" width="14" height="14" />
+      </button>
     </div>
 
-    <!-- Lado Derecho: Información con Glassmorphism -->
-    <div class="flex-1 flex flex-col h-full bg-surface/80 backdrop-blur-3xl relative overflow-hidden">
-      <!-- Navbar fija interna -->
-      <div class="flex items-center justify-between px-6 py-4 border-b-[0.5px] border-line/10 bg-white/10 backdrop-blur-md sticky top-0 z-20">
-        <div class="flex items-center gap-3">
-          <span class="font-mono text-[11px] font-medium uppercase tracking-[0.1em] text-muted/80" id="mCrumb">Projeto</span>
-          <span class="w-[1px] h-3 bg-line/20"></span>
-          <div class="flex items-center gap-1.5" id="mStatusWrap">
-            <span class="w-1.5 h-1.5 rounded-full" id="mStatusDot"></span>
-            <span class="font-mono text-[10px] font-bold uppercase tracking-wider text-ink/60" id="mStatusLabel"></span>
-          </div>
-        </div>
-        <button class="w-9 h-9 flex items-center justify-center rounded-full border border-line/20 text-muted transition-all duration-300 hover:text-ink hover:bg-white/40 hover:scale-105 active:scale-95 outline-none focus-visible:ring-2 focus-visible:ring-ink" id="mClose" type="button" aria-label="Fechar detalles">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 1L13 13M13 1L1 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-        </button>
+    <!-- Contenido -->
+    <div class="flex-1 overflow-y-auto p-6 sm:p-10 lg:pt-8 flex flex-col gap-6 custom-scrollbar">
+      <div class="flex flex-col gap-3">
+        <h2 class="m-0 text-[28px] sm:text-[34px] font-medium tracking-tight leading-[1.1] text-ink" id="modalTitle"></h2>
+        <div class="flex flex-wrap gap-2" id="modalTags"></div>
       </div>
+      
+      <div class="flex flex-col gap-5 text-[16px] leading-[1.7] text-ink-2" id="modalDesc"></div>
 
-      <!-- Contenido scrolleable -->
-      <div class="flex-1 overflow-y-auto p-6 sm:p-10 lg:pt-8 flex flex-col gap-6 custom-scrollbar">
-        <div class="flex flex-col gap-3">
-          <h2 class="m-0 text-[28px] sm:text-[34px] font-medium tracking-tight leading-[1.1] text-ink" id="mTitle"></h2>
-          <div class="flex flex-wrap gap-2" id="mTags"></div>
-        </div>
-        
-        <div class="flex flex-col gap-5 text-[16px] leading-[1.7] text-ink-2 [&>p]:m-0" id="mDesc"></div>
-
-        <div class="mt-auto pt-4 flex flex-col sm:flex-row items-center gap-4">
-          <a class="inline-flex items-center justify-center h-[46px] px-8 bg-ink text-bg font-mono text-[12px] font-bold tracking-widest uppercase rounded-pill transition-all active:scale-[0.98] hover:shadow-[0_10px_20px_-5px_rgba(0,0,0,0.3)] hover:-translate-y-0.5 outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-ink w-full sm:w-max hidden [&.has-href]:inline-flex shadow-premium" id="mLink" href="#" target="_blank" rel="noopener noreferrer">Visitar site</a>
-        </div>
+      <div class="mt-auto pt-4 flex flex-col sm:flex-row items-center gap-4">
+        <a class="inline-flex items-center justify-center h-[46px] px-8 bg-ink text-bg font-mono text-[12px] font-bold tracking-widest uppercase rounded-pill transition-all hover:shadow-premium hover:-translate-y-0.5 hidden [&.active]:inline-flex w-full sm:w-max" id="modalLink" href="#" target="_blank" rel="noopener noreferrer">Visitar site</a>
       </div>
     </div>
   </div>
-</div>
+</BaseModal>
 
-<script is:inline define:vars={{ modalData }}>
-  (function () {
-    const data = Object.fromEntries(modalData.map((p) => [p.id, p]));
-    const modal = document.getElementById('modal');
-    if (!modal) return;
-    const sheet = modal.querySelector('.sheet');
-    const mImg = document.getElementById('mImg');
-    const mTitle = document.getElementById('mTitle');
-    const mCrumb = document.getElementById('mCrumb');
-    const mDesc = document.getElementById('mDesc');
-    const mTags = document.getElementById('mTags');
-    const mLink = document.getElementById('mLink');
-    const mClose = document.getElementById('mClose');
+<script>
+  import { initProjectModal } from '../scripts/modal';
+  
+  // Recuperamos los datos pasados desde el servidor
+  // Nota: En una app real, esto podría venir de una API, pero para mantener el bundle pequeño
+  // y la velocidad de carga, lo inyectamos una sola vez.
+  const dataEl = document.getElementById('project-modal-data');
+  if (dataEl) {
+    const modalData = JSON.parse(dataEl.textContent || '{}');
+    initProjectModal(modalData);
+  }
+</script>
 
-    let lastFocus = null;
-    let scrollY = 0;
-
-    function lockScroll() {
-      scrollY = window.scrollY;
-      document.body.style.position = 'fixed';
-      document.body.style.top = `-${scrollY}px`;
-      document.body.style.left = '0';
-      document.body.style.right = '0';
-      document.body.style.width = '100%';
-    }
-
-    function unlockScroll() {
-      document.body.style.position = '';
-      document.body.style.top = '';
-      document.body.style.left = '';
-      document.body.style.right = '';
-      document.body.style.width = '';
-      window.scrollTo(0, scrollY);
-    }
-
-    function escapeHTML(s) {
-      return String(s).replace(/[&<>"']/g, (c) => ({
-        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
-      })[c]);
-    }
-
-    function tagHTML(label, themeClass) {
-      return `<span class="inline-flex items-center px-1.5 py-0.5 rounded-sm text-[10px] sm:text-[11px] font-medium font-mono uppercase tracking-[0.05em] border-[0.5px] border-line border-opacity-10 ${themeClass}">${escapeHTML(label)}</span>`;
-    }
-
-    function openModal(p) {
-      lastFocus = document.activeElement;
-      if (p.image) {
-        mImg.src = p.image;
-        mImg.alt = `Captura de ${p.title}`;
-        mImg.style.display = '';
-      } else {
-        mImg.removeAttribute('src');
-        mImg.alt = '';
-        mImg.style.display = 'none';
-      }
-      mTitle.textContent = p.title;
-      mCrumb.textContent = p.company || 'Projeto';
-      mDesc.innerHTML = p.descParagraphs.length
-        ? p.descParagraphs.map((para) => `<p>${escapeHTML(para)}</p>`).join('')
-        : '<p style="color:var(--muted)">Sem descrição por enquanto.</p>';
-      mTags.innerHTML = [
-        tagHTML(p.company, p.companyClass),
-        tagHTML(p.production, p.productionClass),
-        ...(p.types || []).map(t => tagHTML(t.label, t.themeClass)),
-      ].join('');
-
-      // Status in navbar
-      const mStatusDot = document.getElementById('mStatusDot');
-      const mStatusLabel = document.getElementById('mStatusLabel');
-      mStatusLabel.textContent = p.status;
-      mStatusDot.className = `w-1.5 h-1.5 rounded-full ${p.status === 'No ar' ? 'bg-green-500 shadow-[0_0_5px_rgba(34,197,94,0.4)]' : 'bg-red-500'}`;
-
-      if (p.link) {
-        mLink.href = p.link;
-        mLink.classList.add('has-href');
-      } else {
-        mLink.removeAttribute('href');
-        mLink.classList.remove('has-href');
-      }
-
-      modal.hidden = false;
-      requestAnimationFrame(() => modal.classList.add('open'));
-      lockScroll();
-      mClose.focus();
-    }
-
-    function closeModal() {
-      modal.classList.remove('open');
-      unlockScroll();
-      setTimeout(() => {
-        modal.hidden = true;
-        if (lastFocus && lastFocus.isConnected) lastFocus.focus();
-      }, 220);
-    }
-
-    const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
-
-    function trapFocus(container, event) {
-      if (event.key !== 'Tab') return;
-      const focusable = [...container.querySelectorAll(FOCUSABLE)].filter(
-        (el) => el.offsetParent !== null || el === document.activeElement
-      );
-      if (!focusable.length) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    }
-
-    mClose.addEventListener('click', closeModal);
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) closeModal();
-    });
-    document.addEventListener('keydown', (e) => {
-      if (modal.hidden) return;
-      if (e.key === 'Escape') { closeModal(); return; }
-      trapFocus(sheet, e);
-    });
-
-    document.querySelectorAll('[data-open-project]').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const id = btn.getAttribute('data-open-project');
-        const p = data[id];
-        if (p) openModal(p);
-      });
-    });
-
-    document.querySelectorAll('.cover img[data-fallback]').forEach((img) => {
-      img.addEventListener('error', () => img.classList.add('is-broken'));
-    });
+<script is:inline define:vars={{ modalDataList }}>
+  // Inyectamos los datos en un script de solo lectura para el cliente
+  (function() {
+    const data = Object.fromEntries(modalDataList.map(p => [p.id, p]));
+    const script = document.createElement('script');
+    script.type = 'application/json';
+    script.id = 'project-modal-data';
+    script.textContent = JSON.stringify(data);
+    document.body.appendChild(script);
   })();
 </script>

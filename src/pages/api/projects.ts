@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro';
-import type { Project, Production } from '../../lib/projects';
+import type { Project, Production, ProjectStatus, ProjectType } from '../../../src/types';
 import {
   upsertProject,
   removeProject,
@@ -10,8 +10,20 @@ export const prerender = false;
 
 const PRODUCTIONS: ReadonlySet<Production> = new Set([
   'Interno',
+  'Externo',
   'Terceiro',
   'Agência',
+]);
+
+const STATUSES: ReadonlySet<ProjectStatus> = new Set([
+  'No ar',
+  'Fora do ar',
+]);
+
+const TYPES: ReadonlySet<ProjectType> = new Set([
+  'Lp',
+  'Software',
+  'Site',
 ]);
 
 function json(body: unknown, status = 200): Response {
@@ -30,8 +42,10 @@ function isProject(obj: unknown): obj is Project {
     typeof o.company === 'string' &&
     typeof o.link === 'string' &&
     typeof o.production === 'string' && PRODUCTIONS.has(o.production as Production) &&
+    typeof o.status === 'string' && STATUSES.has(o.status as ProjectStatus) &&
     typeof o.image === 'string' &&
-    typeof o.desc === 'string'
+    typeof o.desc === 'string' &&
+    Array.isArray(o.type) && o.type.every(t => typeof t === 'string' && TYPES.has(t as ProjectType))
   );
 }
 
