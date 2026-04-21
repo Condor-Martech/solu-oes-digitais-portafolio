@@ -57,7 +57,7 @@ const year = new Date().getFullYear();
               style="padding-right: calc(18vw + 20px);"
             >
               {visible.map((project, index) => (
-                <div class="snap-center shrink-0 w-[78vw] max-w-[320px]">
+                <div class="snap-center shrink-0 w-[78vw] max-w-[320px] h-full flex flex-col">
                   <ProjectCard project={project} index={index} />
                 </div>
               ))}
