@@ -38,7 +38,22 @@ async function fetchRemote(): Promise<Project[] | null> {
     const cleanedText = rawText.trim().replace(/^=/, '');
     
     try {
-      const data = JSON.parse(cleanedText);
+      let data = JSON.parse(cleanedText);
+      
+      // Si los datos vienen envueltos en { "projects": [...] }
+      if (!Array.isArray(data) && data.projects && Array.isArray(data.projects)) {
+        data = data.projects;
+      } 
+      // Si vienen envueltos en [ { "projects": [...] } ] (común en n8n)
+      else if (Array.isArray(data) && data.length === 1 && data[0].projects) {
+        data = data[0].projects;
+      }
+
+      if (Array.isArray(data) && data.length > 0) {
+        console.log(`[storage] 🚀 Sucesso: ${data.length} projetos extraídos do Minio.`);
+        // console.log('[storage] 🔍 Primeiro projeto real:', JSON.stringify(data[0], null, 2));
+      }
+
       return data as Project[];
     } catch (parseErr) {
       throw new Error(`Erro ao processar JSON: ${parseErr instanceof Error ? parseErr.message : 'Formato inválido'}`);
