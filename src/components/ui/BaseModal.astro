@@ -1,0 +1,118 @@
+---
+interface Props {
+  id: string;
+  className?: string;
+}
+
+const { id, className = "" } = Astro.props;
+---
+
+<lp-modal 
+  id={id} 
+  class:list={[
+    "fixed inset-0 z-50 pointer-events-none group",
+    "hidden [&.open]:block [&.open]:pointer-events-auto",
+    className
+  ]}
+>
+  <!-- Backdrop -->
+  <div class="backdrop absolute inset-0 bg-ink/40 backdrop-blur-xl opacity-0 transition-opacity duration-500 ease-in-out group-[.open]:opacity-100"></div>
+  
+  <!-- Content Wrapper -->
+  <div class="content-wrapper absolute inset-0 flex items-center justify-center p-0 lg:p-10 overflow-hidden">
+    <div 
+      class="sheet bg-surface w-full h-full lg:h-auto lg:max-h-[90vh] lg:max-w-[1100px] lg:rounded-2xl border-[0.5px] border-line shadow-2xl flex flex-col lg:flex-row translate-y-12 scale-[0.98] opacity-0 transition-all duration-600 ease-custom group-[.open]:translate-y-0 group-[.open]:scale-100 group-[.open]:opacity-100"
+      role="dialog" 
+      aria-modal="true"
+    >
+      <slot />
+    </div>
+  </div>
+</lp-modal>
+
+<script>
+  class LPModal extends HTMLElement {
+    private lastFocus: HTMLElement | null = null;
+    private scrollY = 0;
+
+    constructor() {
+      super();
+      const closeBtn = this.querySelector('[data-modal-close]');
+      const backdrop = this.querySelector('.backdrop');
+
+      closeBtn?.addEventListener('click', () => this.close());
+      backdrop?.addEventListener('click', () => this.close());
+      
+      window.addEventListener('keydown', (e) => {
+        if (!this.classList.contains('open')) return;
+        if (e.key === 'Escape') this.close();
+        if (e.key === 'Tab') this.trapFocus(e);
+      });
+    }
+
+    open() {
+      this.lastFocus = document.activeElement as HTMLElement;
+      this.hidden = false;
+      this.lockScroll();
+      
+      // Delay para permitir que el navegador registre el cambio de 'hidden' antes de la animación
+      requestAnimationFrame(() => {
+        this.classList.add('open');
+        const firstFocusable = this.querySelector('button, a, input, [tabindex="0"]') as HTMLElement;
+        firstFocusable?.focus();
+      });
+
+      this.dispatchEvent(new CustomEvent('modal-open'));
+    }
+
+    close() {
+      this.classList.remove('open');
+      this.unlockScroll();
+      
+      setTimeout(() => {
+        this.hidden = true;
+        if (this.lastFocus && this.lastFocus.isConnected) {
+          this.lastFocus.focus();
+        }
+      }, 500);
+
+      this.dispatchEvent(new CustomEvent('modal-close'));
+    }
+
+    private lockScroll() {
+      this.scrollY = window.scrollY;
+      document.body.style.cssText = `
+        position: fixed;
+        top: -${this.scrollY}px;
+        left: 0;
+        right: 0;
+        width: 100%;
+      `;
+    }
+
+    private unlockScroll() {
+      document.body.style.cssText = '';
+      window.scrollTo(0, this.scrollY);
+    }
+
+    private trapFocus(e: KeyboardEvent) {
+      const focusables = this.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), [tabindex="0"]'
+      );
+      if (focusables.length === 0) return;
+
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
+  }
+
+  customElements.define('lp-modal', LPModal);
+</script>
