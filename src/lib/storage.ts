@@ -12,47 +12,51 @@ const httpsAgent = new https.Agent({
 });
 
 async function fetchRemote(): Promise<Project[] | null> {
-  // En Astro 5 (Vercel), import.meta.env es la forma correcta de acceder a env vars
   const url = import.meta.env.PROJECTS_URL;
   
   if (!url || url.includes('tu-minio-url.com')) {
-    console.warn('[storage] PROJECTS_URL no configurada o es de ejemplo. Saltando fetch remoto.');
     return null;
   }
 
   try {
-    console.log(`[storage] 📡 Intentando fetch desde: ${url}`);
+    const isHttps = url.startsWith('https');
     
-    // @ts-ignore - El agente es necesario para Node.js en SSR para saltar SSL inválido
-    const res = await fetch(url, { 
-      cache: 'no-store',
-      // @ts-ignore
-      agent: httpsAgent 
-    });
+    // Configuración de fetch compatible con Node.js SSR
+    const fetchOptions: any = { 
+      cache: 'no-store'
+    };
+
+    if (isHttps) {
+      fetchOptions.agent = httpsAgent;
+    }
+
+    const res = await fetch(url, fetchOptions);
 
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const data = await res.json();
-    if (!Array.isArray(data)) throw new Error('Formato de datos inválido (no es array)');
     return data as Project[];
   } catch (err) {
-    console.error(`[storage] ❌ ERROR CRÍTICO FETCH:`, err);
+    console.error(`[storage] ⚠️ Fetch remoto falhou (Minio):`, err instanceof Error ? err.message : err);
     return null;
   }
 }
 
 /**
- * Carga los proyectos. Intenta fetch remoto y cae a los datos locales bundled si falla.
+ * Carrega os projetos. Tenta fetch remoto e usa dados locais se falhar.
  */
 export async function loadProjects(): Promise<Project[]> {
   if (mem) return mem;
   
   const remote = await fetchRemote();
   
-  if (!remote || remote.length === 0) {
-    throw new Error('[storage] CRITICAL: Fetch remoto falló y el fallback local está desactivado para pruebas.');
+  if (remote && remote.length > 0) {
+    console.log(`[storage] ✅ ${remote.length} projetos carregados via Minio.`);
+    mem = remote;
+  } else {
+    console.warn(`[storage] 💡 Usando dados locais (fallback).`);
+    mem = localData as Project[];
   }
 
-  mem = remote;
   return mem;
 }
 
