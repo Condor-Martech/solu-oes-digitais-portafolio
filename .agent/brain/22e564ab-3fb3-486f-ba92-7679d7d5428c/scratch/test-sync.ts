@@ -1,4 +1,4 @@
-import { getProjects } from './src/lib/projects.ts';
+import { getProjects } from '../../../../src/lib/projects';
 
 async function testFetch() {
   console.log('--- Probando getProjects ---');

@@ -8,9 +8,7 @@ A partir de la versión v0.1.0 (Opción C), el sistema utiliza una estrategia de
 2. **Fallback:** En caso de error de red o URL inválida, utiliza el archivo local `data/projects.json`.
 
 
-## La Interfaz `Project`
-
-Todos los proyectos deben seguir estrictamente esta interfaz definida en TypeScript:
+Todos los proyectos deben seguir estrictamente la interfaz definida en `src/types/index.ts`:
 
 ```typescript
 interface Project {
@@ -45,9 +43,7 @@ Categorización técnica del proyecto.
 - `Software`: Aplicaciones complejas o herramientas interactivas.
 - `Site`: Sitios institucionales o blogs.
 
-## Mapeo de Colores por Marca
-
-El sistema asigna automáticamente un color temático basado en el valor del campo `company`. Esto se define en `src/lib/projects.ts` mediante el `brandColorMap`.
+El sistema asigna automáticamente un color temático basado en el valor del campo `company`. Los temas visuales se centralizan en `src/types/index.ts` y el mapeo en `src/lib/projects.ts`.
 
 - **Condor:** `blue`
 - **Gigante:** `amber`

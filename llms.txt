@@ -1,0 +1,16 @@
+# LP Hub — Architecture & Context
+> Portafolio premium con arquitectura Pure UI y sincronización remota.
+
+## Core Files & Structure
+- [src/types/index.ts]: Contratos de datos (Interfaces y Tipos). Único lugar para definiciones TS.
+- [src/lib/view-models.ts]: Transformación de datos crudos a UI (Imágenes, temas, formatos).
+- [src/lib/ui-helpers.ts]: Cálculos visuales puros (Bento classes, animaciones, URLs).
+- [src/scripts/]: Controladores de cliente (Interactividad DOM).
+- [src/components/]: Componentes representacionales puros. No contienen lógica de negocio.
+- [src/pages/api/]: Endpoints de sincronización y persistencia.
+
+## Key Concepts
+- Pure UI: Los archivos .astro son solo plantillas HTML/Tailwind. La lógica vive en helpers y view-models.
+- Bento Grid: Layout asimétrico dinámico controlado por índices en ui-helpers.
+- S3 Sync: Fuente de verdad remota con persistencia local de respaldo.
+- UI Indicators: Estados visuales (No ar/Fora do ar) pre-calculados en el View Model mediante ThemeColors.
