@@ -1,36 +1,36 @@
 # LP Hub
-> Portafolio interno de sitios y landing pages del equipo. Astro 5 SSR + Vercel + Minio.
+> Portfólio interno de sites e landing pages da equipe. Astro 5 SSR + Vercel + Minio.
 
 ## Propósito
-Visualizar y gestionar el catálogo de proyectos web del equipo. Los datos viven en Minio (S3) y se actualizan automáticamente desde Google Sheets vía n8n.
+Visualizar e gerenciar o catálogo de projetos web da equipe. Os dados vivem no Minio (S3) e são atualizados automaticamente a partir do Google Sheets via n8n.
 
-## Arquitectura (Pure UI)
-- Los componentes `.astro` son plantillas HTML puras. No contienen lógica de negocio.
-- El flujo de datos es: `Minio → storage.ts → view-models.ts → pages/index.astro → componentes`.
+## Arquitetura (Pure UI)
+- Os componentes `.astro` são templates HTML puros. Não contêm lógica de negócio.
+- O fluxo de dados é: `Minio → storage.ts → view-models.ts → pages/index.astro → componentes`.
 
-## Core Files
-- [src/types/index.ts]: Contratos de datos. Único lugar para interfaces TypeScript (`Project`, `UIProject`, `Production`, `ProjectStatus`, `ProjectType`).
-- [src/lib/storage.ts]: Fetch remoto del JSON desde Minio. Sin caché de memoria — datos frescos en cada request SSR.
-- [src/lib/projects.ts]: Lógica de filtrado, paleta de colores por empresa, helpers de texto.
-- [src/lib/view-models.ts]: Transforma `Project[]` → `UIProject[]`: optimización WebP, cálculo de clases de tema, split de párrafos.
-- [src/lib/ui-helpers.ts]: Cálculos CSS puros: delays de animación, generación de hrefs de filtro.
-- [src/scripts/modal.ts]: Controlador DOM del modal de detalle de proyecto.
-- [src/scripts/filter.ts]: Controlador DOM del drawer de filtros mobile.
+## Arquivos Principais
+- [src/types/index.ts]: Contratos de dados. Único lugar para interfaces TypeScript (`Project`, `UIProject`, `Production`, `ProjectStatus`, `ProjectType`).
+- [src/lib/storage.ts]: Fetch remoto do JSON do Minio. Sem cache em memória — dados atualizados a cada requisição SSR.
+- [src/lib/projects.ts]: Lógica de filtros, paleta de cores por empresa, helpers de texto.
+- [src/lib/view-models.ts]: Transforma `Project[]` → `UIProject[]`: otimização WebP, cálculo de classes de tema, divisão de parágrafos.
+- [src/lib/ui-helpers.ts]: Cálculos CSS puros: delays de animação, geração de hrefs de filtro.
+- [src/scripts/modal.ts]: Controlador DOM do modal de detalhe de projeto.
+- [src/scripts/filter.ts]: Controlador DOM do drawer de filtros mobile.
 - [src/components/ui/]: Primitivos: `Badge`, `BaseModal`, `BaseDrawer`, `Icon`.
-- [src/pages/index.astro]: Página principal. Grid desktop + carrusel mobile.
-- [src/pages/api/projects.ts]: Endpoint SSR de upsert/delete de proyectos con validación estricta de tipos.
-- [src/data/projects.json]: Snapshot local. SOLO para desarrollo offline. No se usa en producción.
+- [src/pages/index.astro]: Página principal. Grade desktop + carrossel mobile.
+- [src/pages/api/projects.ts]: Endpoint SSR de upsert/delete de projetos com validação estrita de tipos.
+- [src/data/projects.json]: Snapshot local. APENAS para desenvolvimento offline. Não utilizado em produção.
 
-## Key Concepts
-- **Pure UI:** Los archivos `.astro` reciben `UIProject` (ya procesado). Nunca `Project` crudo (excepto `index.astro` como orquestador).
-- **Datos frescos:** `storage.ts` no usa caché singleton. Cada request SSR en Vercel descarga el JSON de Minio, garantizando que cambios en n8n sean visibles inmediatamente.
-- **Automatización:** Google Sheets actúa como CMS. Al editar una fila, un script llama al webhook de n8n (URL de **Producción**) que hace upsert del proyecto en Minio.
-- **Carrusel mobile:** `< 640px` usa `scroll-snap-type: x mandatory` + Scroll-Driven Animations (CSS nativo, sin JS).
-- **Temas visuales:** El color del badge de empresa se calcula en `projects.ts` basado en `brandColorMap`. Default: `blue`.
+## Conceitos Chave
+- **Pure UI:** Os arquivos `.astro` recebem `UIProject` (já processado). Nunca `Project` bruto (exceto `index.astro` como orquestrador).
+- **Dados atualizados:** `storage.ts` não usa cache singleton. Cada requisição SSR na Vercel baixa o JSON do Minio, garantindo que mudanças no n8n sejam visíveis imediatamente.
+- **Automação:** Google Sheets funciona como CMS. Ao editar uma linha, um script chama o webhook do n8n (URL de **Produção**) que faz upsert do projeto no Minio.
+- **Carrossel mobile:** `< 640px` usa `scroll-snap-type: x mandatory` + Scroll-Driven Animations (CSS nativo, sem JS).
+- **Temas visuais:** A cor do badge de empresa é calculada em `projects.ts` com base no `brandColorMap`. Padrão: `blue`.
 
 ## Stack
 - **Framework:** Astro 5.x (SSR, output: server)
 - **Adapter:** @astrojs/vercel
-- **CSS:** Tailwind CSS v4 con tokens OKLCH
-- **Tipografía:** DM Sans + DM Mono (Google Fonts)
-- **Automatización:** n8n + Minio (S3) + Google Sheets
+- **CSS:** Tailwind CSS v4 com tokens OKLCH
+- **Tipografia:** DM Sans + DM Mono (Google Fonts)
+- **Automação:** n8n + Minio (S3) + Google Sheets

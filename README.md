@@ -1,96 +1,96 @@
 # LP Hub — Portfólio
 
-Portafolio interno de sitios y landing pages del equipo. Aplicación **Astro 5 SSR** deployada en Vercel con datos gestionados remotamente a través de Minio (S3-compatible) y automatización vía n8n.
+Portfólio interno de sites e landing pages da equipe. Aplicação **Astro 5 SSR** hospedada na Vercel com dados gerenciados remotamente através do Minio (compatível com S3) e automação via n8n.
 
 ---
 
-## Quick Start
+## Início Rápido
 
 ```bash
-# 1. Instalar dependencias
+# 1. Instalar dependências
 npm install
 
-# 2. Configurar variables de entorno
+# 2. Configurar variáveis de ambiente
 cp .env.local.example .env.local
-# → Editar .env.local con tus credenciales
+# → Editar .env.local com suas credenciais
 
-# 3. Arrancar servidor de desarrollo
+# 3. Iniciar servidor de desenvolvimento
 npm run dev
 # → http://localhost:4321
 ```
 
-## Variables de Entorno
+## Variáveis de Ambiente
 
-| Variable | Requerida | Descripción | Ejemplo |
+| Variável | Obrigatória | Descrição | Exemplo |
 |---|---|---|---|
-| `PROJECTS_URL` | ✅ | URL pública del JSON de proyectos en Minio | `https://minio.cndr.me/lp-content/projects.json` |
-| `ADMIN_USER` | ✅ | Usuario para acceso al panel | `admin` |
-| `ADMIN_PASS` | ✅ | Contraseña de acceso | —  |
-| `AUTH_SECRET` | ✅ | Clave HMAC para sesión HTTP | Generar: `openssl rand -hex 32` |
-| `SYNC_SECRET` | ✅ | Token enviado en `x-sync-token` por n8n | — |
+| `PROJECTS_URL` | ✅ | URL pública do JSON de projetos no Minio | `https://minio.cndr.me/lp-content/projects.json` |
+| `ADMIN_USER` | ✅ | Usuário para acesso ao painel | `admin` |
+| `ADMIN_PASS` | ✅ | Senha de acesso | —  |
+| `AUTH_SECRET` | ✅ | Chave HMAC para sessão HTTP | Gerar: `openssl rand -hex 32` |
+| `SYNC_SECRET` | ✅ | Token enviado em `x-sync-token` pelo n8n | — |
 
-> **Nota:** Sin `PROJECTS_URL` configurada, el servidor lanzará un error crítico al iniciar. No hay fallback en producción.
+> **Nota:** Sem `PROJECTS_URL` configurada, o servidor lançará um erro crítico ao iniciar. Não há fallback em produção.
 
-## Flujo de Datos
+## Fluxo de Dados
 
 ```
-Google Sheets → n8n Webhook → MinIO (S3) → Vercel SSR → Usuario
+Google Sheets → n8n Webhook → MinIO (S3) → Vercel SSR → Usuário
 ```
 
-1. **Google Sheets** actúa como CMS. Un script de Apps Script llama al Webhook de n8n al editar.
-2. **n8n** ejecuta el upsert del proyecto en el JSON y lo sube al bucket `lp-content/projects.json` en Minio.
-3. **Vercel (SSR)** descarga el JSON en cada request sin cache de memoria, siempre mostrando datos frescos.
+1. **Google Sheets** funciona como CMS. Um script do Apps Script chama o Webhook do n8n ao editar.
+2. **n8n** executa o upsert do projeto no JSON e faz upload para o bucket `lp-content/projects.json` no Minio.
+3. **Vercel (SSR)** baixa o JSON a cada requisição sem cache em memória, sempre exibindo dados atualizados.
 
 ## Comandos
 
 ```bash
-npm run dev       # Servidor de desarrollo con HMR
-npm run build     # Build de producción (Vercel lo ejecuta automáticamente)
-npx astro check   # Verificación de tipos TypeScript
+npm run dev       # Servidor de desenvolvimento com HMR
+npm run build     # Build de produção (executado automaticamente pela Vercel)
+npx astro check   # Verificação de tipos TypeScript
 ```
 
-## Estructura del Proyecto
+## Estrutura do Projeto
 
 ```
 src/
-├── types/index.ts        # 📐 Contratos de datos (interfaces TS)
+├── types/index.ts        # 📐 Contratos de dados (interfaces TS)
 ├── lib/
-│   ├── storage.ts        # 🗄️  Fetch remoto del JSON (Minio) — sin cache
-│   ├── projects.ts       # 🔧 Lógica de filtrado, paleta de colores
-│   ├── view-models.ts    # 🎨 Transformación de datos → UI (WebP, temas)
-│   └── ui-helpers.ts     # 💅 Clases CSS, delays de animación
+│   ├── storage.ts        # 🗄️  Fetch remoto do JSON (Minio) — sem cache
+│   ├── projects.ts       # 🔧 Lógica de filtros, paleta de cores
+│   ├── view-models.ts    # 🎨 Transformação de dados → UI (WebP, temas)
+│   └── ui-helpers.ts     # 💅 Classes CSS, delays de animação
 ├── components/
 │   ├── ui/               # Componentes primitivos (Badge, Modal, Drawer, Icon)
 │   ├── ProjectCard.astro # Card representacional pura
-│   ├── ProjectModal.astro# Modal con datos del proyecto
-│   └── FilterBar.astro   # Barra de filtros (desktop + mobile drawer)
+│   ├── ProjectModal.astro# Modal com dados do projeto
+│   └── FilterBar.astro   # Barra de filtros (desktop + drawer mobile)
 ├── scripts/
-│   ├── modal.ts          # Controlador del modal (DOM)
-│   └── filter.ts         # Controlador del drawer de filtros (DOM)
+│   ├── modal.ts          # Controlador do modal (DOM)
+│   └── filter.ts         # Controlador do drawer de filtros (DOM)
 ├── pages/
 │   ├── index.astro       # Página principal
-│   └── api/projects.ts   # Endpoint SSR para sincronización
-└── data/projects.json    # ⚠️  Sólo para desarrollo local offline
+│   └── api/projects.ts   # Endpoint SSR para sincronização
+└── data/projects.json    # ⚠️  Apenas para desenvolvimento local offline
 ```
 
-## Arquitectura
+## Arquitetura
 
-El proyecto sigue el patrón **Pure UI**. Los componentes `.astro` son plantillas HTML puras sin lógica de negocio. Ver [ADR-001](./docs/ADR-001-pure-ui.md) para el detalle de la decisión.
+O projeto segue o padrão **Pure UI**. Os componentes `.astro` são templates HTML puros sem lógica de negócio. Ver [ADR-001](./docs/ADR-001-pure-ui.md) para o detalhe da decisão.
 
-## Documentación
+## Documentação
 
-- [📋 Resumen de Producto (PO)](./docs/product-overview.md) — Qué es, cómo funciona, para stakeholders
-- [Esquema de Datos](./docs/data-schema.md) — Interfaces y valores permitidos
-- [ADR-001: Pure UI](./docs/ADR-001-pure-ui.md) — Decisión de arquitectura
-- [CHANGELOG](./CHANGELOG.md) — Historial de versiones
+- [📋 Resumo do Produto (PO)](./docs/product-overview.md) — O que é, como funciona, para stakeholders
+- [Esquema de Dados](./docs/data-schema.md) — Interfaces e valores permitidos
+- [ADR-001: Pure UI](./docs/ADR-001-pure-ui.md) — Decisão de arquitetura
+- [CHANGELOG](./CHANGELOG.md) — Histórico de versões
 
-## Contributing
+## Contribuindo
 
-1. Todos los tipos van en `src/types/index.ts`.
-2. La lógica de transformación va en `src/lib/view-models.ts`.
-3. Los componentes `.astro` solo reciben `UIProject` — nunca `Project` crudo (excepto `index.astro` y `FilterBar`).
-4. Ejecuta `npx astro check` antes de cualquier PR.
+1. Todos os tipos vão em `src/types/index.ts`.
+2. A lógica de transformação vai em `src/lib/view-models.ts`.
+3. Os componentes `.astro` só recebem `UIProject` — nunca `Project` bruto (exceto `index.astro` e `FilterBar`).
+4. Execute `npx astro check` antes de qualquer PR.
 
-## License
+## Licença
 
 MIT © LP Hub Team

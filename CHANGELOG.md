@@ -1,48 +1,49 @@
 # Changelog
 
-Todos los cambios notables de este proyecto. Formato: [Keep a Changelog](https://keepachangelog.com/es/1.0.0/).
+Todas as mudanças notáveis deste projeto. Formato: [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/).
 
 ---
 
 ## [0.2.0] — 2026-04-21
 
-### Added
-- **Carrusel mobile:** En pantallas < 640px los proyectos se muestran en carrusel horizontal con Scroll Snap y Scroll-Driven Animations (scale + blur al deslizar).
-- **`src/components/ui/`:** Librería de primitivos reutilizables: `Badge`, `BaseModal`, `BaseDrawer`, `Icon`.
-- **`src/types/index.ts`:** Centralización de todos los tipos e interfaces TypeScript.
-- **`src/lib/view-models.ts`:** Capa de transformación `Project → UIProject` con optimización WebP y cálculo de temas.
-- **`src/lib/storage.ts`:** Módulo dedicado de fetch remoto sin caché de memoria (datos frescos en cada request SSR).
-- **`src/scripts/modal.ts` y `filter.ts`:** Controladores DOM extraídos de los componentes Astro.
-- **`src/data/projects.json`:** Snapshot local para desarrollo offline.
-- **`llms.txt`:** Mapa de arquitectura para agentes de IA.
-- **`docs/ADR-001-pure-ui.md`:** Registro de decisión de arquitectura Pure UI.
-- **`CHANGELOG.md`:** Este archivo.
+### Adicionado
+- **Carrossel mobile:** Em telas < 640px os projetos são exibidos em carrossel horizontal com Scroll Snap e Scroll-Driven Animations (escala + blur ao deslizar).
+- **`src/components/ui/`:** Biblioteca de primitivos reutilizáveis: `Badge`, `BaseModal`, `BaseDrawer`, `Icon`.
+- **`src/types/index.ts`:** Centralização de todos os tipos e interfaces TypeScript.
+- **`src/lib/view-models.ts`:** Camada de transformação `Project → UIProject` com otimização WebP e cálculo de temas.
+- **`src/lib/storage.ts`:** Módulo dedicado de fetch remoto sem cache em memória (dados atualizados a cada requisição SSR).
+- **`src/scripts/modal.ts` e `filter.ts`:** Controladores DOM extraídos dos componentes Astro.
+- **`src/data/projects.json`:** Snapshot local para desenvolvimento offline.
+- **`llms.txt`:** Mapa de arquitetura para agentes de IA.
+- **`docs/ADR-001-pure-ui.md`:** Registro de decisão de arquitetura Pure UI.
+- **`docs/product-overview.md`:** Resumo do produto para PO e stakeholders não técnicos.
+- **`CHANGELOG.md`:** Este arquivo.
 
-### Changed
-- **Arquitectura Pure UI:** Desacoplamiento total de lógica en `FilterBar.astro`, `ProjectCard.astro` y `ProjectModal.astro`. Los componentes son ahora plantillas HTML puras.
-- **`storage.ts`:** Eliminado el cache singleton (`mem`) que impedía ver cambios en producción en Lambdas calientes de Vercel.
-- **`globals.css`:** Migración de colores a OKLCH (Tailwind v4), nuevos tokens de radio y sombra.
-- **`BaseModal.astro`:** Añadido `overflow-hidden` para que la imagen respete los bordes redondeados.
-- **`ProjectCard.astro`:** Footer con `line-clamp-2` para altura consistente entre cards, padding reducido.
-- **`FilterBar.astro`:** Drawer mobile con `BaseDrawer` en lugar de modal inline.
-- **n8n Webhook:** Migración de URL de Test a URL de Producción para activación autónoma.
+### Alterado
+- **Arquitetura Pure UI:** Desacoplamento total de lógica em `FilterBar.astro`, `ProjectCard.astro` e `ProjectModal.astro`. Os componentes são agora templates HTML puros.
+- **`storage.ts`:** Eliminado o cache singleton (`mem`) que impedia ver mudanças em produção em Lambdas quentes da Vercel.
+- **`globals.css`:** Migração de cores para OKLCH (Tailwind v4), novos tokens de raio e sombra.
+- **`BaseModal.astro`:** Adicionado `overflow-hidden` para que a imagem respeite as bordas arredondadas.
+- **`ProjectCard.astro`:** Footer com `line-clamp-2` para altura consistente entre cards, padding reduzido.
+- **`FilterBar.astro`:** Drawer mobile com `BaseDrawer` em vez de modal inline.
+- **n8n Webhook:** Migração de URL de Teste para URL de Produção para ativação autônoma.
 
-### Fixed
-- **Modal:** Imagen con esquinas rectas que sobresalían del border-radius del contenedor.
-- **Carrusel:** Conflicto entre `flex` y `grid` en breakpoint `sm:` (640px) que rompía el layout en tablets.
-- **API `/api/projects`:** Faltaba `Externo` en el set de valores permitidos para `production`.
-- **API `/api/projects`:** Sin validación para `status` y `type`, permitiendo datos inválidos.
-- **Responsividad:** Sin `body { overflow-x: hidden }`, el carrusel causaba scroll horizontal en la página.
-- **n8n → Vercel:** Datos no se actualizaban en producción por el cache en memoria de `storage.ts`.
+### Corrigido
+- **Modal:** Imagem com cantos retos que ultrapassavam o border-radius do container.
+- **Carrossel:** Conflito entre `flex` e `grid` no breakpoint `sm:` (640px) que quebrava o layout em tablets.
+- **API `/api/projects`:** Faltava `Externo` no conjunto de valores permitidos para `production`.
+- **API `/api/projects`:** Sem validação para `status` e `type`, permitindo dados inválidos.
+- **Responsividade:** Sem `body { overflow-x: hidden }`, o carrossel causava scroll horizontal na página.
+- **n8n → Vercel:** Dados não eram atualizados em produção por causa do cache em memória do `storage.ts`.
 
 ---
 
 ## [0.1.0] — 2026-04-15
 
-### Added
-- Release inicial del portfolio con cuadrícula de proyectos.
-- Sincronización remota vía Minio (S3-compatible).
-- Modal de detalle de proyecto con diseño split-screen.
-- Filtro por empresa (desktop chips + mobile drawer).
-- Deploy en Vercel con adaptador SSR `@astrojs/vercel`.
-- Autenticación básica HTTP para panel de gestión.
+### Adicionado
+- Release inicial do portfólio com grade de projetos.
+- Sincronização remota via Minio (compatível com S3).
+- Modal de detalhe de projeto com design split-screen.
+- Filtro por empresa (desktop chips + drawer mobile).
+- Deploy na Vercel com adaptador SSR `@astrojs/vercel`.
+- Autenticação básica HTTP para painel de gestão.

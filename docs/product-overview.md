@@ -1,133 +1,133 @@
-# LP Hub — Resumen de Producto
+# LP Hub — Resumo do Produto
 
-> **Para:** Product Owner, Stakeholders, Equipo No Técnico  
-> **Versión:** 2.0 — Abril 2026
-
----
-
-## ¿Qué es LP Hub?
-
-LP Hub es el **portafolio digital interno del equipo**. Es una página web privada que centraliza y exhibe todos los sitios web y landing pages que el equipo ha producido.
-
-Sirve como:
-- **Vitrina interna** para ver de un vistazo todos los proyectos del equipo.
-- **Herramienta de consulta** para saber qué está "en el aire" y qué está fuera.
-- **Referencia visual** con capturas de pantalla y links directos a cada proyecto.
+> **Para:** Product Owner, Stakeholders, Equipe Não Técnica  
+> **Versão:** 2.0 — Abril 2026
 
 ---
 
-## ¿Cómo se ve?
+## O que é o LP Hub?
 
-La pantalla principal muestra las tarjetas de los proyectos en una cuadrícula. Cada tarjeta tiene:
+O LP Hub é o **portfólio digital interno da equipe**. É uma página web privada que centraliza e exibe todos os sites e landing pages que a equipe produziu.
 
-- 📸 **Captura del proyecto**
-- 🏷️ **Nombre y empresa cliente**
-- 🟢 / 🔴 **Indicador de estado** (En el aire / Fuera del aire)
-- 🔖 **Badges de tipo** (LP, Software, Site) y producción (Interno, Externo...)
-
-Al hacer clic en una tarjeta se abre un **panel de detalle** con descripción completa y link directo al proyecto.
-
-En **celulares**, los proyectos se presentan en un **carrusel horizontal** deslizable.
-
-Los proyectos se pueden **filtrar por empresa** (Condor, Gigante, Hipermais, etc.) usando la barra de filtros.
+Serve como:
+- **Vitrine interna** para ver de uma vez todos os projetos da equipe.
+- **Ferramenta de consulta** para saber o que está "no ar" e o que está fora.
+- **Referência visual** com capturas de tela e links diretos para cada projeto.
 
 ---
 
-## ¿Cómo se actualiza?
+## Como ele aparece?
 
-> **El equipo técnico NO necesita publicar una nueva versión del sitio para agregar o editar un proyecto.**
+A tela principal exibe os cards dos projetos em uma grade. Cada card tem:
 
-El flujo es completamente automático:
+- 📸 **Captura do projeto**
+- 🏷️ **Nome e empresa cliente**
+- 🟢 / 🔴 **Indicador de estado** (No ar / Fora do ar)
+- 🔖 **Badges de tipo** (LP, Software, Site) e produção (Interno, Externo...)
+
+Ao clicar em um card abre-se um **painel de detalhe** com descrição completa e link direto para o projeto.
+
+Em **celulares**, os projetos são apresentados em um **carrossel horizontal** deslizável.
+
+Os projetos podem ser **filtrados por empresa** (Condor, Gigante, Hipermais, etc.) usando a barra de filtros.
+
+---
+
+## Como é atualizado?
+
+> **A equipe técnica NÃO precisa publicar uma nova versão do site para adicionar ou editar um projeto.**
+
+O fluxo é completamente automático:
 
 ```
-1. Alguien edita o agrega un proyecto en Google Sheets
+1. Alguém edita ou adiciona um projeto no Google Sheets
            ↓
-2. Hace clic en el botón "Sincronizar" de la planilla
+2. Clica no botão "Sincronizar" da planilha
            ↓
-3. n8n (el automatizador) recibe el cambio
+3. n8n (o automatizador) recebe a mudança
            ↓
-4. n8n guarda el proyecto actualizado en el servidor de archivos (Minio)
+4. n8n salva o projeto atualizado no servidor de arquivos (Minio)
            ↓
-5. El sitio web muestra el cambio de forma inmediata (sin redeploy)
+5. O site exibe a mudança de forma imediata (sem redeploy)
 ```
 
-**No hace falta tocar código. La planilla de Google Sheets actúa como el CMS.**
+**Não é preciso mexer em código. A planilha do Google Sheets funciona como CMS.**
 
 ---
 
-## ¿Qué información tiene cada proyecto?
+## Quais informações tem cada projeto?
 
-| Campo | Qué es | Ejemplo |
+| Campo | O que é | Exemplo |
 |---|---|---|
-| **Nombre** | Título visible del proyecto | "Mês da Mulher" |
-| **Empresa** | Cliente o marca | "Condor" |
-| **Link** | URL del sitio en producción | https://campanha.condor... |
-| **Tipo** | Categoría del proyecto | LP, Site, Software |
-| **Producción** | Quién lo desarrolló | Interno, Externo, Terceiro |
-| **Estado** | Si el sitio sigue activo | No ar / Fora do ar |
-| **Descripción** | Texto libre sobre el proyecto | "Campaña de Día de la Mujer..." |
-| **Imagen** | Captura de pantalla del sitio | (ruta al archivo) |
+| **Nome** | Título visível do projeto | "Mês da Mulher" |
+| **Empresa** | Cliente ou marca | "Condor" |
+| **Link** | URL do site em produção | https://campanha.condor... |
+| **Tipo** | Categoria do projeto | LP, Site, Software |
+| **Produção** | Quem desenvolveu | Interno, Externo, Terceiro |
+| **Estado** | Se o site ainda está ativo | No ar / Fora do ar |
+| **Descrição** | Texto livre sobre o projeto | "Campanha do Dia da Mulher..." |
+| **Imagem** | Captura de tela do site | (caminho do arquivo) |
 
 ---
 
-## ¿Dónde está alojado?
+## Onde está hospedado?
 
-| Componente | Plataforma | Rol |
+| Componente | Plataforma | Função |
 |---|---|---|
-| **Sitio web** | Vercel | Hosting del portafolio. Disponible 24/7. |
-| **Datos** | Minio (servidor interno) | Almacena el listado de proyectos en formato JSON. |
-| **Automatización** | n8n (servidor interno) | Recibe cambios y actualiza Minio. |
-| **Fuente de edición** | Google Sheets | CMS del equipo (donde se editan los proyectos). |
+| **Site** | Vercel | Hospedagem do portfólio. Disponível 24/7. |
+| **Dados** | Minio (servidor interno) | Armazena a lista de projetos em formato JSON. |
+| **Automação** | n8n (servidor interno) | Recebe mudanças e atualiza o Minio. |
+| **Fonte de edição** | Google Sheets | CMS da equipe (onde os projetos são editados). |
 
 ---
 
-## ¿Quién puede hacer qué?
+## Quem pode fazer o quê?
 
-| Rol | Puede |
+| Papel | Pode |
 |---|---|
-| **Cualquier persona del equipo** | Ver el portafolio en el navegador |
-| **Editor de la planilla** | Agregar, editar o marcar proyectos como "Fora do ar" |
-| **Desarrollador** | Modificar el diseño, agregar funcionalidades, gestionar el deploy |
+| **Qualquer pessoa da equipe** | Ver o portfólio no navegador |
+| **Editor da planilha** | Adicionar, editar ou marcar projetos como "Fora do ar" |
+| **Desenvolvedor** | Modificar o design, adicionar funcionalidades, gerenciar o deploy |
 
 ---
 
-## Estado actual (v2.0)
+## Estado atual (v2.0)
 
-✅ **Funcionando en producción**
+✅ **Funcionando em produção**
 
-| Funcionalidad | Estado |
+| Funcionalidade | Estado |
 |---|---|
-| Visualización de proyectos | ✅ Activo |
-| Filtro por empresa | ✅ Activo |
-| Modal de detalle | ✅ Activo |
-| Carrusel en celular | ✅ Activo |
-| Sincronización automática desde Google Sheets | ✅ Activo |
-| Imágenes optimizadas (WebP) | ✅ Activo |
-| Diseño responsive (celular, tablet, desktop) | ✅ Activo |
+| Visualização de projetos | ✅ Ativo |
+| Filtro por empresa | ✅ Ativo |
+| Modal de detalhe | ✅ Ativo |
+| Carrossel em celular | ✅ Ativo |
+| Sincronização automática do Google Sheets | ✅ Ativo |
+| Imagens otimizadas (WebP) | ✅ Ativo |
+| Design responsivo (celular, tablet, desktop) | ✅ Ativo |
 
 ---
 
-## Preguntas frecuentes
+## Perguntas frequentes
 
-**¿Cuándo aparece un proyecto nuevo luego de cargarlo en Sheets?**  
-De forma inmediata (en segundos) después de hacer clic en "Sincronizar".
+**Quando um projeto novo aparece depois de cadastrá-lo no Sheets?**  
+De forma imediata (em segundos) após clicar em "Sincronizar".
 
-**¿Qué pasa si el sitio de un proyecto se da de baja?**  
-Solo hay que cambiar su estado a `Fora do ar` en la planilla y sincronizar. El badge rojo aparecerá automáticamente.
+**O que acontece se o site de um projeto for desativado?**  
+Basta mudar o estado para `Fora do ar` na planilha e sincronizar. O badge vermelho aparecerá automaticamente.
 
-**¿El sitio funciona en celular?**  
-Sí. En móvil los proyectos se muestran en un carrusel horizontal. El diseño está optimizado para todos los tamaños de pantalla.
+**O site funciona no celular?**  
+Sim. No celular os projetos são exibidos em um carrossel horizontal. O design está otimizado para todos os tamanhos de tela.
 
-**¿Hay que pedirle a IT para agregar proyectos?**  
-No. Cualquier persona con acceso a la planilla de Google Sheets puede hacerlo de forma autónoma.
+**É preciso pedir à TI para adicionar projetos?**  
+Não. Qualquer pessoa com acesso à planilha do Google Sheets pode fazer isso de forma autônoma.
 
-**¿Dónde están las imágenes de los proyectos?**  
-Las capturas de pantalla se almacenan en el servidor de archivos interno (Minio). El equipo de desarrollo es responsable de subir las imágenes nuevas.
+**Onde ficam as imagens dos projetos?**  
+As capturas de tela são armazenadas no servidor de arquivos interno (Minio). A equipe de desenvolvimento é responsável por subir as imagens novas.
 
 ---
 
-## Contacto y soporte
+## Contato e suporte
 
-Para cambios en el diseño, nuevas funcionalidades o problemas técnicos, contactar al equipo de desarrollo.
+Para mudanças no design, novas funcionalidades ou problemas técnicos, entrar em contato com a equipe de desenvolvimento.
 
-Para agregar o editar proyectos, usar la [planilla de Google Sheets](#) directamente.
+Para adicionar ou editar projetos, usar a [planilha do Google Sheets](#) diretamente.
