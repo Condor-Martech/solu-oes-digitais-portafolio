@@ -1,8 +1,6 @@
 import type { Project } from '../types';
 import https from 'node:https';
 
-let mem: Project[] | null = null;
-
 /**
  * Agente para ignorar errores de certificado SSL (útil para Minio con certificados auto-firmados)
  */
@@ -14,6 +12,7 @@ async function fetchRemote(): Promise<Project[] | null> {
   const url = import.meta.env.PROJECTS_URL;
   
   if (!url || url.includes('tu-minio-url.com')) {
+    console.error('[storage] ❌ PROJECTS_URL no configurada o es la de ejemplo.');
     return null;
   }
 
@@ -22,7 +21,11 @@ async function fetchRemote(): Promise<Project[] | null> {
     
     // Configuración de fetch compatible con Node.js SSR
     const fetchOptions: any = { 
-      cache: 'no-store'
+      cache: 'no-store',
+      headers: {
+        'Pragma': 'no-cache',
+        'Cache-Control': 'no-cache'
+      }
     };
 
     if (isHttps) {
@@ -35,27 +38,29 @@ async function fetchRemote(): Promise<Project[] | null> {
     
     // Obtenemos el texto crudo para limpiarlo
     const rawText = await res.text();
-    const cleanedText = rawText.trim().replace(/^=/, '');
+    
+    // Limpieza robusta: n8n o algunos editores pueden prefijar con '=' o '=='
+    const cleanedText = rawText.trim().replace(/^=+/, '');
     
     try {
       let data = JSON.parse(cleanedText);
       
-      // Si los datos vienen envueltos en { "projects": [...] }
+      // Normalización de formatos comunes de n8n/API
       if (!Array.isArray(data) && data.projects && Array.isArray(data.projects)) {
         data = data.projects;
       } 
-      // Si vienen envueltos en [ { "projects": [...] } ] (común en n8n)
       else if (Array.isArray(data) && data.length === 1 && data[0].projects) {
         data = data[0].projects;
       }
 
-      if (Array.isArray(data) && data.length > 0) {
+      if (Array.isArray(data)) {
         console.log(`[storage] 🚀 Sucesso: ${data.length} projetos extraídos do Minio.`);
-        // console.log('[storage] 🔍 Primeiro projeto real:', JSON.stringify(data[0], null, 2));
+        return data as Project[];
       }
-
-      return data as Project[];
+      
+      throw new Error("El contenido no es un array de proyectos válido.");
     } catch (parseErr) {
+      console.error('[storage] ❌ Error de parseo. Contenido recibido:', rawText.substring(0, 100));
       throw new Error(`Erro ao processar JSON: ${parseErr instanceof Error ? parseErr.message : 'Formato inválido'}`);
     }
   } catch (err) {
@@ -66,23 +71,19 @@ async function fetchRemote(): Promise<Project[] | null> {
 
 /**
  * Carrega os projetos EXCLUSIVAMENTE do Minio.
- * Lança erro fatal se falhar.
+ * Sin cache en memoria para evitar datos obsoletos en Lambdas calientes de Vercel.
  */
 export async function loadProjects(): Promise<Project[]> {
-  if (mem) return mem;
-  
   const remote = await fetchRemote();
   
   if (!remote || remote.length === 0) {
     const msg = !remote 
-      ? "Não foi possível conectar ao Minio." 
+      ? "Não foi possível conectar ao Minio ou o JSON é inválido." 
       : "O arquivo no Minio está vazio [ ].";
     throw new Error(`[storage] CRITICAL: ${msg}`);
   }
 
-  console.log(`[storage] 🚀 Sucesso: ${remote.length} projetos carregados do Minio.`);
-  mem = remote;
-  return mem;
+  return remote;
 }
 
 /**
@@ -100,6 +101,6 @@ export async function removeProject(_id: string): Promise<number> {
 }
 
 export async function replaceAllProjects(projects: Project[]): Promise<number> {
-  mem = projects;
+  console.warn('[storage] replaceAllProjects no tiene efecto persistente en modo Minio.');
   return projects.length;
 }
