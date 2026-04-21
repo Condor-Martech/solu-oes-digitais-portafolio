@@ -29,63 +29,59 @@
   }
 }
 @layer utilities {
-  .hide-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  .hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  
-  /* Carousel Transitions (Scroll-Driven Animations) */
+  .hide-scrollbar::-webkit-scrollbar { display: none; }
+  .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+  .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+  .custom-scrollbar::-webkit-scrollbar-thumb { @apply bg-ink/10 rounded-full; }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover { @apply bg-ink/20; }
+}
+
+/* ── Mobile Carousel: Scroll-Driven Scale Animation ────────────────────────
+   Scoped to .carousel-track children to avoid conflicts with animate-rise.
+   Uses view-timeline on each item: scales up when centered, down when offscreen.
+   Gracefully degrades: browsers without scroll-driven API simply show full opacity.
+──────────────────────────────────────────────────────────────────────────── */
+@supports (animation-timeline: scroll()) {
   @media (max-width: 639px) {
-    .carousel-item {
-      view-timeline-name: --item;
+    .carousel-track > * {
+      view-timeline-name: --card;
       view-timeline-axis: inline;
-      
-      /* Animación que escala y opaca según la posición del scroll */
-      animation: carousel-focus linear both;
-      animation-timeline: --item;
-      /* Define el rango donde la animación ocurre (cuando entra y sale del viewport) */
-      animation-range: cover 0% cover 100%;
+      animation: carousel-pop linear both;
+      animation-timeline: --card;
+      animation-range: contain 20% contain 80%;
     }
   }
+}
 
-  @keyframes carousel-focus {
-    0% { 
-      transform: scale(0.85) translateY(10px); 
-      opacity: 0.4;
-      filter: blur(2px);
-    }
-    50% { 
-      transform: scale(1) translateY(0); 
-      opacity: 1;
-      filter: blur(0);
-    }
-    100% { 
-      transform: scale(0.85) translateY(10px); 
-      opacity: 0.4;
-      filter: blur(2px);
-    }
+@keyframes carousel-pop {
+  from {
+    transform: scale(0.87);
+    opacity: 0.5;
+    filter: blur(1.5px);
   }
+  to {
+    transform: scale(1);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
 
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
-  }
-  .custom-scrollbar::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-ink/10 rounded-full;
-  }
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    @apply bg-ink/20;
+@media (prefers-reduced-motion: reduce) {
+  .carousel-track > * {
+    animation: none !important;
+    transform: none !important;
+    filter: none !important;
+    opacity: 1 !important;
   }
 }
 
 @layer base {
   *, *::before, *::after { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
+  /* Prevent horizontal overflow at page level (carousels are contained within their wrapper) */
+  body { overflow-x: hidden; }
   html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
   body {
     @apply bg-bg text-ink font-sans text-[15px] leading-relaxed antialiased;
