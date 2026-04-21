@@ -1,77 +1,76 @@
 ---
-import type { Project } from '../lib/projects';
-import { firstParagraph } from '../lib/projects';
-import Tag from './Tag.astro';
-
-import { Image } from 'astro:assets';
+import type { UIProject } from '../types';
+import { getCardDelay } from '../lib/ui-helpers';
+import Badge from './ui/Badge.astro';
 
 interface Props {
-  project: Project;
-  index: number;
+  project: UIProject;
+  index?: number;
 }
 
-const { project, index } = Astro.props;
-const delay = Math.min(index * 55, 420);
-const hasImage = Boolean(project.image);
+const { project, index = 0 } = Astro.props;
+const delay = getCardDelay(index);
 ---
 
-<article class="snap-center shrink-0 w-[85vw] sm:w-auto flex flex-col border-[0.5px] border-line rounded-[18px] bg-surface overflow-hidden opacity-0 animate-[rise_0.8s_both] isolate shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1)] hover:shadow-[var(--shadow-premium)] hover:-translate-y-2 transition-all duration-500 ease-custom group/card" style={`animation-delay:${delay}ms`} data-project-id={project.id}>
-  <div class="relative aspect-[16/9] bg-[#ECEBE7] overflow-hidden group/cover">
-    {/* Badge de Status */}
-    <div class="absolute top-3 right-3 z-30 flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface/90 backdrop-blur-md border border-line/10 shadow-sm">
-      <span class={`w-2 h-2 rounded-full ${project.status === 'No ar' ? 'bg-green-500 animate-pulse shadow-[0_0_8px_rgba(34,197,94,0.6)]' : 'bg-red-500'}`}></span>
-      <span class="text-[10px] font-bold uppercase tracking-wider text-ink/80">{project.status}</span>
+<article 
+  class="group relative flex flex-col bg-surface border-[0.5px] border-line rounded-lg overflow-hidden hover:border-line-strong transition-all duration-500 hover:shadow-premium hover:-translate-y-1.5 animate-rise opacity-0"
+  style={`animation-delay: ${delay}ms; animation-fill-mode: forwards;`}
+>
+  <!-- Main Content Wrapper (Aspect Ratio Controlled) -->
+  <div class="relative aspect-video overflow-hidden bg-bg/50">
+    <!-- Top info (Overlaid on image for more focus) -->
+    <div class="absolute top-4 left-4 right-4 flex items-center justify-end z-20">
+      <div class="flex items-center gap-1.5 px-2 py-1 bg-surface/80 backdrop-blur-md rounded-full border border-white/10 shadow-sm">
+        <span class:list={["w-1.5 h-1.5 rounded-full transition-shadow duration-500", project.status === 'No ar' ? "bg-green-500 shadow-[0_0_8px_oklch(0.62_0.19_145_/_0.4)]" : "bg-red-500"]} />
+        <span class="font-mono text-[9px] font-bold uppercase tracking-wider text-ink/60">
+          {project.status === 'No ar' ? 'No ar' : 'Fora do ar'}
+        </span>
+      </div>
     </div>
 
-    {hasImage && project.image && (
-      <Image 
-        src={project.image}
-        alt={`Captura de ${project.title}`}
-        width={800}
-        height={450}
-        class={`w-full h-full object-cover object-top transition-all duration-700 ease-out group-hover/card:scale-[1.03] ${project.status === 'Fora do ar' ? 'grayscale opacity-80 contrast-75' : ''}`} 
-        data-fallback
-      />
-    )}
-    {!hasImage && (
-      <div class="absolute inset-0 flex items-center justify-center font-mono text-[13px] text-muted uppercase tracking-widest transition-transform duration-700 group-hover/card:scale-[1.03]">sem captura</div>
-    )}
-    <div class="absolute inset-0 flex items-center justify-center bg-ink/10 opacity-0 transition-opacity duration-400 pointer-events-none group-hover/card:opacity-100 group-hover/card:backdrop-blur-[2px]" aria-hidden="true">
-      <span class="bg-surface/95 backdrop-blur-md px-[16px] py-2.5 rounded-pill text-[13px] font-semibold text-ink shadow-lg shadow-ink/10 translate-y-4 group-hover/card:translate-y-0 transition-transform duration-400 ease-out">Ver detalles</span>
+    <!-- Image -->
+    <div class="w-full h-full transition-transform duration-[1.5s] ease-custom group-hover:scale-110">
+      {project.image ? (
+        <img 
+          src={project.image} 
+          alt={project.title}
+          class="w-full h-full object-cover object-top"
+          loading="lazy"
+        />
+      ) : (
+        <div class="w-full h-full flex items-center justify-center border border-dashed border-line/20">
+          <span class="font-mono text-[10px] uppercase tracking-[0.2em] opacity-20">Preview N/A</span>
+        </div>
+      )}
     </div>
-  </div>
-
-  <div class="p-5 xl:p-4 flex flex-col flex-1 gap-4">
-    <div class="flex items-start justify-between gap-4">
-      <h3 class="m-0 flex-1 min-w-0">
-        <button
-          class="text-left text-[17px] sm:text-[19px] xl:text-[17px] font-medium leading-[1.2] tracking-tight hover:opacity-75 transition-opacity outline-none focus-visible:ring-2 focus-visible:ring-ink focus-visible:ring-offset-2 rounded-sm before:content-[''] before:absolute before:inset-0 before:z-10"
-          type="button"
-          data-open-project={project.id}
-          aria-label={`Abrir detalhes de ${project.title}`}
-        >
-          {project.title}
-        </button>
-      </h3>
-      <a
-        class="shrink-0 inline-flex text-[13px] font-medium text-muted underline underline-offset-4 hover:text-ink transition-colors relative z-20"
-        href={project.link}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label={`Visitar ${project.title} (abre em nova aba)`}
+    
+    <!-- Modern Hover Overlay -->
+    <div class="absolute inset-0 bg-ink/20 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center backdrop-blur-[3px] z-30">
+      <button 
+        class="px-8 py-3 bg-surface border border-line rounded-pill text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-ink shadow-2xl translate-y-4 group-hover:translate-y-0 transition-all duration-500 hover:bg-ink hover:text-bg hover:border-ink active:scale-95"
+        data-open-project={project.id}
       >
-        Visitar
-      </a>
-    </div>
-
-    {project.desc && (
-      <p class="m-0 text-[14px] leading-relaxed text-muted line-clamp-3">{firstParagraph(project.desc)}</p>
-    )}
-
-    <div class="flex flex-wrap gap-2 mt-auto relative z-20" aria-label="Tags">
-      <Tag label={project.company} />
-      <Tag label={project.production} />
-      {project.type?.map((t) => <Tag label={t} />)}
+        Ver Detalhes
+      </button>
     </div>
   </div>
+
+  <!-- Footer Info - Elegant & Minimal -->
+  <div class="p-5 flex flex-col gap-4 bg-surface border-t-[0.5px] border-line/5 relative z-10">
+    <div class="flex flex-col gap-1">
+      <h3 class="m-0 text-[18px] font-medium tracking-tight text-ink leading-tight group-hover:text-ink transition-colors">
+        {project.title}
+      </h3>
+    </div>
+
+    <div class="flex flex-wrap gap-1.5">
+      <Badge text={project.production} className={`opacity-80 text-[10px] ${project.theme.production}`} />
+      {project.theme.types.slice(0, 3).map((t) => (
+        <Badge text={t.label} className={`opacity-60 text-[10px] ${t.classes}`} />
+      ))}
+    </div>
+  </div>
+
+  <!-- Subtle glow on hover -->
+  <div class="absolute inset-0 border-2 border-transparent group-hover:border-ink/5 rounded-lg pointer-events-none transition-all duration-500 shadow-none group-hover:shadow-[0_0_40px_rgba(0,0,0,0.05)]"></div>
 </article>
