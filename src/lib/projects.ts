@@ -1,18 +1,4 @@
-export type Production = 'Interno' | 'Externo' | 'Terceiro' | 'Agência';
-export type ProjectType = 'Lp' | 'Software' | 'Site';
-export type ProjectStatus = 'No ar' | 'Fora do ar';
-
-export interface Project {
-  id: string;
-  title: string;
-  company: string;
-  link: string;
-  production: Production;
-  status: ProjectStatus;
-  image: string;
-  desc: string;
-  type: ProjectType[];
-}
+import type { Project, ActiveFilter, ThemeColor } from '../types';
 
 export const tagPalette = [
   { bg: '#EDE5DB', fg: '#5A3A1C' },
@@ -39,29 +25,12 @@ export function colorForTag(tag: string) {
 
 import { loadProjects } from './storage';
 
-const PUBLIC_JSON_URL = 'https://minio.cndr.me/lp-content/projects.json';
-
 /**
  * Obtiene la lista de proyectos.
- * Intenta cargar desde Minio (URL pública) y cae recursivamente al almacenamiento local si falla.
+ * Delega la lógica de carga (Remote + Fallback Local) a storage.ts
  */
 export async function getProjects(): Promise<Project[]> {
-  try {
-    const response = await fetch(PUBLIC_JSON_URL, { 
-      cache: 'no-store',
-      // Timeout opcional podría añadirse aquí si fuera necesario
-    });
-    
-    if (!response.ok) {
-      throw new Error(`Error de red: ${response.status} ${response.statusText}`);
-    }
-    
-    const projects = await response.json();
-    return projects as Project[];
-  } catch (error) {
-    console.error('⚠️ Error al sincronizar proyectos remotos. Usando fallback local:', error);
-    return await loadProjects();
-  }
+  return await loadProjects();
 }
 
 
@@ -73,12 +42,7 @@ export function descParagraphs(desc: string): string[] {
   return (desc ?? '').split(/\n+/).filter(Boolean);
 }
 
-export type FilterGroup = 'all' | 'company' | 'production';
 
-export interface ActiveFilter {
-  group: FilterGroup;
-  value: string;
-}
 
 export function parseFilter(searchParams: URLSearchParams): ActiveFilter {
   const company = searchParams.get('company');
@@ -102,7 +66,7 @@ export function countForCompany(projects: Project[], company: string): number {
   return projects.filter((p) => p.company === company).length;
 }
 
-export type ThemeColor = 'blue' | 'amber' | 'red' | 'slate' | 'fuchsia' | 'orange' | 'teal' | 'rose' | 'cyan' | 'green' | 'default';
+
 
 const brandColorMap: Record<string, ThemeColor> = {
   "Condor": "blue",
