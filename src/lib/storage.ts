@@ -32,10 +32,19 @@ async function fetchRemote(): Promise<Project[] | null> {
     const res = await fetch(url, fetchOptions);
 
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    return data as Project[];
+    
+    // Obtenemos el texto crudo para limpiarlo
+    const rawText = await res.text();
+    const cleanedText = rawText.trim().replace(/^=/, '');
+    
+    try {
+      const data = JSON.parse(cleanedText);
+      return data as Project[];
+    } catch (parseErr) {
+      throw new Error(`Erro ao processar JSON: ${parseErr instanceof Error ? parseErr.message : 'Formato inválido'}`);
+    }
   } catch (err) {
-    console.error(`[storage] ⚠️ Fetch remoto falhou (Minio):`, err instanceof Error ? err.message : err);
+    console.error(`[storage] ❌ Falha no Minio:`, err instanceof Error ? err.message : err);
     return null;
   }
 }
