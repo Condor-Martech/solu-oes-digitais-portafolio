@@ -28,15 +28,47 @@
     to   { opacity: 1; transform: translateY(0); }
   }
 }
-
 @layer utilities {
-  .no-scrollbar::-webkit-scrollbar {
+  .hide-scrollbar::-webkit-scrollbar {
     display: none;
   }
-  .no-scrollbar {
+  .hide-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+  
+  /* Carousel Transitions (Scroll-Driven Animations) */
+  @media (max-width: 639px) {
+    .carousel-item {
+      view-timeline-name: --item;
+      view-timeline-axis: inline;
+      
+      /* Animación que escala y opaca según la posición del scroll */
+      animation: carousel-focus linear both;
+      animation-timeline: --item;
+      /* Define el rango donde la animación ocurre (cuando entra y sale del viewport) */
+      animation-range: cover 0% cover 100%;
+    }
+  }
+
+  @keyframes carousel-focus {
+    0% { 
+      transform: scale(0.85) translateY(10px); 
+      opacity: 0.4;
+      filter: blur(2px);
+    }
+    50% { 
+      transform: scale(1) translateY(0); 
+      opacity: 1;
+      filter: blur(0);
+    }
+    100% { 
+      transform: scale(0.85) translateY(10px); 
+      opacity: 0.4;
+      filter: blur(2px);
+    }
+  }
+
   .custom-scrollbar::-webkit-scrollbar {
     width: 6px;
   }
