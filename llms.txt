@@ -1,16 +1,36 @@
-# LP Hub — Architecture & Context
-> Portafolio premium con arquitectura Pure UI y sincronización remota.
+# LP Hub
+> Portafolio interno de sitios y landing pages del equipo. Astro 5 SSR + Vercel + Minio.
 
-## Core Files & Structure
-- [src/types/index.ts]: Contratos de datos (Interfaces y Tipos). Único lugar para definiciones TS.
-- [src/lib/view-models.ts]: Transformación de datos crudos a UI (Imágenes, temas, formatos).
-- [src/lib/ui-helpers.ts]: Cálculos visuales puros (Bento classes, animaciones, URLs).
-- [src/scripts/]: Controladores de cliente (Interactividad DOM).
-- [src/components/]: Componentes representacionales puros. No contienen lógica de negocio.
-- [src/pages/api/]: Endpoints de sincronización y persistencia.
+## Propósito
+Visualizar y gestionar el catálogo de proyectos web del equipo. Los datos viven en Minio (S3) y se actualizan automáticamente desde Google Sheets vía n8n.
+
+## Arquitectura (Pure UI)
+- Los componentes `.astro` son plantillas HTML puras. No contienen lógica de negocio.
+- El flujo de datos es: `Minio → storage.ts → view-models.ts → pages/index.astro → componentes`.
+
+## Core Files
+- [src/types/index.ts]: Contratos de datos. Único lugar para interfaces TypeScript (`Project`, `UIProject`, `Production`, `ProjectStatus`, `ProjectType`).
+- [src/lib/storage.ts]: Fetch remoto del JSON desde Minio. Sin caché de memoria — datos frescos en cada request SSR.
+- [src/lib/projects.ts]: Lógica de filtrado, paleta de colores por empresa, helpers de texto.
+- [src/lib/view-models.ts]: Transforma `Project[]` → `UIProject[]`: optimización WebP, cálculo de clases de tema, split de párrafos.
+- [src/lib/ui-helpers.ts]: Cálculos CSS puros: delays de animación, generación de hrefs de filtro.
+- [src/scripts/modal.ts]: Controlador DOM del modal de detalle de proyecto.
+- [src/scripts/filter.ts]: Controlador DOM del drawer de filtros mobile.
+- [src/components/ui/]: Primitivos: `Badge`, `BaseModal`, `BaseDrawer`, `Icon`.
+- [src/pages/index.astro]: Página principal. Grid desktop + carrusel mobile.
+- [src/pages/api/projects.ts]: Endpoint SSR de upsert/delete de proyectos con validación estricta de tipos.
+- [src/data/projects.json]: Snapshot local. SOLO para desarrollo offline. No se usa en producción.
 
 ## Key Concepts
-- Pure UI: Los archivos .astro son solo plantillas HTML/Tailwind. La lógica vive en helpers y view-models.
-- Bento Grid: Layout asimétrico dinámico controlado por índices en ui-helpers.
-- S3 Sync: Fuente de verdad remota con persistencia local de respaldo.
-- UI Indicators: Estados visuales (No ar/Fora do ar) pre-calculados en el View Model mediante ThemeColors.
+- **Pure UI:** Los archivos `.astro` reciben `UIProject` (ya procesado). Nunca `Project` crudo (excepto `index.astro` como orquestador).
+- **Datos frescos:** `storage.ts` no usa caché singleton. Cada request SSR en Vercel descarga el JSON de Minio, garantizando que cambios en n8n sean visibles inmediatamente.
+- **Automatización:** Google Sheets actúa como CMS. Al editar una fila, un script llama al webhook de n8n (URL de **Producción**) que hace upsert del proyecto en Minio.
+- **Carrusel mobile:** `< 640px` usa `scroll-snap-type: x mandatory` + Scroll-Driven Animations (CSS nativo, sin JS).
+- **Temas visuales:** El color del badge de empresa se calcula en `projects.ts` basado en `brandColorMap`. Default: `blue`.
+
+## Stack
+- **Framework:** Astro 5.x (SSR, output: server)
+- **Adapter:** @astrojs/vercel
+- **CSS:** Tailwind CSS v4 con tokens OKLCH
+- **Tipografía:** DM Sans + DM Mono (Google Fonts)
+- **Automatización:** n8n + Minio (S3) + Google Sheets

@@ -1,70 +1,125 @@
-# Esquema de Datos (Project Schema)
+# Esquema de Datos — LP Hub
 
-Este documento detalla la estructura y los tipos de datos utilizados en el LP Hub.
+Referencia completa de los contratos de datos utilizados en el sistema.
+
+---
 
 ## Fuente de Datos
-A partir de la versión v0.1.0 (Opción C), el sistema utiliza una estrategia de **Fetch en Tiempo Real**:
-1. **Primaria:** Consume el JSON desde una URL externa en Minio.
-2. **Fallback:** En caso de error de red o URL inválida, utiliza el archivo local `data/projects.json`.
 
+El sistema utiliza una estrategia de **Fetch Remoto en Tiempo Real** sin caché de memoria:
 
-Todos los proyectos deben seguir estrictamente la interfaz definida en `src/types/index.ts`:
+1. **Primaria:** El SSR descarga `projects.json` desde Minio en cada request.
+2. **Offline/Dev:** Si `PROJECTS_URL` no está definida, el servidor lanza un error crítico. Para desarrollo sin red, se puede usar `src/data/projects.json` (solo local, no deployable).
+
+El archivo JSON en Minio es la **única fuente de verdad**. Se actualiza automáticamente a través del flujo **Google Sheets → n8n → Minio**.
+
+---
+
+## Interfaz `Project` (Datos crudos)
+
+Definida en `src/types/index.ts`. Es la estructura que vive en Minio y que la API valida.
 
 ```typescript
 interface Project {
-  id: string;          // Identificador único (Kebab-case)
+  id: string;          // Identificador único, kebab-case. Ej: "dia-das-maes"
   title: string;       // Nombre visible del proyecto
-  company: string;     // Marca/Empresa cliente
-  link: string;        // URL directa a la producción
-  production: string;  // Tipo de gestión (ver valores permitidos)
-  status: string;      // Estado actual (No ar / Fora do ar)
-  image: string;       // Ruta a la captura (/screenshots/...)
-  desc: string;        // Descripción enriquecida (soporta \n)
-  type: string[];      // Array de etiquetas de tipo
+  company: string;     // Marca/empresa cliente. Ej: "Condor"
+  link: string;        // URL completa de producción
+  production: Production; // Tipo de gestión (ver tabla abajo)
+  status: ProjectStatus;  // Estado actual (ver tabla abajo)
+  image: string;       // Ruta pública a la captura: "/screenshots/nombre.png"
+  desc: string;        // Descripción. Soporta saltos de línea con \n
+  type: ProjectType[]; // Array de categorías. Ej: ["Lp", "Site"]
 }
 ```
 
-## Valores Permitidos
+---
 
-### 1. Production (`production`)
-Indica quién o cómo se gestionó el proyecto. Afecta al color del badge superior en la tarjeta.
+## Tipos Permitidos
 
-| Valor | Color UI | Significado |
-| :--- | :--- | :--- |
+### `Production`
+
+| Valor | Color del Badge | Significado |
+|:---|:---|:---|
 | `Interno` | Verde | Desarrollado totalmente in-house |
 | `Externo` | Slate | Gestión externa general |
-| `Terceiro` | Naranja | Desarrollado por un tercer proveedor específico |
+| `Terceiro` | Naranja | Desarrollado por un proveedor tercero |
 | `Agência` | Rosa | Proyecto de agencia colaboradora |
 
-### 2. Project Type (`type`)
-Categorización técnica del proyecto.
+### `ProjectStatus`
 
-- `Lp`: Landing Pages o páginas promocionales únicas.
-- `Software`: Aplicaciones complejas o herramientas interactivas.
-- `Site`: Sitios institucionales o blogs.
+| Valor | Indicador | Significado |
+|:---|:---|:---|
+| `No ar` | 🟢 Verde pulsante | Sitio activo y accesible |
+| `Fora do ar` | 🔴 Rojo | Sitio inactivo o deprecado |
 
-El sistema asigna automáticamente un color temático basado en el valor del campo `company`. Los temas visuales se centralizan en `src/types/index.ts` y el mapeo en `src/lib/projects.ts`.
+### `ProjectType`
 
-- **Condor:** `blue`
-- **Gigante:** `amber`
-- **Hipermais:** `red`
-- **Grupo Zonta:** `slate`
-- **Shopping:** `fuchsia`
-- **Receitas da Nonna:** `orange`
-- **Ourofino:** `green`
-- **Kellanova:** `rose`
+| Valor | Descripción |
+|:---|:---|
+| `Lp` | Landing page o página promocional única |
+| `Software` | Aplicación interactiva o herramienta compleja |
+| `Site` | Sitio institucional, blog o portal |
 
-## Ejemplo de Datos
+---
+
+## Interfaz `UIProject` (Datos para la UI)
+
+Extendida en `src/types/index.ts`. La genera `view-models.ts` antes de pasar datos a los componentes.
+
+```typescript
+interface UIProject extends Project {
+  descParagraphs: string[];   // desc dividido por \n en array de párrafos
+  theme: {
+    company: string;          // Clases CSS de Tailwind para el badge de empresa
+    production: string;       // Clases CSS para el badge de producción
+    status: string;           // Clases CSS para el indicador de estado
+    types: {
+      label: string;          // Texto del badge de tipo
+      classes: string;        // Clases CSS para ese badge
+    }[];
+  };
+}
+```
+
+---
+
+## Mapa de Temas Visuales por Empresa
+
+El sistema asigna automáticamente un color temático basado en `company`. Centralizado en `src/lib/projects.ts`.
+
+| Empresa | Color | Token |
+|:---|:---|:---|
+| Condor | Azul | `blue` |
+| Gigante | Ámbar | `amber` |
+| Hipermais | Rojo | `red` |
+| Grupo Zonta | Gris | `slate` |
+| Shopping | Fucsia | `fuchsia` |
+| Receitas da Nonna | Naranja | `orange` |
+| Ourofino | Verde | `green` |
+| Kellanova | Rosa | `rose` |
+| (default) | Azul neutro | `default` |
+
+---
+
+## Ejemplo de Objeto JSON
 
 ```json
 {
-  "id": "mi-proyecto-premium",
-  "title": "Mi Proyecto Premium",
+  "id": "mes-da-mulher",
+  "title": "Mês da Mulher",
   "company": "Condor",
-  "link": "https://proyecto.com",
+  "link": "https://campanha.condor.com.br/mes-da-mulher-2025/",
   "production": "Interno",
-  "image": "/screenshots/mi-proyecto.png",
-  "desc": "Primera línea de descripción.\nSegunda línea de descripción.",
-  "type": ["Software", "Site"]
+  "status": "No ar",
+  "image": "/screenshots/mesdamulher.png",
+  "desc": "Campaña especial del Mes de la Mujer.\nIncluyó sección de sorteo y galería de productos.",
+  "type": ["Lp"]
 }
 ```
+
+---
+
+## Validación en la API
+
+El endpoint `src/pages/api/projects.ts` valida estrictamente que `production`, `status` y cada elemento de `type` sean valores del enum correspondiente antes de aceptar un upsert. Cualquier valor fuera del conjunto retorna `400 Bad Request`.

@@ -1,6 +1,8 @@
-# LP Hub — Portfólio 🚀
+# LP Hub — Portfólio
 
-Portafolio interno premium de sitios y landing pages del equipo. Una aplicación **Astro 5 SSR** diseñada para ofrecer una experiencia visual cinematográfica y una administración automatizada.
+Portafolio interno de sitios y landing pages del equipo. Aplicación **Astro 5 SSR** deployada en Vercel con datos gestionados remotamente a través de Minio (S3-compatible) y automatización vía n8n.
+
+---
 
 ## Quick Start
 
@@ -8,43 +10,86 @@ Portafolio interno premium de sitios y landing pages del equipo. Una aplicación
 # 1. Instalar dependencias
 npm install
 
-# 2. Configurar entorno
-cp .env.example .env.local
+# 2. Configurar variables de entorno
+cp .env.local.example .env.local
+# → Editar .env.local con tus credenciales
 
-# 3. Arrancar en modo desarrollo
+# 3. Arrancar servidor de desarrollo
 npm run dev
+# → http://localhost:4321
 ```
 
-## Features
+## Variables de Entorno
 
-- **Visual Inmersivo:** Cuadrícula de 4 columnas de alta densidad (Bento Grid) optimizada para múltiples resoluciones.
-- **Pure UI Architecture:** Componentes completamente representacionales y agnósticos con inyección mediante View Models.
-- **Modal Cinematográfico:** Visualización split-screen con efectos de **Glassmorphism** (`backdrop-blur-3xl`) e inmersión visual.
-- **Sincronización Automatizada:** Gestión de datos remota vía S3 con fallback a caché local (`projects.json`).
-- **Optimización Automática:** Transformación WebP al vuelo de imágenes remotas mediante `astro:assets`.
+| Variable | Requerida | Descripción | Ejemplo |
+|---|---|---|---|
+| `PROJECTS_URL` | ✅ | URL pública del JSON de proyectos en Minio | `https://minio.cndr.me/lp-content/projects.json` |
+| `ADMIN_USER` | ✅ | Usuario para acceso al panel | `admin` |
+| `ADMIN_PASS` | ✅ | Contraseña de acceso | —  |
+| `AUTH_SECRET` | ✅ | Clave HMAC para sesión HTTP | Generar: `openssl rand -hex 32` |
+| `SYNC_SECRET` | ✅ | Token enviado en `x-sync-token` por n8n | — |
 
-## Configuration
+> **Nota:** Sin `PROJECTS_URL` configurada, el servidor lanzará un error crítico al iniciar. No hay fallback en producción.
 
-El proyecto requiere las siguientes variables de entorno para funcionar (`.env.local`):
+## Flujo de Datos
 
-| Variable | Descripción | Default / Ejemplo |
-|----------|-------------|---------|
-| `ADMIN_USER` | Usuario único para el acceso. | `admin` |
-| `ADMIN_PASS` | Contraseña de acceso. | `123` |
-| `AUTH_SECRET` | Clave HMAC para la sesión HTTP. | *Generar con openssl* |
-| `SYNC_SECRET` | Token de seguridad (`x-sync-token`). | *Token de sincronización* |
-| `PROJECTS_URL` | Endpoint remoto JSON (S3/n8n). | `https://s3.../projects.json` |
+```
+Google Sheets → n8n Webhook → MinIO (S3) → Vercel SSR → Usuario
+```
 
-## Documentation
+1. **Google Sheets** actúa como CMS. Un script de Apps Script llama al Webhook de n8n al editar.
+2. **n8n** ejecuta el upsert del proyecto en el JSON y lo sube al bucket `lp-content/projects.json` en Minio.
+3. **Vercel (SSR)** descarga el JSON en cada request sin cache de memoria, siempre mostrando datos frescos.
 
-- [API Sincronización](./docs/sync-architecture.md)
-- [Esquema de Datos](./docs/data-schema.md)
-- [ADR-001: Arquitectura Pure UI](./docs/ADR-001-pure-ui.md)
+## Comandos
+
+```bash
+npm run dev       # Servidor de desarrollo con HMR
+npm run build     # Build de producción (Vercel lo ejecuta automáticamente)
+npx astro check   # Verificación de tipos TypeScript
+```
+
+## Estructura del Proyecto
+
+```
+src/
+├── types/index.ts        # 📐 Contratos de datos (interfaces TS)
+├── lib/
+│   ├── storage.ts        # 🗄️  Fetch remoto del JSON (Minio) — sin cache
+│   ├── projects.ts       # 🔧 Lógica de filtrado, paleta de colores
+│   ├── view-models.ts    # 🎨 Transformación de datos → UI (WebP, temas)
+│   └── ui-helpers.ts     # 💅 Clases CSS, delays de animación
+├── components/
+│   ├── ui/               # Componentes primitivos (Badge, Modal, Drawer, Icon)
+│   ├── ProjectCard.astro # Card representacional pura
+│   ├── ProjectModal.astro# Modal con datos del proyecto
+│   └── FilterBar.astro   # Barra de filtros (desktop + mobile drawer)
+├── scripts/
+│   ├── modal.ts          # Controlador del modal (DOM)
+│   └── filter.ts         # Controlador del drawer de filtros (DOM)
+├── pages/
+│   ├── index.astro       # Página principal
+│   └── api/projects.ts   # Endpoint SSR para sincronización
+└── data/projects.json    # ⚠️  Sólo para desarrollo local offline
+```
+
+## Arquitectura
+
+El proyecto sigue el patrón **Pure UI**. Los componentes `.astro` son plantillas HTML puras sin lógica de negocio. Ver [ADR-001](./docs/ADR-001-pure-ui.md) para el detalle de la decisión.
+
+## Documentación
+
+- [Esquema de Datos](./docs/data-schema.md) — Interfaces y valores permitidos
+- [ADR-001: Pure UI](./docs/ADR-001-pure-ui.md) — Decisión de arquitectura
+- [CHANGELOG](./CHANGELOG.md) — Historial de versiones
 
 ## Contributing
-1. Todo cambio estructural debe seguir las directrices documentadas en `llms.txt`.
-2. Ejecuta `npx astro check` antes de cualquier PR para asegurar consistencia de tipos.
+
+1. Todos los tipos van en `src/types/index.ts`.
+2. La lógica de transformación va en `src/lib/view-models.ts`.
+3. Los componentes `.astro` solo reciben `UIProject` — nunca `Project` crudo (excepto `index.astro` y `FilterBar`).
+4. Ejecuta `npx astro check` antes de cualquier PR.
 
 ## License
 
-MIT © LP Hub Team.
+MIT © LP Hub Team
