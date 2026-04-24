@@ -1,38 +1,21 @@
 import type { Project } from '../types';
-import https from 'node:https';
-
-/**
- * Agente para ignorar errores de certificado SSL (útil para Minio con certificados auto-firmados)
- */
-const httpsAgent = new https.Agent({
-  rejectUnauthorized: false
-});
 
 async function fetchRemote(): Promise<Project[] | null> {
   const url = import.meta.env.PROJECTS_URL;
-  
+
   if (!url || url.includes('tu-minio-url.com')) {
     console.error('[storage] ❌ PROJECTS_URL no configurada o es la de ejemplo.');
     return null;
   }
 
   try {
-    const isHttps = url.startsWith('https');
-    
-    // Configuración de fetch compatible con Node.js SSR
-    const fetchOptions: any = { 
+    const res = await fetch(url, {
       cache: 'no-store',
       headers: {
         'Pragma': 'no-cache',
-        'Cache-Control': 'no-cache'
-      }
-    };
-
-    if (isHttps) {
-      fetchOptions.agent = httpsAgent;
-    }
-
-    const res = await fetch(url, fetchOptions);
+        'Cache-Control': 'no-cache',
+      },
+    });
 
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     
@@ -87,23 +70,4 @@ export async function loadProjects(): Promise<Project[]> {
   }
 
   return remote;
-}
-
-/**
- * Los siguientes métodos están ahora desactivados ya que n8n
- * es el único encargado de modificar el JSON en Minio.
- */
-export async function upsertProject(_p: Project): Promise<number> {
-  console.warn('[storage] upsertProject desactivado en modo Minio-Only.');
-  return 0;
-}
-
-export async function removeProject(_id: string): Promise<number> {
-  console.warn('[storage] removeProject desactivado en modo Minio-Only.');
-  return 0;
-}
-
-export async function replaceAllProjects(projects: Project[]): Promise<number> {
-  console.warn('[storage] replaceAllProjects no tiene efecto persistente en modo Minio.');
-  return projects.length;
 }

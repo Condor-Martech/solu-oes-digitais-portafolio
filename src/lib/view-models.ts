@@ -1,4 +1,3 @@
-import { getImage } from 'astro:assets';
 import type { Project, UIProject } from '../types';
 import { getBrandColor, getBadgeThemeClasses, descParagraphs } from './projects';
 import { getImageUrl } from './ui-helpers';

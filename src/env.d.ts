@@ -1,10 +1,9 @@
 /// <reference path="../.astro/types.d.ts" />
 
 interface ImportMetaEnv {
-  readonly AUTH_SECRET: string;
-  readonly SYNC_SECRET: string;
+  readonly ADMIN_USER: string;
+  readonly ADMIN_PASS: string;
   readonly PROJECTS_URL?: string;
-  readonly DATA_FILE?: string;
 }
 
 interface ImportMeta {
