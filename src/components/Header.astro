@@ -6,24 +6,33 @@ interface Props {
 const { count } = Astro.props;
 ---
 
-<header class="py-5 bg-surface sticky top-0 z-40">
+<header class="sticky top-0 z-40 py-4 sm:py-5 bg-surface/80 backdrop-blur-md border-b border-line/5 transition-all duration-300">
   <div
-    class="max-w-7xl mx-auto px-5 sm:px-7 flex justify-between items-center group/header"
+    class="max-w-7xl mx-auto px-4 sm:px-7 flex justify-between items-center group/header"
   >
     <div
-      class="inline-flex items-center gap-2 font-mono text-[12px] uppercase tracking-widest opacity-0 animate-[rise_0.6s_ease-out_forwards]"
+      class="inline-flex items-center gap-2.5 font-mono text-[11px] sm:text-[12px] uppercase tracking-[0.15em] sm:tracking-widest opacity-0 animate-[rise_0.6s_ease-out_forwards]"
     >
-      <span class="w-2 h-2 rounded-full bg-ink animate-pulse" aria-hidden="true"
-      ></span>
-      Soluções Digitais <span class="opacity-40" aria-hidden="true">/</span> Portfólio
+      <div class="relative flex items-center justify-center">
+        <span class="w-2 h-2 rounded-full bg-ink animate-pulse" aria-hidden="true"></span>
+        <span class="absolute inset-0 w-2 h-2 rounded-full bg-ink/20 animate-ping" aria-hidden="true"></span>
+      </div>
+      <span class="font-bold text-ink">Soluções</span>
+      <span class="font-medium text-ink/80">Digitais</span>
+      <span class="hidden min-[450px]:inline opacity-40">/</span>
+      <span class="hidden min-[450px]:inline opacity-70">Portfólio</span>
     </div>
+
     <div
-      style="display:flex;align-items:center;gap:12px"
-      class="opacity-0 animate-[rise_0.6s_ease-out_0.2s_forwards]"
+      class="flex items-center opacity-0 animate-[rise_0.6s_ease-out_0.2s_forwards]"
     >
-      <div class="text-muted text-[15px]" aria-live="polite" aria-atomic="true">
-        <b>{count}</b>
-        <span class="opacity-60">{count === 1 ? "projeto" : "projetos"}</span>
+      <div 
+        class="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 bg-ink/5 border border-line/10 rounded-pill"
+        aria-live="polite" 
+        aria-atomic="true"
+      >
+        <span class="text-[12px] sm:text-[13px] font-bold text-ink leading-none">{count}</span>
+        <span class="text-[10px] sm:text-[12px] text-muted font-medium leading-none uppercase tracking-wider">{count === 1 ? "projeto" : "projetos"}</span>
       </div>
     </div>
   </div>
