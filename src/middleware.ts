@@ -36,6 +36,6 @@ export const onRequest = defineMiddleware(async (context, next) => {
   // Trigger basic auth prompt
   return new Response('Unauthorized', {
     status: 401,
-    headers: { 'WWW-Authenticate': 'Basic realm="LPHub Admin"' }
+    headers: { 'WWW-Authenticate': 'Basic realm="Soluções Digitais Admin"' }
   });
 });

@@ -13,25 +13,17 @@ const modalDataList = await prepareProjectsForUI(projects);
 ---
 
 <BaseModal id="projectModal">
-  <!-- Lado Izquierdo: Imagen -->
-  <div class="w-full h-48 sm:h-64 lg:h-auto lg:w-[58%] relative overflow-hidden bg-line/5 border-b-[0.5px] lg:border-b-0 lg:border-r border-line">
-    <img class="w-full h-full object-cover object-top transition-transform duration-[1200ms] ease-out" id="modalImg" alt="" />
-  </div>
-
-  <!-- Lado Derecho: Info -->
-  <div class="flex-1 flex flex-col h-full bg-surface relative overflow-hidden">
-    <!-- Navbar interna -->
-    <div class="flex items-center justify-between px-6 py-4 border-b-[0.5px] border-line/10 sticky top-0 z-20 bg-surface/80 backdrop-blur-md">
-      <div class="flex items-center gap-3">
-        <span class="font-mono text-[11px] font-medium uppercase tracking-[0.1em] text-muted/80" id="modalCrumb">Projeto</span>
-        <span class="w-[1px] h-3 bg-line/20"></span>
-        <div class="flex items-center gap-1.5">
-          <span class="w-1.5 h-1.5 rounded-full" id="modalStatusDot"></span>
-          <span class="font-mono text-[10px] font-bold uppercase tracking-wider text-ink/60" id="modalStatusLabel"></span>
-        </div>
+  <!-- Contenedor con Scroll -->
+  <div class="flex-1 overflow-y-auto flex flex-col custom-scrollbar bg-surface">
+    <!-- Hero Image Section -->
+    <div class="w-full p-4 sm:p-5 pb-0 flex-none">
+      <div class="aspect-[21/9] sm:aspect-[5/2] w-full rounded-xl overflow-hidden border border-line shadow-sm">
+        <img class="w-full h-full object-cover object-top" id="modalImg" alt="" loading="eager" />
       </div>
+      
+      <!-- Botón cerrar flotante sobre imagen -->
       <button 
-        class="w-9 h-9 flex items-center justify-center rounded-full border border-line/20 text-muted hover:text-ink hover:bg-line/5 transition-all outline-none focus-visible:ring-2 focus-visible:ring-ink" 
+        class="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full bg-surface/80 backdrop-blur-md border border-white/10 text-muted hover:text-ink hover:bg-surface transition-all outline-none z-30 shadow-sm" 
         data-modal-close
         aria-label="Fechar"
       >
@@ -39,17 +31,44 @@ const modalDataList = await prepareProjectsForUI(projects);
       </button>
     </div>
 
-    <!-- Contenido -->
-    <div class="flex-1 overflow-y-auto p-6 sm:p-10 lg:pt-8 flex flex-col gap-6 custom-scrollbar">
+    <!-- Info Section -->
+    <div class="px-6 py-4 flex flex-col gap-5">
+      <div>
+        <a class="inline-flex items-center justify-center h-[46px] px-8 bg-ink text-bg font-mono text-[11px] font-bold tracking-widest uppercase rounded-pill transition-all hover:shadow-premium hover:-translate-y-0.5 hidden [&.active]:inline-flex w-full sm:w-max" id="modalLink" href="#" target="_blank" rel="noopener noreferrer">Visitar site</a>
+      </div>
+
       <div class="flex flex-col gap-3">
-        <h2 class="m-0 text-[28px] sm:text-[34px] font-medium tracking-tight leading-[1.1] text-ink" id="modalTitle"></h2>
+        
+        <h2 class="m-0 text-[28px] sm:text-[36px] font-medium tracking-tight leading-[1.1] text-ink" id="modalTitle"></h2>
         <div class="flex flex-wrap gap-2" id="modalTags"></div>
       </div>
       
-      <div class="flex flex-col gap-5 text-[16px] leading-[1.7] text-ink-2" id="modalDesc"></div>
+      <div class="flex flex-col gap-6 text-[17px] leading-[1.7] text-ink-2 max-w-[800px]" id="modalDesc"></div>
 
-      <div class="mt-auto pt-4 flex flex-col sm:flex-row items-center gap-4">
-        <a class="inline-flex items-center justify-center h-[46px] px-8 bg-ink text-bg font-mono text-[12px] font-bold tracking-widest uppercase rounded-pill transition-all hover:shadow-premium hover:-translate-y-0.5 hidden [&.active]:inline-flex w-full sm:w-max" id="modalLink" href="#" target="_blank" rel="noopener noreferrer">Visitar site</a>
+
+      <!-- Carousel Section -->
+      <div class="mt-4 pt-6 border-t border-line/10">
+        <h4 class="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-muted mb-4">Galeria do Projeto</h4>
+        <div class="grid grid-cols-4 gap-3" id="modalGallery">
+          {/* Los espacios para las 4 imágenes se poblarán vía JS */}
+          {[1, 2, 3, 4].map((i) => (
+            <div class="aspect-[3/4] rounded-lg overflow-hidden bg-line/20 border border-line flex flex-col items-center justify-center relative group/thumb shadow-sm">
+              {/* Contenedor del Placeholder */}
+              <div class="flex flex-col items-center gap-1 text-ink/20 scale-75">
+                <div class="w-4 h-4 border border-current rounded-sm flex items-center justify-center">
+                   <div class="w-1.5 h-1.5 bg-current rounded-full"></div>
+                </div>
+              </div>
+              
+              {/* Imagen real (se carga encima) */}
+              <img 
+                class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-500 z-10" 
+                data-gallery-img={i-1} 
+                alt="" 
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   </div>

@@ -1,4 +1,4 @@
-# LP Hub
+# Soluções Digitais
 > Portfólio interno de sites e landing pages da equipe. Astro 5 SSR + Vercel + Minio.
 
 ## Propósito

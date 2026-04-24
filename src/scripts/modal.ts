@@ -7,12 +7,13 @@ export function initProjectModal(modalData: Record<string, any>) {
   const modal = document.getElementById('projectModal') as any;
   const mImg = document.getElementById('modalImg') as HTMLImageElement;
   const mTitle = document.getElementById('modalTitle');
-  const mCrumb = document.getElementById('modalCrumb');
+  const mCompanyLogo = document.getElementById('modalCompanyLogo') as HTMLImageElement;
   const mDesc = document.getElementById('modalDesc');
   const mTags = document.getElementById('modalTags');
   const mLink = document.getElementById('modalLink') as HTMLAnchorElement;
-  const mStatusDot = document.getElementById('modalStatusDot');
-  const mStatusLabel = document.getElementById('modalStatusLabel');
+  const mStatusDot = null;
+  const mStatusLabel = null;
+  const mGalleryImgs = document.querySelectorAll('[data-gallery-img]');
 
   if (!modal) return;
 
@@ -26,21 +27,13 @@ export function initProjectModal(modalData: Record<string, any>) {
       mImg.alt = `Captura de ${p.title}`;
     }
     if (mTitle) mTitle.textContent = p.title;
-    if (mCrumb) mCrumb.textContent = p.company || 'Projeto';
-    if (mStatusLabel) mStatusLabel.textContent = p.status;
-    
-    if (mStatusDot) {
-      mStatusDot.className = `w-1.5 h-1.5 rounded-full ${p.status === 'No ar' ? 'bg-green-500 shadow-[0_0_8px_oklch(0.62_0.19_145_/_0.4)]' : 'bg-red-500'}`;
-    }
     
     if (mDesc) {
-      mDesc.innerHTML = p.descParagraphs.map((para: string) => `<p>${para}</p>`).join('');
+      mDesc.innerHTML = (p.descParagraphs || []).map((para: string) => `<p>${para}</p>`).join('');
     }
     
     if (mTags) {
       mTags.innerHTML = [
-        tagHTML(p.company, p.theme.company),
-        tagHTML(p.production, p.theme.production),
         ...(p.theme.types || []).map((t: any) => tagHTML(t.label, t.classes))
       ].join('');
     }
@@ -54,6 +47,22 @@ export function initProjectModal(modalData: Record<string, any>) {
         mLink.classList.remove('active');
         mLink.classList.add('hidden');
       }
+    }
+
+    if (mGalleryImgs) {
+      mGalleryImgs.forEach((imgEl, idx) => {
+        const img = imgEl as HTMLImageElement;
+        const src = p.gallery && p.gallery[idx];
+        if (src) {
+          img.src = src;
+          img.classList.remove('opacity-0');
+          img.classList.add('opacity-100');
+        } else {
+          img.removeAttribute('src');
+          img.classList.add('opacity-0');
+          img.classList.remove('opacity-100');
+        }
+      });
     }
   }
 

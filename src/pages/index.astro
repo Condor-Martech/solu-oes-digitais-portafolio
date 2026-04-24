@@ -21,7 +21,7 @@ const year = new Date().getFullYear();
   <Header count={visible.length} />
   <FilterBar projects={rawProjects} active={filter} />
 
-  <main id="main">
+  <main id="main" class="flex-1">
     <section
       aria-labelledby="projectsHeading"
     >
@@ -34,15 +34,6 @@ const year = new Date().getFullYear();
             <h3 class="text-[17px] font-medium text-ink mb-1">
               Nenhum projeto encontrado
             </h3>
-            <p class="font-mono text-[13px] mb-5 opacity-60">
-              Nenhum item corresponde ao filtro "{filter.value}"
-            </p>
-            <a
-              class="inline-flex h-10 items-center px-6 bg-ink text-bg rounded-pill text-[12px] font-mono font-bold uppercase tracking-widest hover:scale-105 transition-transform"
-              href="/"
-            >
-              Limpar filtro
-            </a>
           </div>
         </div>
       ) : (
@@ -80,7 +71,7 @@ const year = new Date().getFullYear();
   <footer
     class="max-w-7xl mx-auto px-5 sm:px-7 py-10 text-[13px] text-muted text-center"
   >
-    <span>&copy; {year} — LP Hub</span>
+    <span>&copy; {year} Soluções Digitais</span>
   </footer>
 
   <ProjectModal projects={rawProjects} />

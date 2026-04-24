@@ -1,6 +1,6 @@
 ---
 import type { UIProject } from '../types';
-import { getCardDelay } from '../lib/ui-helpers';
+import { getCardDelay, getImageUrl } from '../lib/ui-helpers';
 import Badge from './ui/Badge.astro';
 
 interface Props {
@@ -18,15 +18,6 @@ const delay = getCardDelay(index);
 >
   <!-- Main Content Wrapper (Aspect Ratio Controlled) -->
   <div class="relative aspect-video overflow-hidden bg-bg/50">
-    <!-- Top info (Overlaid on image for more focus) -->
-    <div class="absolute top-4 left-4 right-4 flex items-center justify-end z-20">
-      <div class="flex items-center gap-1.5 px-2 py-1 bg-surface/80 backdrop-blur-md rounded-full border border-white/10 shadow-sm">
-        <span class:list={["w-1.5 h-1.5 rounded-full transition-shadow duration-500", project.status === 'No ar' ? "bg-green-500 shadow-[0_0_8px_oklch(0.62_0.19_145_/_0.4)]" : "bg-red-500"]} />
-        <span class="font-mono text-[9px] font-bold uppercase tracking-wider text-ink/60">
-          {project.status === 'No ar' ? 'No ar' : 'Fora do ar'}
-        </span>
-      </div>
-    </div>
 
     <!-- Image -->
     <div class="w-full h-full transition-transform duration-[1.5s] ease-custom group-hover:scale-110">

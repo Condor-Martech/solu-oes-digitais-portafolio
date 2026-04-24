@@ -1,5 +1,5 @@
 {
-  "name": "lphub",
+  "name": "solucoes-digitais",
   "version": "0.1.0",
   "type": "module",
   "private": true,
@@ -15,7 +15,8 @@
     "@astrojs/vercel": "^9.0.5",
     "@tailwindcss/vite": "^4.1.11",
     "astro": "^5.13.0",
-    "tailwindcss": "^4.1.11"
+    "tailwindcss": "^4.1.11",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/node": "^25.6.0",

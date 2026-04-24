@@ -60,7 +60,10 @@ async function fetchRemote(): Promise<Project[] | null> {
       
       throw new Error("El contenido no es un array de proyectos válido.");
     } catch (parseErr) {
-      console.error('[storage] ❌ Error de parseo. Contenido recibido:', rawText.substring(0, 100));
+      console.error('[storage] ❌ Error de parseo. El servidor respondió con algo que no es JSON.');
+      console.log('--- INICIO RESPUESTA ---');
+      console.log(rawText.substring(0, 500));
+      console.log('--- FIN RESPUESTA ---');
       throw new Error(`Erro ao processar JSON: ${parseErr instanceof Error ? parseErr.message : 'Formato inválido'}`);
     }
   } catch (err) {

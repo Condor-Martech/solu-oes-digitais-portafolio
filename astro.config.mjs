@@ -8,16 +8,14 @@ export default defineConfig({
     webAnalytics: { enabled: true }
   }),
   image: {
-    remotePatterns: [{
-      protocol: 'https',
-      hostname: 's3.cndr.me',
-    }],
+    remotePatterns: [
+      { protocol: 'https', hostname: 'minio.cndr.me' },
+      { protocol: 'http', hostname: 'minio.cndr.me' },
+      { protocol: 'https', hostname: 's3.cndr.me' },
+      { protocol: 'http', hostname: 's3.cndr.me' },
+    ],
   },
   vite: {
     plugins: [tailwindcss()],
-  },
-  server: {
-    host: '0.0.0.0',
-    port: 4321,
   },
 });

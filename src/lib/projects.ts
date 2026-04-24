@@ -103,12 +103,18 @@ const companyLogoMap: Record<string, string> = {
   "Condor AutoPosto": "/logos/Logo-Grande.png",
 };
 
-export function getCompanyLogo(company: string): string | null {
+export function getCompanyLogo(company: string, project?: Project): string | null {
+  // 1. Prioridad: Lo que viene del JSON/Sheet
+  if (project?.companyLogo) return project.companyLogo;
+  // 2. Fallback: Lo que tenemos hardcodeado por nombre de empresa
   return companyLogoMap[company] || null;
 }
 
-export function getBrandColor(company: string): ThemeColor {
-  return brandColorMap[company] || 'default';
+export function getBrandColor(value: string, project?: Project): ThemeColor {
+  // 1. Prioridad: Lo que viene del JSON/Sheet
+  if (project?.brandColor && value === project.company) return project.brandColor;
+  // 2. Fallback: Lo que tenemos hardcodeado
+  return brandColorMap[value] || 'default';
 }
 
 export function getFilterThemeClasses(color: ThemeColor): string {

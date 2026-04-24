@@ -38,3 +38,36 @@ export function buildFilterLinks(
 
   return { all, companies };
 }
+
+/**
+ * Normaliza a URL da imagem.
+ * Se for um caminho relativo (começa com /), adiciona a URL base do Minio.
+ */
+export function getImageUrl(imagePath: string | undefined | null): string {
+  if (!imagePath || imagePath.trim() === '') {
+    return '/images/placeholder-project.png';
+  }
+
+  // Si Astro ya optimizó la imagen (empieza por /_astro/), la devolvemos tal cual
+  if (imagePath.startsWith('/_astro/')) {
+    return imagePath;
+  }
+
+  // URL MAESTRA DE TU MINIO
+  const MINIO_BASE = "https://s3.cndr.me/lp-content";
+
+  // Si ya es una URL completa, la respetamos pero le añadimos el cache buster
+  if (imagePath.startsWith('http')) {
+    const separator = imagePath.includes('?') ? '&' : '?';
+    return `${imagePath}${separator}v=${new Date().getTime()}`;
+  }
+
+  // Limpiamos el path (quitamos la barra inicial si existe)
+  const cleanPath = imagePath.startsWith('/') ? imagePath.substring(1) : imagePath;
+  
+  // Codificamos el path para manejar espacios y caracteres especiales
+  const encodedPath = encodeURI(cleanPath);
+  
+  // Retornamos la URL con el cache buster basado en milisegundos
+  return `${MINIO_BASE}/${encodedPath}?v=${new Date().getTime()}`;
+}

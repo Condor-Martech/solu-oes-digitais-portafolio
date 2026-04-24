@@ -12,8 +12,14 @@ export interface Project {
   production: Production;
   status: ProjectStatus;
   image: string;
+  slide01?: string;
+  slide02?: string;
+  slide03?: string;
+  gallery?: string[];
   desc: string;
   type: ProjectType[];
+  companyLogo?: string;
+  brandColor?: ThemeColor;
 }
 
 export interface ActiveFilter {

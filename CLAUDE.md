@@ -1,4 +1,4 @@
-# Projeto: LP Hub — Portfólio
+# Projeto: Soluções Digitais — Portfólio
 
 Aplicação Astro (SSR, adapter Node) com Tailwind v4 que apresenta os projetos do time. O conteúdo é sincronizado a partir de uma Google Sheet via n8n — o Sheet + n8n são o backoffice, não há admin UI própria.
 
