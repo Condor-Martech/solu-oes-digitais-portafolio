@@ -54,7 +54,16 @@ export function parseFilter(searchParams: URLSearchParams): ActiveFilter {
 
 export function applyFilter(projects: Project[], filter: ActiveFilter): Project[] {
   if (filter.group === 'all') return projects;
-  if (filter.group === 'company') return projects.filter((p) => p.company === filter.value);
+  
+  if (filter.group === 'company') {
+    return projects.filter((p) => {
+      // Filtramos por empresa O por tipo (badge)
+      const matchesCompany = p.company === filter.value;
+      const matchesType = (p.type || []).includes(filter.value);
+      return matchesCompany || matchesType;
+    });
+  }
+  
   return projects.filter((p) => p.production === filter.value);
 }
 
