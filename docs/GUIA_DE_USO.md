@@ -8,7 +8,8 @@ Bem-vindo ao manual operacional do Soluções Digitais. Siga este guia para adic
 
 A sua planilha do Google é o "painel de controle" do site.
 
-1. **Adicionar novo projeto:** Preencha uma nova linha na planilha.
+1. **Adicionar novo projeto:** Clique com o botão direito no número da última linha à esquerda e selecione **"Inserir 1 linha abaixo"**. 
+   - ⚠️ **Importante:** NÃO use o botão que diz *"Adicionar 1000 linhas"* no fundo da tela.
    - Certifique-se de que o **ID** (Coluna A) seja único e não contenha acentos ou caracteres especiais (use traços em vez de espaços).
 2. **Ativar/Desativar:** Utilize o checkbox na coluna **status** para mostrar ou esconder um projeto no site instantaneamente.
 3. **Tags:** No campo `type`, você pode colocar várias tags separadas por vírgula (ex: `Lp, Site, Venda`).
