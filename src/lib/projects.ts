@@ -59,7 +59,7 @@ export function applyFilter(projects: Project[], filter: ActiveFilter): Project[
     return projects.filter((p) => {
       // Filtramos por empresa O por tipo (badge)
       const matchesCompany = p.company === filter.value;
-      const matchesType = (p.type || []).includes(filter.value);
+      const matchesType = (p.type || []).includes(filter.value as any);
       return matchesCompany || matchesType;
     });
   }
