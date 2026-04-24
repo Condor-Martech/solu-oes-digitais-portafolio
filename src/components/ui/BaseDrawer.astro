@@ -9,14 +9,14 @@ const { id, side = 'right' } = Astro.props;
 
 <lp-drawer 
   id={id} 
-  class="fixed inset-0 z-[60] pointer-events-none group hidden [&.open]:block [&.open]:pointer-events-auto"
+  class="fixed inset-0 z-[60] pointer-events-none group invisible [&.open]:visible"
 >
   <!-- Backdrop -->
-  <div class="backdrop absolute inset-0 bg-ink/30 backdrop-blur-sm opacity-0 transition-opacity duration-400 group-[.open]:opacity-100"></div>
+  <div class="backdrop absolute inset-0 bg-ink/30 opacity-0 transition-opacity duration-300 ease-in-out group-[.open]:opacity-100 group-[.open]:pointer-events-auto"></div>
   
   <!-- Content Panel -->
   <div class:list={[
-    "panel absolute top-0 h-full w-[85%] max-w-[340px] bg-surface border-line flex flex-col transition-transform duration-500 ease-out group-[.open]:translate-x-0",
+    "panel absolute top-0 h-full w-[85%] max-w-[320px] bg-surface border-line flex flex-col transition-transform duration-300 ease-in-out group-[.open]:translate-x-0 group-[.open]:pointer-events-auto shadow-xl",
     side === 'right' ? "right-0 translate-x-full border-l-[0.5px]" : "left-0 -translate-x-full border-r-[0.5px]"
   ]}>
     <slot />
@@ -25,8 +25,6 @@ const { id, side = 'right' } = Astro.props;
 
 <script>
   class LPDrawer extends HTMLElement {
-    private scrollY = 0;
-
     constructor() {
       super();
       const backdrop = this.querySelector('.backdrop');
@@ -41,27 +39,21 @@ const { id, side = 'right' } = Astro.props;
     }
 
     open() {
-      this.hidden = false;
-      this.lockScroll();
-      requestAnimationFrame(() => this.classList.add('open'));
+      const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+      document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+      
+      this.classList.add('open');
     }
 
     close() {
       this.classList.remove('open');
-      this.unlockScroll();
+      
+      // Wait for transition before unlocking scroll
       setTimeout(() => {
-        this.hidden = true;
-      }, 500);
-    }
-
-    private lockScroll() {
-      this.scrollY = window.scrollY;
-      document.body.style.cssText = `position: fixed; top: -${this.scrollY}px; width: 100%;`;
-    }
-
-    private unlockScroll() {
-      document.body.style.cssText = '';
-      window.scrollTo(0, this.scrollY);
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+      }, 300);
     }
   }
 
