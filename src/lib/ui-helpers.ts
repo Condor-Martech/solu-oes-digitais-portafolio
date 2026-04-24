@@ -48,26 +48,16 @@ export function getImageUrl(imagePath: string | undefined | null): string | unde
     return undefined;
   }
 
-  // Si Astro ya optimizó la imagen (empieza por /_astro/), la devolvemos tal cual
   if (imagePath.startsWith('/_astro/')) {
     return imagePath;
   }
 
-  // URL MAESTRA DE TU MINIO
   const MINIO_BASE = "https://s3.cndr.me/lp-content";
 
-  // Si ya es una URL completa, la respetamos pero le añadimos el cache buster
   if (imagePath.startsWith('http')) {
-    const separator = imagePath.includes('?') ? '&' : '?';
-    return `${imagePath}${separator}v=${new Date().getTime()}`;
+    return imagePath;
   }
 
-  // Limpiamos el path (quitamos la barra inicial si existe)
   const cleanPath = imagePath.startsWith('/') ? imagePath.substring(1) : imagePath;
-  
-  // Codificamos el path para manejar espacios y caracteres especiales
-  const encodedPath = encodeURI(cleanPath);
-  
-  // Retornamos la URL con el cache buster basado en milisegundos
-  return `${MINIO_BASE}/${encodedPath}?v=${new Date().getTime()}`;
+  return `${MINIO_BASE}/${encodeURI(cleanPath)}`;
 }

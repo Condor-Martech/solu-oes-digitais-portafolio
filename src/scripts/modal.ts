@@ -7,12 +7,9 @@ export function initProjectModal(modalData: Record<string, any>) {
   const modal = document.getElementById('projectModal') as any;
   const mImg = document.getElementById('modalImg') as HTMLImageElement;
   const mTitle = document.getElementById('modalTitle');
-  const mCompanyLogo = document.getElementById('modalCompanyLogo') as HTMLImageElement;
   const mDesc = document.getElementById('modalDesc');
   const mTags = document.getElementById('modalTags');
   const mLink = document.getElementById('modalLink') as HTMLAnchorElement;
-  const mStatusDot = null;
-  const mStatusLabel = null;
   const mGalleryImgs = document.querySelectorAll('[data-gallery-img]');
 
   if (!modal) return;
