@@ -13,32 +13,31 @@ const delay = getCardDelay(index);
 ---
 
 <article 
-  class="group relative flex flex-col bg-surface border-[0.5px] border-line rounded-md overflow-hidden hover:border-line-strong transition-all duration-500 hover:shadow-premium hover:-translate-y-1.5 animate-rise opacity-0 h-full"
+  class="group relative flex flex-col bg-surface border-[0.5px] border-line rounded-xl overflow-hidden hover:border-line-strong transition-all duration-500 shadow-sm hover:shadow-premium hover:-translate-y-1.5 animate-rise opacity-0 h-full"
   style={`animation-delay: ${delay}ms; animation-fill-mode: forwards;`}
 >
-  <!-- Main Content Wrapper (Aspect Ratio Controlled) -->
-  <div class="relative aspect-[4/3] sm:aspect-video overflow-hidden bg-bg/50">
-
-    <!-- Image -->
-    <div class="w-full h-full transition-transform duration-[1.5s] ease-custom group-hover:scale-110">
+  <!-- Image Section -->
+  <div class="relative aspect-[4/3] sm:aspect-video overflow-hidden isolate">
+    <div class="absolute inset-0 transition-transform duration-[1.5s] ease-custom group-hover:scale-110 bg-line/5 z-0">
       {project.image ? (
         <img 
           src={project.image} 
           alt={project.title}
-          class="w-full h-full object-cover object-top"
+          class="w-full h-full object-cover object-top opacity-0 transition-opacity duration-700"
+          onload="this.classList.remove('opacity-0')"
           loading="lazy"
         />
       ) : (
-        <div class="w-full h-full flex items-center justify-center border border-dashed border-line/20">
-          <span class="font-mono text-[10px] uppercase tracking-[0.2em] opacity-20">Preview N/A</span>
+        <div class="w-full h-full flex items-center justify-center border-b border-line/10 bg-bg/50">
+          <span class="font-mono text-[9px] uppercase tracking-[0.2em] opacity-20">Preview N/A</span>
         </div>
       )}
     </div>
     
-    <!-- Modern Hover Overlay -->
-    <div class="absolute inset-0 bg-ink/20 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center backdrop-blur-[3px] z-30">
+    <!-- Hover Overlay -->
+    <div class="absolute inset-0 bg-ink/20 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center backdrop-blur-[2px] z-30">
       <button 
-        class="px-4 sm:px-8 py-2 sm:py-3 bg-surface border border-line rounded-md text-[10px] sm:text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-ink shadow-2xl translate-y-4 group-hover:translate-y-0 transition-all duration-500 hover:bg-ink hover:text-bg hover:border-ink active:scale-95"
+        class="px-6 py-2.5 bg-surface border border-line rounded-md text-[10px] font-mono font-bold uppercase tracking-[0.2em] text-ink shadow-2xl translate-y-4 group-hover:translate-y-0 transition-all duration-500 hover:bg-ink hover:text-bg hover:border-ink active:scale-95"
         data-open-project={project.id}
       >
         Ver Detalhes
@@ -46,19 +45,20 @@ const delay = getCardDelay(index);
     </div>
   </div>
 
-  <!-- Footer Info - Elegant & Minimal -->
-  <div class="p-3 sm:p-4 flex flex-col gap-1.5 sm:gap-2 bg-surface border-t-[0.5px] border-line/5 relative z-10 mt-auto">
+  <!-- Content Section -->
+  <div class="p-2.5 sm:p-4 flex flex-col gap-2 flex-1">
     <h3 class="m-0 text-[14px] sm:text-[16px] font-medium tracking-tight text-ink leading-snug line-clamp-2 group-hover:text-ink transition-colors">
       {project.title}
     </h3>
-    <div class="flex flex-wrap gap-1.5">
-      <Badge text={project.production} className={`opacity-80 text-[10px] ${project.theme.production}`} />
+    
+    <div class="flex flex-wrap gap-1.5 mt-auto pt-1">
+      <Badge text={project.production} className={`opacity-80 text-[9px] sm:text-[10px] ${project.theme.production}`} />
       {project.theme.types.slice(0, 3).map((t) => (
-        <Badge text={t.label} className={`opacity-60 text-[10px] ${t.classes}`} />
+        <Badge text={t.label} className={`opacity-70 text-[9px] sm:text-[10px] ${t.classes}`} />
       ))}
     </div>
   </div>
 
   <!-- Subtle glow on hover -->
-  <div class="absolute inset-0 border-2 border-transparent group-hover:border-ink/5 rounded-md pointer-events-none transition-all duration-500 shadow-none group-hover:shadow-[0_0_40px_rgba(0,0,0,0.05)]"></div>
+  <div class="absolute inset-0 border border-transparent group-hover:border-ink/5 rounded-md pointer-events-none transition-all duration-500 shadow-none group-hover:shadow-[0_0_40px_rgba(0,0,0,0.05)]"></div>
 </article>
