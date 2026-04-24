@@ -23,7 +23,15 @@ export function initProjectModal(modalData: Record<string, any>) {
 
   function updateModal(p: any) {
     if (mImg) {
-      mImg.src = p.image || '';
+      if (p.image) {
+        mImg.src = p.image;
+        mImg.classList.remove('opacity-0');
+        mImg.classList.add('opacity-100');
+      } else {
+        mImg.removeAttribute('src');
+        mImg.classList.add('opacity-0');
+        mImg.classList.remove('opacity-100');
+      }
       mImg.alt = `Captura de ${p.title}`;
     }
     if (mTitle) mTitle.textContent = p.title;

@@ -37,7 +37,7 @@ const filterLinks = buildFilterLinks(rawFilterCompanies, active);
       </div>
       <button
         id="filterBtn"
-        class="inline-flex items-center justify-center w-9 h-9 border border-line bg-surface rounded-xl text-ink active:scale-90 transition-transform"
+        class="inline-flex items-center justify-center w-9 h-9 border border-line bg-surface rounded-md text-ink active:scale-90 transition-transform"
         aria-label="Abrir filtros"
       >
         <Icon name="menu" width="20" height="20" />
@@ -92,7 +92,7 @@ const filterLinks = buildFilterLinks(rawFilterCompanies, active);
   <div class="flex-1 overflow-y-auto px-6 py-6 flex flex-col gap-2">
     <a
       href={filterLinks.all.href}
-      class="flex items-center justify-between p-3 border rounded-xl bg-line/5"
+      class="flex items-center justify-between p-3 border rounded-md bg-line/5"
     >
       <span class="text-[13px] font-medium">Todas as Marcas</span>
       <span class="text-[11px] font-mono opacity-50">{projects.length}</span>
@@ -102,7 +102,7 @@ const filterLinks = buildFilterLinks(rawFilterCompanies, active);
         <a
           href={c.href}
           class:list={[
-            "flex items-center justify-between p-3 border rounded-xl transition-all",
+            "flex items-center justify-between p-3 border rounded-md transition-all",
             c.isActive ? "border-ink bg-ink/5" : "border-line",
           ]}
         >

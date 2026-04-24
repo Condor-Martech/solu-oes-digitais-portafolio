@@ -13,7 +13,7 @@ const delay = getCardDelay(index);
 ---
 
 <article 
-  class="group relative flex flex-col bg-surface border-[0.5px] border-line rounded-lg overflow-hidden hover:border-line-strong transition-all duration-500 hover:shadow-premium hover:-translate-y-1.5 animate-rise opacity-0 h-full"
+  class="group relative flex flex-col bg-surface border-[0.5px] border-line rounded-md overflow-hidden hover:border-line-strong transition-all duration-500 hover:shadow-premium hover:-translate-y-1.5 animate-rise opacity-0 h-full"
   style={`animation-delay: ${delay}ms; animation-fill-mode: forwards;`}
 >
   <!-- Main Content Wrapper (Aspect Ratio Controlled) -->
@@ -38,7 +38,7 @@ const delay = getCardDelay(index);
     <!-- Modern Hover Overlay -->
     <div class="absolute inset-0 bg-ink/20 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center backdrop-blur-[3px] z-30">
       <button 
-        class="px-8 py-3 bg-surface border border-line rounded-pill text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-ink shadow-2xl translate-y-4 group-hover:translate-y-0 transition-all duration-500 hover:bg-ink hover:text-bg hover:border-ink active:scale-95"
+        class="px-8 py-3 bg-surface border border-line rounded-md text-[11px] font-mono font-bold uppercase tracking-[0.2em] text-ink shadow-2xl translate-y-4 group-hover:translate-y-0 transition-all duration-500 hover:bg-ink hover:text-bg hover:border-ink active:scale-95"
         data-open-project={project.id}
       >
         Ver Detalhes
@@ -60,5 +60,5 @@ const delay = getCardDelay(index);
   </div>
 
   <!-- Subtle glow on hover -->
-  <div class="absolute inset-0 border-2 border-transparent group-hover:border-ink/5 rounded-lg pointer-events-none transition-all duration-500 shadow-none group-hover:shadow-[0_0_40px_rgba(0,0,0,0.05)]"></div>
+  <div class="absolute inset-0 border-2 border-transparent group-hover:border-ink/5 rounded-md pointer-events-none transition-all duration-500 shadow-none group-hover:shadow-[0_0_40px_rgba(0,0,0,0.05)]"></div>
 </article>

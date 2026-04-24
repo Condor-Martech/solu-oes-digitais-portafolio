@@ -17,10 +17,16 @@ const modalDataList = await prepareProjectsForUI(projects);
   <div class="flex-1 overflow-y-auto flex flex-col custom-scrollbar bg-surface">
     <!-- Hero Image Section -->
     <div class="w-full p-4 sm:p-5 pb-0 flex-none">
-      <div class="aspect-[21/9] sm:aspect-[5/2] w-full rounded-xl overflow-hidden border border-line shadow-sm">
-        <img class="w-full h-full object-cover object-top" id="modalImg" alt="" loading="eager" />
-      </div>
-      
+      <div class="aspect-[21/9] sm:aspect-[5/2] w-full rounded-lg overflow-hidden bg-line/20 border border-line flex flex-col items-center justify-center relative shadow-sm">
+        {/* Contenedor del Placeholder */}
+        <div class="flex flex-col items-center gap-1 text-ink/20 scale-150">
+          <div class="w-4 h-4 border border-current rounded-sm flex items-center justify-center">
+             <div class="w-1.5 h-1.5 bg-current rounded-full"></div>
+          </div>
+        </div>
+        
+        <img class="absolute inset-0 w-full h-full object-cover object-top opacity-0 transition-opacity duration-500 z-10" id="modalImg" alt="" loading="eager" />
+      </div>      
       <!-- Botón cerrar flotante sobre imagen -->
       <button 
         class="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full bg-surface/80 backdrop-blur-md border border-white/10 text-muted hover:text-ink hover:bg-surface transition-all outline-none z-30 shadow-sm" 
@@ -34,7 +40,7 @@ const modalDataList = await prepareProjectsForUI(projects);
     <!-- Info Section -->
     <div class="px-6 py-4 flex flex-col gap-5">
       <div>
-        <a class="inline-flex items-center justify-center h-[46px] px-8 bg-ink text-bg font-mono text-[11px] font-bold tracking-widest uppercase rounded-pill transition-all hover:shadow-premium hover:-translate-y-0.5 hidden [&.active]:inline-flex w-full sm:w-max" id="modalLink" href="#" target="_blank" rel="noopener noreferrer">Visitar site</a>
+        <a class="inline-flex items-center justify-center h-[46px] px-8 bg-ink text-bg font-mono text-[11px] font-bold tracking-widest uppercase rounded-md transition-all hover:shadow-premium hover:-translate-y-0.5 hidden [&.active]:inline-flex w-full sm:w-max" id="modalLink" href="#" target="_blank" rel="noopener noreferrer">Visitar site</a>
       </div>
 
       <div class="flex flex-col gap-3">
@@ -52,7 +58,7 @@ const modalDataList = await prepareProjectsForUI(projects);
         <div class="grid grid-cols-4 gap-3" id="modalGallery">
           {/* Los espacios para las 4 imágenes se poblarán vía JS */}
           {[1, 2, 3, 4].map((i) => (
-            <div class="aspect-[3/4] rounded-lg overflow-hidden bg-line/20 border border-line flex flex-col items-center justify-center relative group/thumb shadow-sm">
+            <div class="aspect-[3/4] rounded-md overflow-hidden bg-line/20 border border-line flex flex-col items-center justify-center relative group/thumb shadow-sm">
               {/* Contenedor del Placeholder */}
               <div class="flex flex-col items-center gap-1 text-ink/20 scale-75">
                 <div class="w-4 h-4 border border-current rounded-sm flex items-center justify-center">
