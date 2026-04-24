@@ -43,9 +43,9 @@ export function buildFilterLinks(
  * Normaliza a URL da imagem.
  * Se for um caminho relativo (começa com /), adiciona a URL base do Minio.
  */
-export function getImageUrl(imagePath: string | undefined | null): string {
+export function getImageUrl(imagePath: string | undefined | null): string | undefined {
   if (!imagePath || imagePath.trim() === '') {
-    return '/images/placeholder-project.png';
+    return undefined;
   }
 
   // Si Astro ya optimizó la imagen (empieza por /_astro/), la devolvemos tal cual
