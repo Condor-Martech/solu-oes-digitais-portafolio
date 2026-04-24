@@ -17,7 +17,7 @@ const modalDataList = await prepareProjectsForUI(projects);
   <div class="flex-1 overflow-y-auto flex flex-col custom-scrollbar bg-surface">
     <!-- Hero Image Section -->
     <div class="w-full p-4 sm:p-5 pb-0 flex-none">
-      <div class="aspect-[21/9] sm:aspect-[5/2] w-full rounded-lg overflow-hidden bg-line/20 border border-line flex flex-col items-center justify-center relative shadow-sm">
+      <div class="aspect-video sm:aspect-[5/2] w-full rounded-lg overflow-hidden bg-line/20 border border-line flex flex-col items-center justify-center relative shadow-sm">
         {/* Contenedor del Placeholder */}
         <div class="flex flex-col items-center gap-1 text-ink/20 scale-150">
           <div class="w-4 h-4 border border-current rounded-sm flex items-center justify-center">
@@ -52,13 +52,13 @@ const modalDataList = await prepareProjectsForUI(projects);
       <div class="flex flex-col gap-6 text-[17px] leading-[1.7] text-ink-2 max-w-[800px]" id="modalDesc"></div>
 
 
-      <!-- Carousel Section -->
+      <!-- Gallery Section -->
       <div class="mt-4 pt-6 border-t border-line/10">
         <h4 class="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-muted mb-4">Galeria do Projeto</h4>
-        <div class="grid grid-cols-4 gap-3" id="modalGallery">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="modalGallery">
           {/* Los espacios para las 4 imágenes se poblarán vía JS */}
           {[1, 2, 3, 4].map((i) => (
-            <div class="aspect-[3/4] rounded-md overflow-hidden bg-line/20 border border-line flex flex-col items-center justify-center relative group/thumb shadow-sm">
+            <div class="aspect-[4/3] rounded-md overflow-hidden bg-line/20 border border-line flex flex-col items-center justify-center relative group/thumb shadow-sm">
               {/* Contenedor del Placeholder */}
               <div class="flex flex-col items-center gap-1 text-ink/20 scale-75">
                 <div class="w-4 h-4 border border-current rounded-sm flex items-center justify-center">
