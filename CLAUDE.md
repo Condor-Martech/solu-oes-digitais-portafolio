@@ -33,24 +33,27 @@ Para tarefas classificadas como **COMPLEX CODE** ou **DESIGN/UI** (conforme GEMI
 ## Stack e convenções deste projeto
 
 - **Astro 5 (SSR) + TypeScript + Tailwind v4** via `@tailwindcss/vite`.
-- Adapter `@astrojs/node` em mode `standalone`. Deploy: VPS próprio com PM2 + Nginx.
+- Adapter `@astrojs/vercel`. Deploy: Vercel.
 - Skills aplicáveis: `tailwind-patterns`, `frontend-ui-engineering`, `api-and-interface-design`. Skills `react-best-practices` e `nextjs-react-expert` **não** se aplicam (Astro ≠ React/Next).
-- Dev: `npm run dev` (porta 4321). Build: `npm run build`. Start: `npm run start`.
-- Dados canônicos: `src/data/projects.json`. Reescrito pelo endpoint `/api/projects` quando n8n dispara (atomic write-then-rename).
-- Assets públicos: `public/screenshots/` e `public/logos/`.
+- Dev: `npm run dev` (porta 4321). Build: `npm run build`. Preview: `npm run preview`.
+- **Source-of-truth**: `projects.json` armazenado em **MinIO S3** (`s3.cndr.me/lp-content/projects.json`). Astro só lê; quem escreve é n8n.
+- `src/data/projects.json` é apenas um **snapshot local** para desenvolvimento offline, não é usado em produção.
+- Assets públicos: `public/screenshots/` e `public/logos/`. Imagens de projetos vivem no bucket MinIO.
 
 ## Arquivos principais
 
-- `src/pages/index.astro` — grid de projetos com filtros por company/production.
-- `src/pages/login.astro` + `src/pages/api/login.ts` — autenticação por cookie HMAC.
-- `src/pages/api/projects.ts` — endpoint que recebe payloads de n8n (`upsert`, `delete`, `replace_all`). Header `x-sync-token`.
-- `src/middleware.ts` — gate de sessão.
-- `src/layouts/Base.astro` — layout base (fontes, meta).
+- `src/pages/index.astro` — grid de projetos com filtros.
+- `src/middleware.ts` — Basic Auth gate para toda a aplicação (exceto estáticos).
+- `src/layouts/Base.astro` — layout base (fontes, meta, skip-link).
 - `src/components/ProjectCard.astro`, `ProjectModal.astro`, `FilterBar.astro`, `Header.astro`.
-- `src/lib/storage.ts` — read/write atômico do JSON.
-- `src/lib/projects.ts` — upsert/delete/replaceAll no array em memória.
-- `src/lib/auth.ts` — sign/verify cookie HMAC.
-- `src/styles/globals.css` — `@import "tailwindcss"` + `@theme` com tokens.
+- `src/components/ui/` — primitivos: `Badge`, `BaseModal`, `BaseDrawer`, `Icon`.
+- `src/lib/storage.ts` — fetch read-only do `projects.json` em MinIO (sem cache em memória).
+- `src/lib/projects.ts` — filtros, paleta de cores por empresa, helpers de texto.
+- `src/lib/view-models.ts` — transforma `Project → UIProject` (galería, temas, parágrafos).
+- `src/lib/ui-helpers.ts` — cálculos CSS puros e normalização de URLs de imagem.
+- `src/lib/auth.ts` — `verifyBasicAuth` com comparação timing-safe (`ADMIN_USER` + `ADMIN_PASS`).
+- `src/scripts/modal.ts`, `filter.ts` — controladores DOM (web components nativos).
+- `src/styles/globals.css` — `@import "tailwindcss"` + `@theme` com tokens OKLCH.
 
 ## Regras fixas do produto
 
@@ -59,16 +62,31 @@ Para tarefas classificadas como **COMPLEX CODE** ou **DESIGN/UI** (conforme GEMI
 - Bordas 0.5px, **sem sombras, sem gradientes**.
 - Hover nos cards: escurecer a imagem + label "Ver detalhes" centralizada.
 - Cores das tags: atribuição automática via hash (paleta definida em `src/lib/projects.ts`).
-- Filtros derivados automaticamente do JSON (chips de `company` e `production`).
+- Filtros derivados automaticamente do JSON (chips de `company` / `type`).
 
-## Contrato Sheet ↔ n8n ↔ Astro
+## Fluxo de dados real
 
-Colunas da Google Sheet: `id | title | company | link | production | image | desc | _marked_delete`.
+```text
+Google Sheet ──(Apps Script)──▶ n8n webhook (sync-portfolio)
+                                     │
+                                     ▼
+                              Download projects.json ← MinIO S3
+                                     │
+                              Upsert Logic (code node, shallow merge)
+                                     │
+                                     ▼
+                              Upload projects.json ──▶ MinIO S3
+                                                          │
+                                                          │ fetch read-only
+                                                          ▼
+                                                    Astro SSR (Vercel)
+```
 
-n8n envia para `POST /api/projects` com header `x-sync-token`:
+- **n8n escreve direto no bucket** via nodo S3 — não há endpoint HTTP em Astro para isso.
+- Imagens: webhook `sync-portfolio-image` recebe base64, sobe PNG ao bucket; o Apps Script do Sheet atualiza a célula com a URL resultante.
+- Fonte de verdade é a Sheet. Se `projects.json` for corrompido, rodar a sync do Sheet de novo.
 
-- `{ op: "upsert", project }` em onEdit de fila.
-- `{ op: "delete", id }` somente após aprovação manual (n8n usa nó _Send and Wait for Response_).
-- `{ op: "replace_all", projects: [...] }` para bootstrap/resync.
+## Env vars
 
-Fonte de verdade é a Sheet. Não há backup de `projects.json` — se perder, basta rodar `replace_all` de novo.
+- `ADMIN_USER`, `ADMIN_PASS` — credenciais Basic Auth (obrigatórias).
+- `PROJECTS_URL` — URL pública do `projects.json` no MinIO (obrigatória).

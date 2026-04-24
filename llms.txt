@@ -18,7 +18,6 @@ Visualizar e gerenciar o catálogo de projetos web da equipe. Os dados vivem no 
 - [src/scripts/filter.ts]: Controlador DOM do drawer de filtros mobile.
 - [src/components/ui/]: Primitivos: `Badge`, `BaseModal`, `BaseDrawer`, `Icon`.
 - [src/pages/index.astro]: Página principal. Grade desktop + carrossel mobile.
-- [src/pages/api/projects.ts]: Endpoint SSR de upsert/delete de projetos com validação estrita de tipos.
 - [src/data/projects.json]: Snapshot local. APENAS para desenvolvimento offline. Não utilizado em produção.
 
 ## Conceitos Chave

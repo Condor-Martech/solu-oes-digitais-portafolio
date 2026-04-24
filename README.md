@@ -64,7 +64,8 @@ npm run dev
 
 ## 📖 Documentação Detalhada
 
-- [**Guia de Arquitetura**](./ARCHITECTURE.md) - Detalhes técnicos, Schema e fluxos avançados.
+- [**Guia de Arquitetura**](./docs/ARCHITECTURE.md) - Detalhes técnicos, Schema e fluxos avançados.
+- [**Guia de Uso**](./docs/GUIA_DE_USO.md) - Manual operacional para gerir o portfólio.
 
 ---
 *Soluções Digitais v0.1.0 - Criado para performance e automação.*
