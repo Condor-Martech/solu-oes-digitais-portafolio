@@ -2,6 +2,7 @@
 import type { Project, ActiveFilter } from '../types';
 import { prepareFilterData } from '../lib/view-models';
 import { buildFilterLinks } from "../lib/ui-helpers";
+import { getBrandColor, getBadgeThemeClasses } from '../lib/projects';
 import BaseDrawer from "./ui/BaseDrawer.astro";
 import Badge from "./ui/Badge.astro";
 import Icon from "./ui/Icon.astro";
@@ -100,26 +101,32 @@ const filterLinks = buildFilterLinks(rawFilterCompanies, active);
       <span class="text-[11px] font-mono opacity-50">{projects.length}</span>
     </a>
     {
-      filterLinks.companies.map((c) => (
-        <a
-          href={c.href}
-          class:list={[
-            "flex items-center justify-between p-3 border rounded-md transition-all",
-            c.isActive ? "border-ink bg-ink/5" : "border-line",
-          ]}
-        >
-          <div class="flex items-center gap-3">
-            <div
-              class:list={[
-                "w-2 h-2 rounded-full",
-                c.isActive ? "bg-ink" : "bg-line",
-              ]}
-            />
-            <span class="text-[13px] font-medium">{c.label}</span>
-          </div>
-          <span class="text-[11px] font-mono opacity-50">{c.count}</span>
-        </a>
-      ))
+      filterLinks.companies.map((c) => {
+        const brandColor = getBrandColor(c.label);
+        const themeClasses = getBadgeThemeClasses(brandColor);
+        
+        return (
+          <a
+            href={c.href}
+            class:list={[
+              "flex items-center justify-between p-3 border rounded-md transition-all group/item",
+              c.isActive ? `border-ink/10 ${themeClasses}` : "border-line hover:bg-line/5",
+            ]}
+          >
+            <div class="flex items-center gap-3">
+              <div
+                class:list={[
+                  "w-2.5 h-2.5 rounded-full transition-transform group-hover/item:scale-110",
+                  themeClasses,
+                  c.isActive ? "ring-2 ring-ink/10" : "opacity-60",
+                ]}
+              />
+              <span class="text-[13px] font-medium">{c.label}</span>
+            </div>
+            <span class="text-[11px] font-mono opacity-50">{c.count}</span>
+          </a>
+        )
+      })
     }
   </div>
 </BaseDrawer>
