@@ -1,5 +1,5 @@
 export type ProjectType = 'Lp' | 'Software' | 'Site';
-export type ProjectStatus = 'No ar' | 'Fora do ar';
+export type ProjectStatus = boolean | string | number;
 export type FilterGroup = 'all' | 'company';
 export type ThemeColor = 'blue' | 'amber' | 'red' | 'slate' | 'fuchsia' | 'orange' | 'teal' | 'rose' | 'cyan' | 'green' | 'default';
 

@@ -1,7 +1,7 @@
 import type { Project, UIProject } from '../types';
 import { getBrandColor, getBadgeThemeClasses, descParagraphs } from './projects';
 import { getImageUrl } from './ui-helpers';
-
+import { getImage } from 'astro:assets';
 /**
  * Prepara los datos de un proyecto para ser consumidos por la UI.
 
@@ -10,14 +10,29 @@ export async function prepareProjectForUI(p: Project): Promise<UIProject> {
   let optimizedImg = p.image;
   
   if (p.image) {
-    // Usamos la URL directa de Minio sin pasar por el optimizador de Astro
-    // para evitar problemas de red o de caché durante el desarrollo.
-    optimizedImg = getImageUrl(p.image);
+    const rawUrl = getImageUrl(p.image) || p.image;
+    try {
+      // Providing BOTH width and height prevents Astro from fetching the image during SSR to calculate aspect ratio.
+      const optimized = await getImage({ src: rawUrl, width: 800, height: 600, format: 'webp' });
+      optimizedImg = optimized.src;
+    } catch (e) {
+      optimizedImg = rawUrl;
+    }
   }
   
   // Construímos a galeria a partir da imagem principal e dos 3 slides vindos do Excel
   const gallerySources = [p.image, p.slide01, p.slide02, p.slide03].filter(Boolean) as string[];
-  const optimizedGallery = gallerySources.map((imgSrc) => getImageUrl(imgSrc));
+  const optimizedGallery = await Promise.all(
+    gallerySources.map(async (imgSrc) => {
+      const rawUrl = getImageUrl(imgSrc) || imgSrc;
+      try {
+        const opt = await getImage({ src: rawUrl, width: 1200, height: 900, format: 'webp' });
+        return opt.src;
+      } catch (e) {
+        return rawUrl;
+      }
+    })
+  );
 
   return {
     ...p,
@@ -26,7 +41,7 @@ export async function prepareProjectForUI(p: Project): Promise<UIProject> {
     descParagraphs: descParagraphs(p.desc),
     theme: {
       company: getBadgeThemeClasses(getBrandColor(p.company, p)),
-      status: getBadgeThemeClasses(getBrandColor(p.status, p)),
+      status: getBadgeThemeClasses(getBrandColor(String(p.status), p)),
       types: (p.type || []).map(t => ({
         label: t,
         classes: getBadgeThemeClasses(getBrandColor(t, p))
