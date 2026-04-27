@@ -46,9 +46,7 @@ export function descParagraphs(desc: string): string[] {
 
 export function parseFilter(searchParams: URLSearchParams): ActiveFilter {
   const company = searchParams.get('company');
-  const production = searchParams.get('production');
   if (company) return { group: 'company', value: company };
-  if (production) return { group: 'production', value: production };
   return { group: 'all', value: 'Tudo' };
 }
 
@@ -64,7 +62,7 @@ export function applyFilter(projects: Project[], filter: ActiveFilter): Project[
     });
   }
   
-  return projects.filter((p) => p.production === filter.value);
+  return projects;
 }
 
 export function uniqueCompanies(projects: Project[]): string[] {

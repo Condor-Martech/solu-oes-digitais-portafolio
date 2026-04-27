@@ -26,7 +26,6 @@ export async function prepareProjectForUI(p: Project): Promise<UIProject> {
     descParagraphs: descParagraphs(p.desc),
     theme: {
       company: getBadgeThemeClasses(getBrandColor(p.company, p)),
-      production: getBadgeThemeClasses(getBrandColor(p.production, p)),
       status: getBadgeThemeClasses(getBrandColor(p.status, p)),
       types: (p.type || []).map(t => ({
         label: t,

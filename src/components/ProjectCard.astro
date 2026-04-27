@@ -52,7 +52,7 @@ const delay = getCardDelay(index);
     </h3>
     
     <div class="flex flex-wrap gap-1.5 mt-auto pt-1">
-      <Badge text={project.production} className={`opacity-80 text-[9px] sm:text-[10px] ${project.theme.production}`} />
+      <Badge text={project.company} className={`opacity-80 text-[9px] sm:text-[10px] ${project.theme.company}`} />
       {project.theme.types.slice(0, 3).map((t) => (
         <Badge text={t.label} className={`opacity-70 text-[9px] sm:text-[10px] ${t.classes}`} />
       ))}
