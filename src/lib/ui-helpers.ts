@@ -52,6 +52,14 @@ export function getImageUrl(imagePath: string | undefined | null): string | unde
     return imagePath;
   }
 
+  // Si estamos en modo local (sin URL de Minio), respetamos las rutas que empiezan por /
+  const projectsUrl = import.meta.env.PROJECTS_URL;
+  const isLocalMode = !projectsUrl || projectsUrl.includes('tu-minio-url.com');
+  
+  if (isLocalMode && imagePath.startsWith('/')) {
+    return imagePath;
+  }
+
   const MINIO_BASE = "https://s3.cndr.me/lp-content";
 
   if (imagePath.startsWith('http')) {
@@ -59,5 +67,10 @@ export function getImageUrl(imagePath: string | undefined | null): string | unde
   }
 
   const cleanPath = imagePath.startsWith('/') ? imagePath.substring(1) : imagePath;
-  return `${MINIO_BASE}/${encodeURI(cleanPath)}`;
+  const baseUrl = `${MINIO_BASE}/${encodeURI(cleanPath)}`;
+  
+  // Cache Buster: Cambia cada minuto para asegurar que las actualizaciones se vean pronto
+  // sin saturar el servidor con descargas constantes.
+  const version = Math.floor(Date.now() / 60000); 
+  return `${baseUrl}?v=${version}`;
 }

@@ -1,0 +1,353 @@
+{"projects": [
+  {
+    "id": "condor-em-casa",
+    "title": "Condor em Casa",
+    "company": "Condor",
+    "link": "https://www.condoremcasa.com.br/",
+    "production": "Externo",
+    "image": "/screenshots/condor-em-casa.png",
+    "desc": "Sem descrição por enquanto.",
+    "type": [
+      "Site"
+    ],
+    "status": "No ar"
+  },
+  {
+    "id": "grupo-zonta",
+    "title": "Grupo Zonta",
+    "company": "Grupo Zonta",
+    "link": "https://grupozonta.com.br/",
+    "production": "Interno",
+    "image": "/screenshots/grupo-zonta.png",
+    "desc": "Sem descrição por enquanto.",
+    "type": [
+      "Site"
+    ],
+    "status": "No ar"
+  },
+  {
+    "id": "institucional-condor",
+    "title": "Institucional Condor",
+    "company": "Condor",
+    "link": "https://institucional.condor.com.br/",
+    "production": "Interno",
+    "image": "/screenshots/institucional-condor.png",
+    "desc": "Sem descrição por enquanto.",
+    "type": [
+      "Site"
+    ],
+    "status": "No ar"
+  },
+  {
+    "id": "gigante",
+    "title": "Gigante Atacadista",
+    "company": "Gigante",
+    "link": "https://giganteatacadista.com/",
+    "production": "Interno",
+    "image": "/screenshots/gigante.png",
+    "desc": "Sem descrição por enquanto.",
+    "type": [
+      "Site"
+    ],
+    "status": "No ar"
+  },
+  {
+    "id": "hipermais",
+    "title": "Hipermais",
+    "company": "Hipermais",
+    "link": "https://teste-mais.z0n.co/",
+    "production": "Interno",
+    "image": "/screenshots/hipermais.png",
+    "desc": "Sem descrição por enquanto.",
+    "type": [
+      "Site"
+    ],
+    "status": "No ar"
+  },
+  {
+    "id": "shopping-estacao-joinville",
+    "title": "Shopping Estação Joinville",
+    "company": "Shopping",
+    "link": "https://shoppingestacaojoinville.com.br/",
+    "production": "Interno",
+    "image": "/screenshots/shopping-estacao-joinville.png",
+    "desc": "Sem descrição por enquanto.",
+    "type": [
+      "Site"
+    ],
+    "status": "No ar"
+  },
+  {
+    "id": "hipermais-joinville-atacado",
+    "title": "Hipermais Joinville Atacado",
+    "company": "Hipermais Atacado",
+    "link": "https://joinvilleatacado.com.br/",
+    "production": "Interno",
+    "image": "/screenshots/hipermais-joinville-atacado.png",
+    "desc": "Sem descrição por enquanto.",
+    "type": [
+      "Site"
+    ],
+    "status": "No ar"
+  },
+  {
+    "id": "receitas-da-nonna",
+    "title": "Receitas da Nonna",
+    "company": "Receitas da Nonna",
+    "link": "https://receitasdanonna.com.br/",
+    "production": "Interno",
+    "image": "/screenshots/receitas-da-nonna.png",
+    "desc": "Sem descrição por enquanto.",
+    "type": [
+      "Site"
+    ],
+    "status": "No ar"
+  },
+  {
+    "id": "pet",
+    "title": "Pet",
+    "company": "Pet CãoCurso",
+    "link": "https://pet.condor.com.br/",
+    "production": "Interno",
+    "image": "/screenshots/pet.png",
+    "desc": "Sem descrição por enquanto.",
+    "type": [
+      "Lp"
+    ],
+    "status": "No ar"
+  },
+  {
+    "id": "sabor-do-verao-kellanova",
+    "title": "Sabor do Verão (Kellanova)",
+    "company": "Kellanova",
+    "link": "https://campanha.condor.com.br/sabordoveraokellanova/",
+    "production": "Interno",
+    "image": "/screenshots/sabor-do-verao-kellanova.png",
+    "desc": "Sem descrição por enquanto.",
+    "type": [
+      "Lp"
+    ],
+    "status": "No ar"
+  },
+  {
+    "id": "rumo-ao-paraiso-auto-posto",
+    "title": "Rumo ao Paraíso (Auto Posto)",
+    "company": "Condor AutoPosto",
+    "link": "https://campanha.condor.com.br/rumo-ao-paraiso/",
+    "production": "Interno",
+    "image": "/screenshots/rumo-ao-paraiso-auto-posto.png",
+    "desc": "Sem descrição por enquanto.",
+    "type": [
+      "Lp"
+    ],
+    "status": "No ar"
+  },
+  {
+    "id": "sabores-de-inverno",
+    "title": "Sabores de Inverno",
+    "company": "Condor",
+    "link": "https://campanha.condor.com.br/saboresdeinverno/",
+    "production": "Interno",
+    "image": "/screenshots/sabores-de-inverno.png",
+    "desc": "Sem descrição por enquanto.",
+    "type": [
+      "Lp"
+    ],
+    "status": "No ar"
+  },
+  {
+    "id": "ganhadores-semanas-premiada",
+    "title": "Ganhadores Semanas Premiada",
+    "company": "Condor",
+    "link": "https://campanha.condor.com.br/ganhadores-semanas-premiadas/",
+    "production": "Interno",
+    "image": "/screenshots/ganhadores-semanas-premiada.png",
+    "desc": "Sem descrição por enquanto.",
+    "type": [
+      "Lp"
+    ],
+    "status": "No ar"
+  },
+  {
+    "id": "dia-das-maes",
+    "title": "Dia das Mães",
+    "company": "Condor",
+    "link": "https://campanha.condor.com.br/dia-das-maes/",
+    "production": "Interno",
+    "image": "/screenshots/dia-das-maes.png",
+    "desc": "Sem descrição por enquanto.",
+    "type": [
+      "Lp"
+    ],
+    "status": "No ar"
+  },
+  {
+    "id": "pascoa",
+    "title": "Páscoa",
+    "company": "Condor",
+    "link": "https://campanha.condor.com.br/pascoa/",
+    "production": "Interno",
+    "image": "/screenshots/pascoa.png",
+    "desc": "Sem descrição por enquanto.",
+    "type": [
+      "Lp"
+    ],
+    "status": "No ar"
+  },
+  {
+    "id": "passeio-ciclistico",
+    "title": "Passeio Ciclístico",
+    "company": "Condor",
+    "link": "https://campanha.condor.com.br/passeio-ciclistico/",
+    "production": "Interno",
+    "image": "/screenshots/passeio-ciclistico.png",
+    "desc": "Sem descrição por enquanto.",
+    "type": [
+      "Lp"
+    ],
+    "status": "No ar"
+  },
+  {
+    "id": "mes-da-mulher",
+    "title": "Mês da Mulher",
+    "company": "Condor",
+    "link": "https://campanha.condor.com.br/mes-da-mulher-2025/",
+    "production": "Interno",
+    "image": "/screenshots/mesdamulher.png",
+    "desc": "Sem descrição por enquanto.",
+    "type": [
+      "Lp"
+    ],
+    "status": "No ar"
+  },
+  {
+    "id": "condor-running",
+    "title": "Condor Running",
+    "company": "Condor",
+    "link": "https://campanha.condor.com.br/condor-running/",
+    "production": "Interno",
+    "image": "/screenshots/condor-running.png",
+    "desc": "Sem descrição por enquanto.",
+    "type": [
+      "Lp"
+    ],
+    "status": "No ar"
+  },
+  {
+    "id": "semanas-premiadas",
+    "title": "Semanas Premiadas",
+    "company": "Condor",
+    "link": "https://campanha.condor.com.br/semanaspremiadas/",
+    "production": "Interno",
+    "image": "/screenshots/semanas-premiadas.png",
+    "desc": "Sem descrição por enquanto.",
+    "type": [
+      "Lp"
+    ],
+    "status": "No ar"
+  },
+  {
+    "id": "campanha-solidaria",
+    "title": "Campanha Solidária",
+    "company": "Condor",
+    "link": "https://campanhasolidariacondor.com.br/",
+    "production": "Interno",
+    "image": "/screenshots/campanha-solidaria.png",
+    "desc": "Sem descrição por enquanto.",
+    "type": [
+      "Lp"
+    ],
+    "status": "No ar"
+  },
+  {
+    "id": "novas-lojas",
+    "title": "Novas Lojas",
+    "company": "Condor",
+    "link": "https://novaslojas.condor.com.br",
+    "production": "Externo",
+    "image": "/screenshots/novas-lojas.png",
+    "desc": "Sem descrição por enquanto.",
+    "type": [
+      "Lp"
+    ],
+    "status": "No ar"
+  },
+  {
+    "id": "ganhadores-promocao-semanas-premiadas",
+    "title": "Ganhadores da Promoção Semanas Premiadas",
+    "company": "Condor",
+    "link": "https://ganhadores.condor.com.br/",
+    "production": "Interno",
+    "image": "/screenshots/ganhadores-promocao-semanas-premiadas.png",
+    "desc": "Sem descrição por enquanto.",
+    "type": [
+      "Software"
+    ],
+    "status": "No ar"
+  },
+  {
+    "id": "clube-condor",
+    "title": "Clube Condor",
+    "company": "Condor",
+    "link": "https://www.clubecondor.com/",
+    "production": "Externo",
+    "image": "/screenshots/clube-condor.png",
+    "desc": "Sem descrição por enquanto.",
+    "type": [
+      "Software"
+    ],
+    "status": "No ar"
+  },
+  {
+    "id": "aniversario",
+    "title": "Aniversário",
+    "company": "Condor",
+    "link": "https://aniversario.condor.com.br/",
+    "production": "Interno",
+    "image": "/screenshots/aniversario.png",
+    "desc": "Sem descrição por enquanto.",
+    "type": [
+      "Lp"
+    ],
+    "status": "No ar"
+  },
+  {
+    "id": "natal",
+    "title": "Natal",
+    "company": "Condor",
+    "link": "https://natal.condor.com.br/",
+    "production": "Interno",
+    "image": "/screenshots/natal.png",
+    "desc": "Sem descrição por enquanto.",
+    "type": [
+      "Lp"
+    ],
+    "status": "No ar"
+  },
+  {
+    "id": "volta-as-aulas",
+    "title": "Volta às Aulas",
+    "company": "Condor",
+    "link": "https://volta-as-aulas.condor.com.br/",
+    "production": "Interno",
+    "image": "/screenshots/volta-as-aulas.png",
+    "desc": "Sem descrição por enquanto.",
+    "type": [
+      "Lp"
+    ],
+    "status": "No ar"
+  },
+  {
+    "id": "carnaval-ourofino",
+    "title": "Carnaval Ourofino",
+    "company": "Ourofino",
+    "link": "https://ourofino-lp.vercel.app/",
+    "production": "Interno",
+    "image": "/screenshots/carnaval-ourofino.png",
+    "desc": "Sem descrição por enquanto.",
+    "type": [
+      "Lp"
+    ],
+    "status": "Fora do ar"
+  }
+], "timestamp": "2026-04-29T13:59:14Z"}

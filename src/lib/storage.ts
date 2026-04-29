@@ -1,11 +1,13 @@
 import type { Project } from '../types';
 
+import localProjects from '../data/projects.json';
+
 async function fetchRemote(): Promise<Project[] | null> {
   const url = import.meta.env.PROJECTS_URL;
 
   if (!url || url.includes('tu-minio-url.com')) {
-    console.error('[storage] ❌ PROJECTS_URL no configurada o es la de ejemplo.');
-    return null;
+    console.warn('[storage] ⚠️ PROJECTS_URL no configurada o es la de ejemplo. Usando snapshot local.');
+    return localProjects as Project[];
   }
 
   try {
@@ -25,6 +27,11 @@ async function fetchRemote(): Promise<Project[] | null> {
     // Limpieza robusta: n8n o algunos editores pueden prefijar con '=' o '=='
     const cleanedText = rawText.trim().replace(/^=+/, '');
     
+    if (!cleanedText) {
+      console.warn('[storage] ⚠️ O arquivo no Minio está vazio (0 bytes).');
+      return null;
+    }
+
     try {
       let data = JSON.parse(cleanedText);
       
@@ -64,9 +71,10 @@ export async function loadProjects(): Promise<Project[]> {
   
   if (!remote || remote.length === 0) {
     const msg = !remote 
-      ? "Não foi possível conectar ao Minio ou o JSON é inválido." 
-      : "O arquivo no Minio está vazio [ ].";
-    throw new Error(`[storage] CRITICAL: ${msg}`);
+      ? "Não foi possível conectar ao Minio. Usando backup local." 
+      : "O arquivo no Minio está vazio. Usando backup local.";
+    console.warn(`[storage] ⚠️ ${msg}`);
+    return localProjects as Project[];
   }
 
   return remote;

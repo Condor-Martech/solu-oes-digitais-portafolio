@@ -57,7 +57,7 @@ export async function prepareProjectsForUI(projects: Project[]) {
   // Solo procesamos los proyectos que tengan el checkbox (status) marcado como true
   const activeProjects = projects.filter(p => {
     // Google Sheets puede enviar TRUE, "TRUE", true o 1 para los checkboxes
-    return p.status === true || p.status === "TRUE" || p.status === 1;
+    return p.status === true || p.status === "TRUE" || p.status === 1 || p.status === "No ar";
   });
   return Promise.all(activeProjects.map(prepareProjectForUI));
 }
@@ -67,7 +67,7 @@ export async function prepareProjectsForUI(projects: Project[]) {
  */
 export function prepareFilterData(projects: Project[]) {
   // Solo contamos proyectos activos para los filtros
-  const activeProjects = projects.filter(p => p.status === true || p.status === "TRUE" || p.status === 1);
+  const activeProjects = projects.filter(p => p.status === true || p.status === "TRUE" || p.status === 1 || p.status === "No ar");
   
   // Extraemos todos los tipos únicos de todos los proyectos activos
   const allTypes = activeProjects.flatMap(p => p.type || []);

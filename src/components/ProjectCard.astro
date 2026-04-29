@@ -13,8 +13,9 @@ const delay = getCardDelay(index);
 ---
 
 <article 
-  class="group relative flex flex-col bg-surface border-[0.5px] border-line rounded-xl overflow-hidden hover:border-line-strong transition-all duration-500 shadow-sm hover:shadow-premium hover:-translate-y-1.5 animate-rise opacity-0 h-full"
+  class="group relative flex flex-col bg-surface border-[0.5px] border-line rounded-xl overflow-hidden hover:border-line-strong transition-all duration-500 shadow-sm hover:shadow-premium hover:-translate-y-1.5 animate-rise opacity-0 h-full cursor-pointer"
   style={`animation-delay: ${delay}ms; animation-fill-mode: forwards;`}
+  data-open-project={project.id}
 >
   <!-- Image Section -->
   <div class="relative aspect-[4/3] sm:aspect-video overflow-hidden isolate">
