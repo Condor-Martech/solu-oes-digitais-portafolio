@@ -1,0 +1,84 @@
+---
+/**
+ * 🖼️ ImageLightbox.astro
+ * Modal minimalista para visualizar imágenes a tamaño completo.
+ */
+---
+
+<div 
+  id="imageLightbox" 
+  class="fixed inset-0 z-[100] hidden items-center justify-center pointer-events-none group"
+>
+  <!-- Backdrop -->
+  <div class="backdrop absolute inset-0 bg-ink/90 backdrop-blur-sm opacity-0 transition-opacity duration-300 ease-in-out group-[.open]:opacity-100 pointer-events-auto cursor-zoom-out"></div>
+  
+  <!-- Image Container -->
+  <div class="relative z-10 max-w-[95vw] max-h-[90vh] scale-95 opacity-0 transition-all duration-300 ease-out group-[.open]:scale-100 group-[.open]:opacity-100 pointer-events-none">
+    <img 
+      id="lightboxImg" 
+      src="" 
+      alt="Preview" 
+      class="w-full h-full object-contain shadow-2xl rounded-sm"
+    />
+  </div>
+
+  <!-- Close Button -->
+  <button 
+    id="closeLightbox"
+    class="absolute top-6 right-6 z-20 text-bg/50 hover:text-bg transition-colors pointer-events-auto p-2"
+    aria-label="Fechar"
+  >
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18"></line>
+      <line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
+  </button>
+</div>
+
+<script>
+  class Lightbox {
+    private el: HTMLElement;
+    private img: HTMLImageElement;
+    private backdrop: HTMLElement;
+    private closeBtn: HTMLElement;
+
+    constructor() {
+      this.el = document.getElementById('imageLightbox')!;
+      this.img = document.getElementById('lightboxImg') as HTMLImageElement;
+      this.backdrop = this.el.querySelector('.backdrop')!;
+      this.closeBtn = document.getElementById('closeLightbox')!;
+
+      this.backdrop.addEventListener('click', () => this.close());
+      this.closeBtn.addEventListener('click', () => this.close());
+      
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && this.el.classList.contains('open')) {
+          this.close();
+        }
+      });
+    }
+
+    open(src: string) {
+      this.img.src = src;
+      this.el.classList.remove('hidden');
+      this.el.classList.add('flex');
+      
+      // Delay for transition
+      requestAnimationFrame(() => {
+        this.el.classList.add('open');
+      });
+    }
+
+    close() {
+      this.el.classList.remove('open');
+      setTimeout(() => {
+        this.el.classList.remove('flex');
+        this.el.classList.add('hidden');
+        this.img.src = '';
+      }, 300);
+    }
+  }
+
+  // Expose to window for easy access from other scripts
+  (window as any).lpLightbox = new Lightbox();
+</script>

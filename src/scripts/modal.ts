@@ -84,4 +84,17 @@ export function initProjectModal(modalData: Record<string, any>) {
       }
     }
   });
+
+  // --- LÓGICA DE LIGHTBOX ---
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    const lightboxTrigger = target.closest('[data-lightbox]') as HTMLImageElement;
+    
+    if (lightboxTrigger && lightboxTrigger.src) {
+      const lightbox = (window as any).lpLightbox;
+      if (lightbox) {
+        lightbox.open(lightboxTrigger.src);
+      }
+    }
+  });
 }
