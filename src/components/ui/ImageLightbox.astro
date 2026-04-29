@@ -10,16 +10,18 @@
   class="fixed inset-0 z-[100] hidden items-center justify-center pointer-events-none group"
 >
   <!-- Backdrop -->
-  <div class="backdrop absolute inset-0 bg-ink/90 backdrop-blur-sm opacity-0 transition-opacity duration-300 ease-in-out group-[.open]:opacity-100 pointer-events-auto cursor-zoom-out"></div>
+  <div class="backdrop absolute inset-0 bg-ink/95 backdrop-blur-md opacity-0 transition-opacity duration-300 ease-in-out group-[.open]:opacity-100 pointer-events-auto cursor-pointer"></div>
   
   <!-- Image Container -->
-  <div class="relative z-10 max-w-[95vw] max-h-[90vh] scale-95 opacity-0 transition-all duration-300 ease-out group-[.open]:scale-100 group-[.open]:opacity-100 pointer-events-none">
-    <img 
-      id="lightboxImg" 
-      src="" 
-      alt="Preview" 
-      class="w-full h-full object-contain shadow-2xl rounded-sm"
-    />
+  <div class="relative z-10 w-full h-full flex items-center justify-center p-6 lg:p-16 scale-95 opacity-0 transition-all duration-300 ease-out group-[.open]:scale-100 group-[.open]:opacity-100 pointer-events-none">
+    <div class="relative bg-black/20 p-1 rounded-lg shadow-2xl">
+      <img 
+        id="lightboxImg" 
+        src="" 
+        alt="Preview" 
+        class="max-w-full max-h-[85vh] lg:max-h-[80vh] w-auto h-auto object-contain rounded-md"
+      />
+    </div>
   </div>
 
   <!-- Close Button -->

@@ -26,7 +26,7 @@ const modalDataList = await prepareProjectsForUI(projects);
           </div>
         </div>
         
-        <img class="absolute inset-0 w-full h-full object-cover object-top opacity-0 transition-opacity duration-500 z-10 cursor-zoom-in" id="modalImg" alt="" loading="eager" data-lightbox />
+        <img class="absolute inset-0 w-full h-full object-cover object-top opacity-0 transition-opacity duration-500 z-10 cursor-pointer" id="modalImg" alt="" loading="eager" data-lightbox />
       </div>      
       <!-- Botón cerrar flotante sobre imagen -->
       <button 
@@ -57,7 +57,7 @@ const modalDataList = await prepareProjectsForUI(projects);
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="modalGallery">
           {/* Los espacios para las 4 imágenes se poblarán vía JS */}
           {[1, 2, 3, 4].map((i) => (
-            <div class="aspect-[3/4] rounded-xl overflow-hidden bg-surface border-[0.5px] border-line shadow-sm relative group/thumb transition-all hover:border-line-strong hover:shadow-md cursor-zoom-in isolate">
+            <div class="aspect-[3/4] rounded-xl overflow-hidden bg-surface border-[0.5px] border-line shadow-sm relative group/thumb transition-all hover:border-line-strong hover:shadow-md cursor-pointer isolate">
               {/* Contenedor del Placeholder */}
               <div class="absolute inset-0 flex flex-col items-center justify-center gap-1 text-ink/10 scale-75 bg-line/5 z-0">
                 <div class="w-4 h-4 border border-current rounded-sm flex items-center justify-center">
