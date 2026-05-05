@@ -1,9 +1,9 @@
 ---
-import BaseModal from './ui/BaseModal.astro';
-import ImageLightbox from './ui/ImageLightbox.astro';
-import Icon from './ui/Icon.astro';
-import { prepareProjectsForUI } from '../lib/view-models';
-import type { Project } from '../types';
+import BaseModal from "./ui/BaseModal.astro";
+import ImageLightbox from "./ui/ImageLightbox.astro";
+import Icon from "./ui/Icon.astro";
+import { prepareProjectsForUI } from "../lib/view-models";
+import type { Project } from "../types";
 
 interface Props {
   projects: Project[];
@@ -18,19 +18,29 @@ const modalDataList = await prepareProjectsForUI(projects);
   <div class="flex-1 overflow-y-auto flex flex-col custom-scrollbar bg-surface">
     <!-- Hero Image Section -->
     <div class="w-full flex-none">
-      <div class="aspect-[2/1] sm:aspect-[5/2] w-full rounded-none overflow-hidden bg-surface border-b-[0.5px] border-line shadow-sm flex flex-col items-center justify-center relative">
+      <div
+        class="aspect-[2/1] sm:aspect-[5/2] w-full rounded-none overflow-hidden bg-surface border-b-[0.5px] border-line shadow-sm flex flex-col items-center justify-center relative"
+      >
         {/* Contenedor del Placeholder */}
         <div class="flex flex-col items-center gap-1 text-ink/20 scale-150">
-          <div class="w-4 h-4 border border-current rounded-sm flex items-center justify-center">
-             <div class="w-1.5 h-1.5 bg-current rounded-full"></div>
+          <div
+            class="w-4 h-4 border border-current rounded-sm flex items-center justify-center"
+          >
+            <div class="w-1.5 h-1.5 bg-current rounded-full"></div>
           </div>
         </div>
-        
-        <img class="absolute inset-0 w-full h-full object-cover object-top opacity-0 transition-opacity duration-500 z-10 cursor-pointer" id="modalImg" alt="" loading="eager" data-lightbox />
-      </div>      
+
+        <img
+          class="absolute inset-0 w-full h-full object-cover object-top opacity-0 transition-opacity duration-500 z-10 cursor-pointer"
+          id="modalImg"
+          alt=""
+          loading="eager"
+          data-lightbox
+        />
+      </div>
       <!-- Botón cerrar flotante sobre imagen -->
-      <button 
-        class="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full bg-surface/80 backdrop-blur-md border border-white/10 text-muted hover:text-ink hover:bg-surface transition-all outline-none z-30 shadow-sm" 
+      <button
+        class="absolute top-4 right-4 w-9 h-9 flex items-center justify-center rounded-full bg-surface/80 backdrop-blur-md border border-white/10 text-muted hover:text-ink hover:bg-surface transition-all outline-none z-30 shadow-sm"
         data-modal-close
         aria-label="Fechar"
       >
@@ -40,48 +50,67 @@ const modalDataList = await prepareProjectsForUI(projects);
 
     <!-- Info Section -->
     <div class="px-6 py-4 flex flex-col gap-5">
-
-
       <div class="flex flex-col gap-3">
-        
-        <h2 class="m-0 text-[28px] sm:text-[36px] font-medium tracking-tight leading-[1.1] text-ink" id="modalTitle"></h2>
+        <h2
+          class="m-0 text-[28px] sm:text-[36px] font-medium tracking-tight leading-[1.1] text-ink"
+          id="modalTitle"
+        >
+        </h2>
         <div class="flex flex-wrap gap-2" id="modalTags"></div>
       </div>
-      
-      <div class="flex flex-col gap-6 text-[17px] leading-[1.7] text-ink-2 max-w-[800px]" id="modalDesc"></div>
 
+      <div
+        class="flex flex-col gap-6 text-[17px] leading-[1.7] text-ink-2 max-w-[800px]"
+        id="modalDesc"
+      >
+      </div>
 
       <!-- Gallery Section -->
       <div class="mt-4 pt-6 border-t border-line/10">
-        <h4 class="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-muted mb-4">Galeria</h4>
-        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3" id="modalGallery">
+        <h4
+          class="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-muted mb-4"
+        >
+          Galeria
+        </h4>
+        <div
+          class="flex overflow-x-auto gap-4 pb-6 custom-scrollbar scroll-smooth snap-x snap-mandatory"
+          id="modalGallery"
+        >
           {/* Los espacios para las 4 imágenes se poblarán vía JS */}
-          {[1, 2, 3, 4].map((i) => (
-            <div class="aspect-[3/4] rounded-xl overflow-hidden bg-surface border-[0.5px] border-line shadow-sm relative group/thumb transition-all hover:border-line-strong hover:shadow-md cursor-pointer isolate">
-              {/* Contenedor del Placeholder */}
-              <div class="absolute inset-0 flex flex-col items-center justify-center gap-1 text-ink/10 scale-75 bg-line/5 z-0">
-                <div class="w-4 h-4 border border-current rounded-sm flex items-center justify-center">
-                   <div class="w-1.5 h-1.5 bg-current rounded-full"></div>
+          {
+            [1, 2, 3, 4].map((i) => (
+              <div class="flex-none w-[120px] sm:w-[150px] aspect-[3/4] rounded-xl overflow-hidden bg-surface border-[0.5px] border-line shadow-sm relative group/thumb transition-all hover:border-line-strong hover:shadow-md cursor-pointer isolate snap-start">
+                {/* Contenedor del Placeholder */}
+                <div class="absolute inset-0 flex flex-col items-center justify-center gap-1 text-ink/10 scale-75 bg-line/5 z-0">
+                  <div class="w-4 h-4 border border-current rounded-sm flex items-center justify-center">
+                    <div class="w-1.5 h-1.5 bg-current rounded-full" />
+                  </div>
+                </div>
+
+                {/* Imagen real (se carga encima) con efecto zoom idéntico a las cards */}
+                <div class="absolute inset-0 transition-transform duration-[1.5s] ease-custom group-hover/thumb:scale-105 z-10">
+                  <img
+                    class="w-full h-full object-cover object-top opacity-0 transition-opacity duration-700 relative"
+                    data-gallery-img={i - 1}
+                    data-lightbox
+                    alt=""
+                    onload="this.classList.remove('opacity-0')"
+                  />
                 </div>
               </div>
-              
-              {/* Imagen real (se carga encima) con efecto zoom idéntico a las cards */}
-              <div class="absolute inset-0 transition-transform duration-[1.5s] ease-custom group-hover/thumb:scale-110 z-10">
-                <img 
-                  class="w-full h-full object-cover object-top opacity-0 transition-opacity duration-700 relative" 
-                  data-gallery-img={i-1} 
-                  data-lightbox
-                  alt="" 
-                  onload="this.classList.remove('opacity-0')"
-                />
-              </div>
-            </div>
-          ))}
+            ))
+          }
         </div>
       </div>
 
       <div class="mt-8 flex justify-center">
-        <a class="inline-flex items-center justify-center h-[42px] px-8 bg-ink text-bg font-mono text-[10px] font-bold tracking-[0.2em] uppercase rounded-full transition-all hover:shadow-premium hover:-translate-y-0.5 hidden [&.active]:inline-flex w-max" id="modalLink" href="#" target="_blank" rel="noopener noreferrer">Ver projeto</a>
+        <a
+          class="inline-flex items-center justify-center h-[42px] px-8 bg-ink text-bg font-mono text-[10px] font-bold tracking-[0.2em] uppercase rounded-full transition-all hover:shadow-premium hover:-translate-y-0.5 hidden [&.active]:inline-flex w-max"
+          id="modalLink"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer">Ver projeto</a
+        >
       </div>
     </div>
   </div>
@@ -90,25 +119,25 @@ const modalDataList = await prepareProjectsForUI(projects);
 <ImageLightbox />
 
 <script>
-  import { initProjectModal } from '../scripts/modal';
-  
+  import { initProjectModal } from "../scripts/modal";
+
   // Recuperamos los datos pasados desde el servidor
   // Nota: En una app real, esto podría venir de una API, pero para mantener el bundle pequeño
   // y la velocidad de carga, lo inyectamos una sola vez.
-  const dataEl = document.getElementById('project-modal-data');
+  const dataEl = document.getElementById("project-modal-data");
   if (dataEl) {
-    const modalData = JSON.parse(dataEl.textContent || '{}');
+    const modalData = JSON.parse(dataEl.textContent || "{}");
     initProjectModal(modalData);
   }
 </script>
 
 <script is:inline define:vars={{ modalDataList }}>
   // Inyectamos los datos en un script de solo lectura para el cliente
-  (function() {
-    const data = Object.fromEntries(modalDataList.map(p => [p.id, p]));
-    const script = document.createElement('script');
-    script.type = 'application/json';
-    script.id = 'project-modal-data';
+  (function () {
+    const data = Object.fromEntries(modalDataList.map((p) => [p.id, p]));
+    const script = document.createElement("script");
+    script.type = "application/json";
+    script.id = "project-modal-data";
     script.textContent = JSON.stringify(data);
     document.body.appendChild(script);
   })();
