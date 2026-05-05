@@ -4,6 +4,7 @@ import { verifyBasicAuth } from './lib/auth';
 function isStaticAsset(pathname: string): boolean {
   return (
     pathname.startsWith('/_astro/') ||
+    pathname.startsWith('/_image') ||
     pathname.startsWith('/screenshots/') ||
     pathname.startsWith('/logos/') ||
     pathname === '/favicon.ico' ||
