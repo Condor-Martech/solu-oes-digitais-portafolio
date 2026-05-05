@@ -57,15 +57,19 @@ export function initProjectModal(modalData: Record<string, any>) {
     if (mGalleryImgs) {
       mGalleryImgs.forEach((imgEl, idx) => {
         const img = imgEl as HTMLImageElement;
+        const container = img.closest('.snap-start');
         const src = p.gallery && p.gallery[idx];
+
         if (src) {
           img.src = src;
           img.classList.remove('opacity-0');
           img.classList.add('opacity-100');
+          container?.classList.remove('hidden');
         } else {
           img.removeAttribute('src');
           img.classList.add('opacity-0');
           img.classList.remove('opacity-100');
+          container?.classList.add('hidden');
         }
       });
     }
