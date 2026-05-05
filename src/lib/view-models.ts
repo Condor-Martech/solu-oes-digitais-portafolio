@@ -7,18 +7,7 @@ import { getImage } from 'astro:assets';
 
  */
 export async function prepareProjectForUI(p: Project): Promise<UIProject> {
-  let optimizedImg = p.image;
-  
-  if (p.image) {
-    const rawUrl = getImageUrl(p.image) || p.image;
-    try {
-      // Providing BOTH width and height prevents Astro from fetching the image during SSR to calculate aspect ratio.
-      const optimized = await getImage({ src: rawUrl, width: 800, height: 600, format: 'webp' });
-      optimizedImg = optimized.src;
-    } catch (e) {
-      optimizedImg = rawUrl;
-    }
-  }
+  const optimizedImg = p.image ? (getImageUrl(p.image) || p.image) : p.image;
   
   // Construímos a galeria a partir da imagem principal e dos 3 slides vindos do Excel
   const gallerySources = [p.image, p.slide01, p.slide02, p.slide03].filter(Boolean) as string[];
