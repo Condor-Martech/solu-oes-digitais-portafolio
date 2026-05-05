@@ -2,6 +2,7 @@
 import type { UIProject } from '../types';
 import { getCardDelay } from '../lib/ui-helpers';
 import Badge from './ui/Badge.astro';
+import { Image } from 'astro:assets';
 
 interface Props {
   project: UIProject;
@@ -18,12 +19,14 @@ const delay = getCardDelay(index);
   data-open-project={project.id}
 >
   <!-- Image Section -->
-  <div class="relative aspect-[4/3] sm:aspect-video overflow-hidden isolate">
+  <div class="relative aspect-[4/3] overflow-hidden isolate">
     <div class="absolute inset-0 transition-transform duration-[1.5s] ease-custom group-hover:scale-110 bg-line/5 z-0">
       {project.image ? (
-        <img 
+        <Image 
           src={project.image} 
           alt={project.title}
+          width={800}
+          height={600}
           class="w-full h-full object-cover object-top opacity-0 transition-opacity duration-700"
           onload="this.classList.remove('opacity-0')"
           loading="lazy"
