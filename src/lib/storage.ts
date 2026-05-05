@@ -36,6 +36,15 @@ async function fetchRemote(): Promise<Project[] | null> {
       let data = JSON.parse(cleanedText);
       
       // Normalización de formatos comunes de n8n/API
+      if (!Array.isArray(data) && data.fileContent) {
+        try {
+          data = JSON.parse(data.fileContent);
+        } catch (e) {
+          // Si no es un string JSON válido, quizás es el objeto directo
+          data = data.fileContent;
+        }
+      }
+
       if (!Array.isArray(data) && data.projects && Array.isArray(data.projects)) {
         data = data.projects;
       } 
