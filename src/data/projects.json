@@ -211,7 +211,7 @@
     "id": "mes-da-mulher",
     "title": "Mês da Mulher",
     "company": "Condor",
-    "link": "https://campanha.condor.com.br/mes-da-mulher-2025/",
+    "link": "https://lp.condor.com.br/mulher/",
     "production": "Interno",
     "image": "/screenshots/mesdamulher.png",
     "desc": "Sem descrição por enquanto.",
@@ -234,8 +234,8 @@
     "status": "No ar"
   },
   {
-    "id": "semanas-premiadas",
-    "title": "Semanas Premiadas",
+    "id": "condor-premia",
+    "title": "Condor Premia",
     "company": "Condor",
     "link": "https://campanha.condor.com.br/semanaspremiadas/",
     "production": "Interno",
